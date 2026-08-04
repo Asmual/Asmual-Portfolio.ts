@@ -2,12 +2,13 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { CodeXml, ArrowUpRight } from "lucide-react";
+import { CodeXml, ArrowUpRight, Menu, X } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
 import { NavItem } from "@/index";
 
 export default function Navbar() {
   const [activeNav, setActiveNav] = useState("Home");
+  const [isOpen, setIsOpen] = useState(false);
 
   const navLinks: NavItem[] = [
     { name: "Home", href: "#home" },
@@ -32,7 +33,7 @@ export default function Navbar() {
           </span>
         </Link>
 
-        {/* Middle Side: Floating Pill Nav Links */}
+        {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-1.5 p-1.5 rounded-full bg-card-bg/60 border border-border shadow-md backdrop-blur-md">
           {navLinks.map((link) => {
             const isActive = activeNav === link.name;
@@ -53,7 +54,7 @@ export default function Navbar() {
           })}
         </nav>
 
-        {/* Right Side: Theme Icon Toggle & Hire Me Button */}
+        {/* Right Side: Theme Icon Toggle, Hire Me Button & Mobile Hamburger */}
         <div className="flex items-center gap-3">
           <ThemeToggle />
           
@@ -64,9 +65,57 @@ export default function Navbar() {
             Hire Me
             <ArrowUpRight className="w-4 h-4" />
           </Link>
+
+          {/* Mobile Hamburger Button */}
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="md:hidden p-2 rounded-xl bg-card-bg border border-border text-foreground hover:border-accent transition-colors"
+            aria-label="Toggle Menu"
+          >
+            {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
         </div>
 
       </div>
+
+      {/* Mobile Menu Dropdown */}
+      {isOpen && (
+        <div className="md:hidden bg-card-bg/95 backdrop-blur-md border-b border-border px-4 pt-2 pb-4 space-y-2 transition-all">
+          <nav className="flex flex-col gap-1.5">
+            {navLinks.map((link) => {
+              const isActive = activeNav === link.name;
+              return (
+                <Link
+                  key={link.name}
+                  href={link.href}
+                  onClick={() => {
+                    setActiveNav(link.name);
+                    setIsOpen(false);
+                  }}
+                  className={`px-4 py-2.5 text-sm font-medium rounded-xl transition-all ${
+                    isActive
+                      ? "bg-accent/20 text-accent font-semibold border border-accent/30"
+                      : "text-foreground/85 hover:text-foreground hover:bg-foreground/5"
+                  }`}
+                >
+                  {link.name}
+                </Link>
+              );
+            })}
+          </nav>
+
+          <div className="pt-2 sm:hidden">
+            <Link
+              href="#contact"
+              onClick={() => setIsOpen(false)}
+              className="flex items-center justify-center gap-1.5 w-full py-2.5 text-sm font-semibold rounded-xl bg-accent text-white shadow-md hover:opacity-90 transition-all"
+            >
+              Hire Me
+              <ArrowUpRight className="w-4 h-4" />
+            </Link>
+          </div>
+        </div>
+      )}
     </header>
   );
 }

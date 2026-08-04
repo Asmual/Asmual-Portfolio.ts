@@ -8,5 +8,5 @@ git push -u origin main
 
 
 git add .
-git commit -m " "
+git commit -m "feat: implement responsive Navbar with active link states and tri-theme toggle (Light, Dark, Slate Gray)"
 git push

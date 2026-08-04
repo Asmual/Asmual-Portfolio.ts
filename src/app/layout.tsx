@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import SmoothScroll from "@/components/SmoothScroll";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -13,19 +14,26 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Asmual ObaidulHoque",
+  title: "Asmual Obaidul Hoque",
   description: "Full Stack Web Developer",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({
+  children,
+}: { 
+  children: React.ReactNode;
+}) {
   return (
     <html
       lang="en"
       suppressHydrationWarning
-      style={{ scrollBehavior: "smooth" }}
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body suppressHydrationWarning className="min-h-full flex flex-col">{children}</body>
+      <body suppressHydrationWarning className="min-h-full flex flex-col">
+        <SmoothScroll>
+          <main className="flex-1">{children}</main>
+        </SmoothScroll>
+      </body>
     </html>
   );
 }
