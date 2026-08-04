@@ -1,11 +1,12 @@
 echo "# Asmual-Portfolio.ts" >> README.md
 git init
 git add .
-git commit -m "first commit"
+git commit -m "feat: initialize typescript and install dependencies"
 git branch -M main
 git remote add origin https://github.com/Asmual/Asmual-Portfolio.ts.git
 git push -u origin main
 
+
 git add .
-git commit -m "first commit"
+git commit -m " "
 git push
