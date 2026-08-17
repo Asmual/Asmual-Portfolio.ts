@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Sun, Moon, Palette } from "lucide-react";
-import { ThemeMode } from "@/index";
+import { ThemeMode } from "@/types/index";
 
 export default function ThemeToggle() {
   const [theme, setTheme] = useState<ThemeMode>(() => {

@@ -7,6 +7,7 @@ import { Download, FolderKanban, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function Hero() {
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const titles = [
     "Full Stack Developer",
     "MERN Stack Developer",
@@ -37,7 +38,7 @@ export default function Hero() {
 
     const timer = setTimeout(handleType, isDeleting ? 40 : 80);
     return () => clearTimeout(timer);
-  }, [currentText, isDeleting, currentTitleIndex]);
+  }, [currentText, isDeleting, currentTitleIndex, titles]);
 
   return (
     <section
@@ -91,7 +92,7 @@ export default function Hero() {
                 Asmual Obaidul Hoque
               </h1>
               {/* Typewriter Text Animation */}
-              <p className="text-lg sm:text-xl lg:text-2xl font-bold text-accent min-h-[36px] flex items-center justify-center lg:justify-start">
+              <p className="text-lg sm:text-xl lg:text-2xl font-bold text-accent min-h-9 flex items-center justify-center lg:justify-start">
                 <span>{currentText}</span>
                 <span className="animate-pulse ml-0.5 text-accent">|</span>
               </p>
