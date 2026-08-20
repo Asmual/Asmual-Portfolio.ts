@@ -79,7 +79,7 @@ export default function Footer(): React.JSX.Element {
   return (
     <footer className="relative overflow-hidden border-t border-border/70 bg-card-bg/90 text-foreground backdrop-blur-xl transition-colors duration-300">
       {/* Top Accent Gradient Line */}
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-accent/70 to-transparent" />
+      <div className="absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-accent/70 to-transparent" />
 
       {/* Background Lighting Glows */}
       <div className="pointer-events-none absolute -left-32 top-10 h-48 w-48 rounded-full bg-accent/5 blur-3xl" />

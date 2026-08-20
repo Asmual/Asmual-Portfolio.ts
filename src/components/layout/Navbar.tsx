@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { ArrowUpRight, Menu, X } from "lucide-react";
-import ThemeToggle from "./ThemeToggle";
+import ThemeToggle from "../ui/ThemeToggle";
 import { NavItem } from "@/types/index";
 
 export default function Navbar() {
@@ -24,13 +24,12 @@ export default function Navbar() {
   return (
     <header className="sticky top-0 z-50 w-full backdrop-blur-md bg-background/80 border-b border-border transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-
         {/* Left Side: Brand Avatar & Name */}
         <Link href="/" className="flex items-center gap-2.5 group">
           <div className="relative w-9 h-9 rounded-full overflow-hidden border border-border group-hover:border-accent p-0.5 bg-card-bg shadow-sm transition-all duration-300">
             <div className="relative w-full h-full rounded-full overflow-hidden">
               <Image
-                src="/as-logo.png"
+                src="/images/as-logo.png"
                 alt="Asmual Obaidul Hoque"
                 fill
                 sizes="36px"
@@ -42,9 +41,7 @@ export default function Navbar() {
 
           {/* Brand text — no background box. A hover-only underline border,
               uses your existing tokens so it adapts across all theme modes */}
-          <span
-            className="font-bold text-lg tracking-tight text-foreground border-b-2 border-transparent group-hover:border-accent transition-colors duration-300 leading-tight pb-0.5"
-          >
+          <span className="font-bold text-lg tracking-tight text-foreground border-b-2 border-transparent group-hover:border-accent transition-colors duration-300 leading-tight pb-0.5">
             Asmual<span className="text-accent">.</span>
           </span>
         </Link>
@@ -105,7 +102,6 @@ export default function Navbar() {
             {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
         </div>
-
       </div>
 
       {/* Mobile Dropdown Menu */}
@@ -128,7 +124,11 @@ export default function Navbar() {
                     <motion.span
                       layoutId="nav-active-pill-mobile"
                       className="absolute inset-0 rounded-xl bg-accent"
-                      transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 380,
+                        damping: 30,
+                      }}
                     />
                   )}
                   <span

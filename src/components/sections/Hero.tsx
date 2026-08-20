@@ -51,9 +51,8 @@ export default function Hero() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
-          
           {/* Left Column: Image with Animated Frame */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6 }}
@@ -64,7 +63,7 @@ export default function Hero() {
               <div className="relative w-full h-full bg-linear-to-tr from-accent to-accent/40 p-1.5 rounded-[30%_70%_70%_30%/30%_30%_70%_70%] shadow-2xl overflow-hidden transition-all duration-500 group-hover:scale-[1.02]">
                 <div className="w-full h-full bg-card-bg rounded-[29%_69%_69%_29%/29%_29%_69%_69%] overflow-hidden relative">
                   <Image
-                    src="/asmual.png"
+                    src="/images/asmual.png"
                     alt="Asmual Obaidul Hoque"
                     fill
                     priority
@@ -76,7 +75,7 @@ export default function Hero() {
           </motion.div>
 
           {/* Right Column: Content */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
@@ -99,14 +98,17 @@ export default function Hero() {
             </div>
 
             <p className="max-w-xl text-sm sm:text-base text-foreground/80 leading-relaxed">
-              Passionate about building responsive, high-performance web applications using React.js, Next.js, Node.js, Express.js, and MongoDB. Specialized in RESTful APIs, secure authentication, and scalable full-stack architectures.
+              Passionate about building responsive, high-performance web
+              applications using React.js, Next.js, Node.js, Express.js, and
+              MongoDB. Specialized in RESTful APIs, secure authentication, and
+              scalable full-stack architectures.
             </p>
 
             {/* Buttons */}
             <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 pt-1">
               <a
-                href="/Asmual Obaidul Hoque-Full Stack Developer-Resume.pdf"
-                download="Asmual Obaidul Hoque-Full Stack Developer-Resume.pdf"
+                href="/resume/Asmual Obaidul Hoque - Full Stack Developer-Resume.pdf"
+                download="Asmual-Obaidul-Hoque-Resume.pdf"
                 className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-accent text-white text-sm font-semibold shadow-md hover:bg-accent/90 transition-all duration-300"
               >
                 <Download className="w-4 h-4" />
@@ -122,7 +124,6 @@ export default function Hero() {
               </Link>
             </div>
           </motion.div>
-
         </div>
       </div>
     </section>
