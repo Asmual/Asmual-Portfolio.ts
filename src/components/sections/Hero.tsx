@@ -65,6 +65,7 @@ export default function Hero() {
                   <Image
                     src="/images/asmual.png"
                     alt="Asmual Obaidul Hoque"
+                    sizes="(max-width: 640px) 224px, (max-width: 1024px) 288px, 320px"  
                     fill
                     priority
                     className="object-cover object-top hover:scale-105 transition-transform duration-500"
