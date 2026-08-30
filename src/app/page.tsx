@@ -4,6 +4,7 @@ import Navbar from "@/components/layout/Navbar";
 import About from "@/components/sections/About";
 import Pojects from "@/components/sections/Projects";
 import Contact from "@/components/sections/Contact";
+import Skills from "@/components/sections/Skills";
 
 export default function Home() {
   return (
@@ -11,6 +12,7 @@ export default function Home() {
       <Navbar/>
       <Hero/>
       <Pojects/>
+      <Skills/>
       <About/>
       <Contact/>
       <Footer/>
