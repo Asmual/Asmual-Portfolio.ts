@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 import { ArrowUpRight, Menu, X } from "lucide-react";
 import ThemeToggle from "../ui/ThemeToggle";
@@ -11,26 +12,40 @@ import { NavItem } from "@/types/index";
 export default function Navbar() {
   const [activeNav, setActiveNav] = useState("Home");
   const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
 
   const navLinks: NavItem[] = [
     { name: "Home", href: "#home" },
     { name: "Projects", href: "#projects" },
     { name: "Skills", href: "#skills" },
     { name: "About", href: "#about" },
-    { name: "Blog", href: "#blog" },
     { name: "Contact", href: "#contact" },
   ];
 
+  const handleScroll = (e: React.MouseEvent<HTMLAnchorElement>, targetHref: string, name: string) => {
+    setActiveNav(name);
+
+    if (targetHref.startsWith("#")) {
+      const targetId = targetHref.replace("#", "");
+      if (pathname === "/") {
+        e.preventDefault();
+        const element = document.getElementById(targetId);
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth" });
+        }
+      }
+    }
+  };
+
   return (
     <header className="sticky top-0 z-50 w-full backdrop-blur-md bg-background/80 border-b border-border transition-colors duration-300">
-      {/* Reduced height from h-20 to h-16 (standard 64px) */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-        {/* Left Side: Brand Avatar & Name */}
+        {/* Left Side: Brand Avatar & Developer Name */}
         <Link href="/" className="flex items-center gap-2 group">
           <div className="relative w-8 h-8 rounded-full overflow-hidden border border-border group-hover:border-accent p-0.5 bg-card-bg shadow-sm transition-all duration-300">
             <div className="relative w-full h-full rounded-full overflow-hidden">
               <Image
-                src="/images/as-logo.png"
+                src="/images/as_logo.png"
                 alt="Asmual Obaidul Hoque"
                 fill
                 sizes="32px"
@@ -40,8 +55,10 @@ export default function Navbar() {
             </div>
           </div>
 
-          <span className="font-bold text-base tracking-tight text-foreground border-b-2 border-transparent group-hover:border-accent transition-colors duration-300 leading-none">
-            Asmual<span className="text-accent">.</span>
+          <span className="font-mono font-bold text-sm sm:text-base tracking-tight text-foreground/90 group-hover:text-accent transition-colors duration-300 leading-none">
+            <span className="text-accent">&lt;</span>
+            Asmual
+            <span className="text-accent"> /&gt;</span>
           </span>
         </Link>
 
@@ -52,7 +69,7 @@ export default function Navbar() {
               key={link.name}
               link={link}
               isActive={activeNav === link.name}
-              onClick={() => setActiveNav(link.name)}
+              onClick={(e) => handleScroll(e, link.href, link.name)}
               layoutId="nav-active-pill"
             />
           ))}
@@ -64,6 +81,7 @@ export default function Navbar() {
 
           <Link
             href="#contact"
+            onClick={(e) => handleScroll(e, "#contact", "Contact")}
             className="hidden sm:inline-flex items-center gap-1 px-4 py-1.5 text-xs font-semibold rounded-full bg-accent text-white shadow-sm hover:opacity-90 transition-all duration-300"
           >
             Hire Me
@@ -90,8 +108,8 @@ export default function Navbar() {
                 key={link.name}
                 link={link}
                 isActive={activeNav === link.name}
-                onClick={() => {
-                  setActiveNav(link.name);
+                onClick={(e) => {
+                  handleScroll(e, link.href, link.name);
                   setIsOpen(false);
                 }}
                 layoutId="nav-active-pill-mobile"
@@ -103,7 +121,10 @@ export default function Navbar() {
           <div className="pt-1.5 sm:hidden">
             <Link
               href="#contact"
-              onClick={() => setIsOpen(false)}
+              onClick={(e) => {
+                handleScroll(e, "#contact", "Contact");
+                setIsOpen(false);
+              }}
               className="flex items-center justify-center gap-1.5 w-full py-2 text-xs font-semibold rounded-lg bg-accent text-white shadow-sm hover:opacity-90 transition-all"
             >
               Hire Me
@@ -116,7 +137,6 @@ export default function Navbar() {
   );
 }
 
-{/* Helper component for clean and clean layout */}
 function NavLink({
   link,
   isActive,
@@ -126,7 +146,7 @@ function NavLink({
 }: {
   link: NavItem;
   isActive: boolean;
-  onClick: () => void;
+  onClick: (e: React.MouseEvent<HTMLAnchorElement>) => void;
   layoutId: string;
   isMobile?: boolean;
 }) {

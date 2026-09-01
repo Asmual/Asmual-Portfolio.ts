@@ -88,30 +88,29 @@ export default function Footer(): React.JSX.Element {
       <div className="relative mx-auto max-w-7xl px-4 pt-10 pb-6 sm:px-6 lg:px-8">
         {/* Main Compact Footer Grid */}
         <div className="grid grid-cols-1 gap-8 border-b border-border/60 pb-8 md:grid-cols-2 lg:grid-cols-12 lg:gap-x-8">
-          
           {/* Column 1: Simple Brand Info & Location */}
           <div className="lg:col-span-4">
             <div className="space-y-3">
-              
               {/* Plain Logo & Name without extra dot or hover borders */}
-              <Link
-                href="#home"
-                className="inline-flex items-center gap-2.5"
-              >
-                <div className="relative h-9 w-9 overflow-hidden rounded-full border border-border bg-background p-0.5">
-                  <div className="relative h-full w-full overflow-hidden rounded-full">
+              <Link href="/" className="flex items-center gap-2 group">
+                <div className="relative w-8 h-8 rounded-full overflow-hidden border border-border group-hover:border-accent p-0.5 bg-card-bg shadow-sm transition-all duration-300">
+                  <div className="relative w-full h-full rounded-full overflow-hidden">
                     <Image
-                      src="/as-logo.png"
+                      src="/images/as_logo.png"
                       alt="Asmual Obaidul Hoque"
                       fill
-                      sizes="36px"
-                      className="object-cover object-top"
+                      sizes="32px"
+                      priority
+                      className="object-cover object-top transition-transform duration-300 group-hover:scale-110"
                     />
                   </div>
                 </div>
 
-                <span className="text-xl font-bold tracking-tight text-foreground">
+                {/* Coder-Style Professional Name Badge */}
+                <span className="font-mono font-bold text-sm sm:text-base tracking-tight text-foreground/90 group-hover:text-accent transition-colors duration-300 leading-none">
+                  <span className="text-accent">&lt;</span>
                   Asmual
+                  <span className="text-accent">/&gt;</span>
                 </span>
               </Link>
 
@@ -162,9 +161,7 @@ export default function Footer(): React.JSX.Element {
                   key={service.name}
                   className="group flex items-center gap-2 text-foreground/65"
                 >
-                  <span className="shrink-0 text-accent">
-                    {service.icon}
-                  </span>
+                  <span className="shrink-0 text-accent">{service.icon}</span>
 
                   <span className="transition-colors duration-300 group-hover:text-foreground">
                     {service.name}
@@ -197,15 +194,14 @@ export default function Footer(): React.JSX.Element {
               ))}
             </div>
           </div>
-
         </div>
 
         {/* Bottom Bar: Reordered Layout & Low Height */}
         <div className="flex flex-col gap-3 pt-4 text-xs text-foreground/60 sm:flex-row sm:items-center sm:justify-between">
-          
           {/* Left: Copyright */}
           <p className="text-center sm:text-left">
-            © {new Date().getFullYear()} Asmual Obaidul Hoque. All rights reserved.
+            © {new Date().getFullYear()} Asmual Obaidul Hoque. All rights
+            reserved.
           </p>
 
           {/* Center: Back To Top Button */}
@@ -225,7 +221,6 @@ export default function Footer(): React.JSX.Element {
             <Heart className="h-3.5 w-3.5 fill-accent text-accent" />
             <span>using Next.js & Tailwind CSS</span>
           </p>
-
         </div>
       </div>
     </footer>
