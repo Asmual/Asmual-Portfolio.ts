@@ -1,29 +1,20 @@
 import { ReactNode } from "react";
 
-// ==========================================
-// 1. Theme & Navigation Types
-// ==========================================
-
-/** Supported theme modes */
+// Theme and Navigation Types
 export type ThemeMode = "light" | "dark" | "gray";
 
-/** Navigation bar link item */
 export interface NavItem {
   name: string;
   href: string;
   icon?: ReactNode;
 }
 
-/** Global Theme Context State */
 export interface ThemeContextType {
   theme: ThemeMode;
   changeTheme: (newTheme: ThemeMode) => void;
 }
 
-// ==========================================
-// 2. Project Section Types
-// ==========================================
-
+// Project Section Types
 export type ProjectCategory = "Full Stack" | "Frontend" | "Backend" | "MERN";
 
 export interface Project {
@@ -42,24 +33,18 @@ export interface Project {
   keyFeatures?: string[];
 }
 
-// ==========================================
-// 3. Skills Section Types
-// ==========================================
-
+// Skill Section Types
 export type SkillCategory = "Frontend" | "Backend" | "Database" | "Tools & Platforms";
 
 export interface Skill {
   name: string;
   category: SkillCategory;
   icon?: ReactNode;
-  level?: number; // Percentage e.g. 90
+  level?: number;
   isFeatured?: boolean;
 }
 
-// ==========================================
-// 4. Services Section Types
-// ==========================================
-
+// Service Section Types
 export interface Service {
   id: string;
   title: string;
@@ -68,17 +53,14 @@ export interface Service {
   features?: string[];
 }
 
-// ==========================================
-// 5. Experience & Education Types
-// ==========================================
-
+// Experience and Education Types
 export interface Experience {
   id: string;
   role: string;
   company: string;
   location: string;
   startDate: string;
-  endDate: string; // "Present" or Date
+  endDate: string;
   description: string[];
   technologies?: string[];
 }
@@ -92,10 +74,7 @@ export interface Education {
   description?: string;
 }
 
-// ==========================================
-// 6. Contact Form & Info Types
-// ==========================================
-
+// Contact Form and Info Types
 export interface ContactFormData {
   name: string;
   email: string;
@@ -110,10 +89,7 @@ export interface ContactInfo {
   availability: boolean;
 }
 
-// ==========================================
-// 7. Footer & Social Link Types
-// ==========================================
-
+// Social and Footer Types
 export interface SocialLink {
   name: string;
   href: string;
@@ -131,10 +107,7 @@ export interface ProjectItem {
   href: string;
 }
 
-// ==========================================
-// 8. Auth & API Response Types (Better Auth / Backend Integration)
-// ==========================================
-
+// Auth and API Response Types
 export interface UserProfile {
   id: string;
   name: string;
