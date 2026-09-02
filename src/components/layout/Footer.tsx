@@ -16,9 +16,10 @@ import {
 import {
   FaGithub,
   FaLinkedinIn,
-  FaFacebookF,
+  FaXTwitter,
   FaYoutube,
 } from "react-icons/fa6";
+import { SiLeetcode } from "react-icons/si";
 import { NavItem, SocialLink, ServiceItem } from "@/types/index";
 
 export default function Footer(): React.JSX.Element {
@@ -57,17 +58,22 @@ export default function Footer(): React.JSX.Element {
     },
     {
       name: "LinkedIn",
-      href: "https://linkedin.com",
+      href: "https://www.linkedin.com/in/asmual",
       icon: <FaLinkedinIn className="w-3.5 h-3.5" />,
     },
     {
-      name: "Facebook",
-      href: "https://facebook.com",
-      icon: <FaFacebookF className="w-3.5 h-3.5" />,
+      name: "X (Twitter)",
+      href: "https://x.com/Asmual_123",
+      icon: <FaXTwitter className="w-3.5 h-3.5" />,
+    },
+    {
+      name: "LeetCode",
+      href: "https://leetcode.com/u/Asmual",
+      icon: <SiLeetcode className="w-3.5 h-3.5" />,
     },
     {
       name: "YouTube",
-      href: "https://youtube.com",
+      href: "https://www.youtube.com/@AsmualObaidulHoque",
       icon: <FaYoutube className="w-3.5 h-3.5" />,
     },
   ];
@@ -172,7 +178,7 @@ export default function Footer(): React.JSX.Element {
               Connect Online
             </h3>
 
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               {socialLinks.map((social: SocialLink) => (
                 <a
                   key={social.name}
@@ -182,9 +188,9 @@ export default function Footer(): React.JSX.Element {
                   aria-label={social.name}
                   className="group flex items-center gap-2 rounded-xl border border-border bg-background/60 px-3 py-2 text-foreground/70 transition-all duration-200 hover:border-accent hover:text-accent hover:bg-card-bg shadow-xs"
                 >
-                  <span className="text-foreground/80 group-hover:text-accent transition-colors">{social.icon}</span>
-                  <span className="text-xs font-medium">{social.name}</span>
-                  <ExternalLink className="ml-auto h-3 w-3 opacity-0 transition-opacity duration-200 group-hover:opacity-70" />
+                  <span className="text-foreground/80 group-hover:text-accent transition-colors shrink-0">{social.icon}</span>
+                  <span className="text-xs font-medium truncate">{social.name}</span>
+                  <ExternalLink className="ml-auto h-3 w-3 opacity-0 transition-opacity duration-200 group-hover:opacity-70 shrink-0" />
                 </a>
               ))}
             </div>

@@ -11,10 +11,10 @@ import {
   Sparkles, 
   Copy, 
   Check, 
-  Clock,
-  MessageSquare
+  Clock
 } from "lucide-react";
-import { FaGithub, FaLinkedin, FaXTwitter } from "react-icons/fa6";
+import { FaGithub, FaLinkedin, FaXTwitter, FaYoutube } from "react-icons/fa6";
+import { SiLeetcode } from "react-icons/si";
 
 const subjectPills = [
   "Project Inquiry",
@@ -160,38 +160,63 @@ export default function Contact() {
               </div>
             </div>
 
-            {/* Social Channels */}
+            {/* Social Channels with all 5 platforms */}
             <div className="p-5 rounded-2xl bg-card-bg border border-border shadow-sm space-y-3">
               <h3 className="text-xs font-bold uppercase tracking-wider text-foreground/70">Connect Online</h3>
-              <div className="grid grid-cols-3 gap-2 pt-1">
+              <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 pt-1">
                 <a 
                   href="https://github.com/Asmual" 
                   target="_blank" 
                   rel="noopener noreferrer" 
-                  className="p-2.5 rounded-xl bg-background border border-border hover:border-accent hover:text-accent text-foreground/80 transition-all flex flex-col items-center justify-center gap-1 group"
+                  className="p-2 rounded-xl bg-background border border-border hover:border-accent hover:text-accent text-foreground/80 transition-all flex flex-col items-center justify-center gap-1 group shadow-xs cursor-pointer"
+                  title="GitHub Profile"
                 >
                   <FaGithub className="w-4 h-4 group-hover:scale-110 transition-transform" />
-                  <span className="text-[10px] font-semibold">GitHub</span>
+                  <span className="text-[9px] font-semibold truncate">GitHub</span>
                 </a>
 
                 <a 
-                  href="https://linkedin.com" 
+                  href="https://www.linkedin.com/in/asmual" 
                   target="_blank" 
                   rel="noopener noreferrer" 
-                  className="p-2.5 rounded-xl bg-background border border-border hover:border-accent hover:text-accent text-foreground/80 transition-all flex flex-col items-center justify-center gap-1 group"
+                  className="p-2 rounded-xl bg-background border border-border hover:border-accent hover:text-accent text-foreground/80 transition-all flex flex-col items-center justify-center gap-1 group shadow-xs cursor-pointer"
+                  title="LinkedIn Profile"
                 >
                   <FaLinkedin className="w-4 h-4 group-hover:scale-110 transition-transform" />
-                  <span className="text-[10px] font-semibold">LinkedIn</span>
+                  <span className="text-[9px] font-semibold truncate">LinkedIn</span>
                 </a>
 
                 <a 
-                  href="https://twitter.com" 
+                  href="https://x.com/Asmual_123" 
                   target="_blank" 
                   rel="noopener noreferrer" 
-                  className="p-2.5 rounded-xl bg-background border border-border hover:border-accent hover:text-accent text-foreground/80 transition-all flex flex-col items-center justify-center gap-1 group"
+                  className="p-2 rounded-xl bg-background border border-border hover:border-accent hover:text-accent text-foreground/80 transition-all flex flex-col items-center justify-center gap-1 group shadow-xs cursor-pointer"
+                  title="X (Twitter) Profile"
                 >
                   <FaXTwitter className="w-4 h-4 group-hover:scale-110 transition-transform" />
-                  <span className="text-[10px] font-semibold">Twitter</span>
+                  <span className="text-[9px] font-semibold truncate">X</span>
+                </a>
+
+                <a 
+                  href="https://leetcode.com/u/Asmual" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="p-2 rounded-xl bg-background border border-border hover:border-accent hover:text-accent text-foreground/80 transition-all flex flex-col items-center justify-center gap-1 group shadow-xs cursor-pointer"
+                  title="LeetCode Profile"
+                >
+                  <SiLeetcode className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                  <span className="text-[9px] font-semibold truncate">LeetCode</span>
+                </a>
+
+                <a 
+                  href="https://www.youtube.com/@AsmualObaidulHoque" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="p-2 rounded-xl bg-background border border-border hover:border-accent hover:text-accent text-foreground/80 transition-all flex flex-col items-center justify-center gap-1 group shadow-xs cursor-pointer"
+                  title="YouTube Channel"
+                >
+                  <FaYoutube className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                  <span className="text-[9px] font-semibold truncate">YouTube</span>
                 </a>
               </div>
             </div>

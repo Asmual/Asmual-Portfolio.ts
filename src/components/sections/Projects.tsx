@@ -64,6 +64,7 @@ function ProjectCard({ project }: ProjectCardProps) {
                 src={project.images[currentImageIndex]}
                 alt={`${project.title} preview ${currentImageIndex + 1}`}
                 fill
+                priority={project.id === "arthub"}
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 className="object-cover object-top group-hover:scale-105 transition-transform duration-500"
               />

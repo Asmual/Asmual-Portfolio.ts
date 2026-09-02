@@ -9,7 +9,8 @@ import {
   Code2, 
   Terminal
 } from "lucide-react";
-import { FaGithub, FaLinkedin } from "react-icons/fa6";
+import { FaGithub, FaLinkedin, FaXTwitter } from "react-icons/fa6";
+import { SiLeetcode } from "react-icons/si";
 import { motion } from "framer-motion";
 
 export default function Hero() {
@@ -134,44 +135,66 @@ export default function Hero() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="GitHub Profile"
+                  title="GitHub Profile"
                   className="p-2 rounded-xl bg-card-bg border border-border text-foreground/80 hover:border-accent hover:text-accent transition-colors shadow-xs cursor-pointer"
                 >
                   <FaGithub className="w-3.5 h-3.5" />
                 </a>
                 <a
-                  href="https://linkedin.com"
+                  href="https://www.linkedin.com/in/asmual"
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="LinkedIn Profile"
+                  title="LinkedIn Profile"
                   className="p-2 rounded-xl bg-card-bg border border-border text-foreground/80 hover:border-accent hover:text-accent transition-colors shadow-xs cursor-pointer"
                 >
                   <FaLinkedin className="w-3.5 h-3.5" />
+                </a>
+                <a
+                  href="https://x.com/Asmual_123"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="X Profile"
+                  title="X (Twitter) Profile"
+                  className="p-2 rounded-xl bg-card-bg border border-border text-foreground/80 hover:border-accent hover:text-accent transition-colors shadow-xs cursor-pointer"
+                >
+                  <FaXTwitter className="w-3.5 h-3.5" />
+                </a>
+                <a
+                  href="https://leetcode.com/u/Asmual"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="LeetCode Profile"
+                  title="LeetCode Profile"
+                  className="p-2 rounded-xl bg-card-bg border border-border text-foreground/80 hover:border-accent hover:text-accent transition-colors shadow-xs cursor-pointer"
+                >
+                  <SiLeetcode className="w-3.5 h-3.5" />
                 </a>
               </div>
             </div>
           </motion.div>
 
-          {/* Right Column on Desktop: Developer Profile Avatar (5 cols) */}
+          {/* Right Column on Desktop: Developer Profile Avatar with Organic Curved Shape (5 cols) */}
           <motion.div
             initial={{ opacity: 0, scale: 0.92 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5 }}
             className="lg:col-span-5 flex justify-center lg:justify-end order-1 lg:order-2"
           >
-            <div className="relative w-52 h-52 sm:w-60 sm:h-60 lg:w-68 lg:h-68 flex items-center justify-center">
-              {/* Outer Glow Halo */}
-              <div className="absolute inset-0 bg-accent/20 rounded-3xl blur-xl transition-all duration-500" />
+            <div className="relative group w-56 h-56 sm:w-64 sm:h-64 lg:w-72 lg:h-72 flex items-center justify-center">
+              {/* Organic Curved Ambient Glow Halo */}
+              <div className="absolute inset-0 bg-accent/30 rounded-[30%_70%_70%_30%/30%_30%_70%_70%] blur-xl group-hover:bg-accent/40 transition-all duration-500" />
               
-              {/* Profile Card Container */}
-              <div className="relative w-full h-full bg-card-bg border-2 border-border/80 rounded-3xl p-2.5 shadow-xl overflow-hidden group hover:border-accent/60 transition-all duration-500">
-                <div className="relative w-full h-full rounded-2xl overflow-hidden bg-foreground/5">
+              {/* Organic Curved Gradient Border Frame */}
+              <div className="relative w-full h-full bg-linear-to-tr from-accent to-accent/40 p-1.5 rounded-[30%_70%_70%_30%/30%_30%_70%_70%] shadow-2xl overflow-hidden transition-all duration-500 group-hover:scale-[1.02]">
+                <div className="w-full h-full bg-card-bg rounded-[29%_69%_69%_29%/29%_29%_69%_69%] overflow-hidden relative">
                   <Image
                     src="/images/asmual.png"
                     alt="Asmual Obaidul Hoque"
-                    sizes="(max-width: 640px) 208px, (max-width: 1024px) 240px, 272px"  
+                    sizes="(max-width: 640px) 224px, (max-width: 1024px) 256px, 288px"  
                     fill
                     priority
-                    className="object-cover object-top group-hover:scale-105 transition-transform duration-500"
+                    className="object-cover object-top hover:scale-105 transition-transform duration-500"
                   />
                 </div>
               </div>
@@ -181,7 +204,7 @@ export default function Hero() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.25, duration: 0.4 }}
-                className="absolute -top-2.5 -left-2.5 sm:-top-3 sm:-left-3 bg-card-bg/95 backdrop-blur-md border border-border/80 px-2.5 py-1 rounded-xl shadow-md flex items-center gap-1.5 select-none"
+                className="absolute -top-2.5 -left-2.5 sm:-top-3 sm:-left-3 bg-card-bg/95 backdrop-blur-md border border-border/80 px-2.5 py-1 rounded-xl shadow-md flex items-center gap-1.5 select-none z-10"
               >
                 <div className="p-1 rounded-md bg-accent/15 text-accent">
                   <Code2 className="w-3 h-3" />
@@ -197,7 +220,7 @@ export default function Hero() {
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.35, duration: 0.4 }}
-                className="absolute -bottom-2.5 -right-2.5 sm:-bottom-3 sm:-right-3 bg-card-bg/95 backdrop-blur-md border border-border/80 px-2.5 py-1 rounded-xl shadow-md flex items-center gap-1.5 select-none"
+                className="absolute -bottom-2.5 -right-2.5 sm:-bottom-3 sm:-right-3 bg-card-bg/95 backdrop-blur-md border border-border/80 px-2.5 py-1 rounded-xl shadow-md flex items-center gap-1.5 select-none z-10"
               >
                 <div className="p-1 rounded-md bg-emerald-500/15 text-emerald-500">
                   <Terminal className="w-3 h-3" />
