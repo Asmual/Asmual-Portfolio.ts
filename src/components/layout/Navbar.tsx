@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -21,6 +21,47 @@ export default function Navbar() {
     { name: "About", href: "#about" },
     { name: "Contact", href: "#contact" },
   ];
+
+  // Real-time ScrollSpy: dynamically tracks which section is in the viewport
+  useEffect(() => {
+    if (pathname !== "/") {
+      if (pathname.includes("projects")) setActiveNav("Projects");
+      else if (pathname.includes("about")) setActiveNav("About");
+      else if (pathname.includes("skills")) setActiveNav("Skills");
+      else if (pathname.includes("contact")) setActiveNav("Contact");
+      return;
+    }
+
+    const sectionIds = ["home", "projects", "skills", "about", "contact"];
+
+    const handleScrollSpy = () => {
+      const scrollPosition = window.scrollY + 220; // Offset for navbar height
+
+      // If scrolled near bottom of page, highlight Contact
+      if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 60) {
+        setActiveNav("Contact");
+        return;
+      }
+
+      for (let i = sectionIds.length - 1; i >= 0; i--) {
+        const id = sectionIds[i];
+        const element = document.getElementById(id);
+        if (element) {
+          const top = element.offsetTop;
+          if (scrollPosition >= top) {
+            const capitalized = id.charAt(0).toUpperCase() + id.slice(1);
+            setActiveNav(capitalized);
+            break;
+          }
+        }
+      }
+    };
+
+    window.addEventListener("scroll", handleScrollSpy, { passive: true });
+    handleScrollSpy();
+
+    return () => window.removeEventListener("scroll", handleScrollSpy);
+  }, [pathname]);
 
   const handleScroll = (e: React.MouseEvent<HTMLAnchorElement>, targetHref: string, name: string) => {
     setActiveNav(name);
@@ -62,12 +103,13 @@ export default function Navbar() {
           </span>
         </Link>
 
-        {/* Desktop Navigation */}
+        {/* Desktop Navigation with Live ScrollSpy Pill */}
         <nav className="hidden md:flex items-center gap-0.5 p-1 rounded-full bg-card-bg/60 border border-border shadow-sm backdrop-blur-md">
           {navLinks.map((link: NavItem) => (
             <NavLink
               key={link.name}
               link={link}
+              pathname={pathname}
               isActive={activeNav === link.name}
               onClick={(e) => handleScroll(e, link.href, link.name)}
               layoutId="nav-active-pill"
@@ -80,9 +122,9 @@ export default function Navbar() {
           <ThemeToggle />
 
           <Link
-            href="#contact"
+            href={pathname === "/" ? "#contact" : "/#contact"}
             onClick={(e) => handleScroll(e, "#contact", "Contact")}
-            className="hidden sm:inline-flex items-center gap-1 px-4 py-1.5 text-xs font-semibold rounded-full bg-accent text-white shadow-sm hover:opacity-90 transition-all duration-300"
+            className="hidden sm:inline-flex items-center gap-1 px-4 py-1.5 text-xs font-semibold rounded-full bg-accent text-white shadow-sm hover:opacity-90 transition-all duration-300 cursor-pointer"
           >
             Hire Me
             <ArrowUpRight className="w-3.5 h-3.5" />
@@ -91,7 +133,7 @@ export default function Navbar() {
           {/* Mobile Navigation Toggle */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden p-1.5 rounded-lg bg-card-bg border border-border text-foreground hover:border-accent transition-colors"
+            className="md:hidden p-1.5 rounded-lg bg-card-bg border border-border text-foreground hover:border-accent transition-colors cursor-pointer"
             aria-label="Toggle Navigation Menu"
           >
             {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -107,6 +149,7 @@ export default function Navbar() {
               <NavLink
                 key={link.name}
                 link={link}
+                pathname={pathname}
                 isActive={activeNav === link.name}
                 onClick={(e) => {
                   handleScroll(e, link.href, link.name);
@@ -120,12 +163,12 @@ export default function Navbar() {
 
           <div className="pt-1.5 sm:hidden">
             <Link
-              href="#contact"
+              href={pathname === "/" ? "#contact" : "/#contact"}
               onClick={(e) => {
                 handleScroll(e, "#contact", "Contact");
                 setIsOpen(false);
               }}
-              className="flex items-center justify-center gap-1.5 w-full py-2 text-xs font-semibold rounded-lg bg-accent text-white shadow-sm hover:opacity-90 transition-all"
+              className="flex items-center justify-center gap-1.5 w-full py-2 text-xs font-semibold rounded-lg bg-accent text-white shadow-sm hover:opacity-90 transition-all cursor-pointer"
             >
               Hire Me
               <ArrowUpRight className="w-3.5 h-3.5" />
@@ -139,24 +182,28 @@ export default function Navbar() {
 
 function NavLink({
   link,
+  pathname,
   isActive,
   onClick,
   layoutId,
   isMobile = false,
 }: {
   link: NavItem;
+  pathname: string;
   isActive: boolean;
   onClick: (e: React.MouseEvent<HTMLAnchorElement>) => void;
   layoutId: string;
   isMobile?: boolean;
 }) {
+  const targetHref = pathname === "/" ? link.href : `/${link.href}`;
+
   return (
     <Link
-      href={link.href}
+      href={targetHref}
       onClick={onClick}
       className={`relative ${
         isMobile ? "px-3 py-2 rounded-lg text-xs" : "px-3.5 py-1 text-xs"
-      } font-medium rounded-full transition-colors duration-200 select-none`}
+      } font-medium rounded-full transition-colors duration-200 select-none cursor-pointer`}
     >
       {isActive && (
         <motion.span
