@@ -11,7 +11,6 @@ import {
   Globe,
   Heart,
   ExternalLink,
-  Mail
 } from "lucide-react";
 import {
   FaGithub,
@@ -193,16 +192,6 @@ export default function Footer(): React.JSX.Element {
                   <ExternalLink className="ml-auto h-3 w-3 opacity-0 transition-opacity duration-200 group-hover:opacity-70 shrink-0" />
                 </a>
               ))}
-            </div>
-
-            <div className="pt-3">
-              <a
-                href="mailto:asmualobaidulhoque@gmail.com"
-                className="inline-flex items-center gap-1.5 text-xs text-foreground/70 hover:text-accent transition-colors font-medium"
-              >
-                <Mail className="w-3.5 h-3.5 text-accent" />
-                <span>asmualobaidulhoque@gmail.com</span>
-              </a>
             </div>
           </div>
         </div>
