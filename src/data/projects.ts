@@ -19,6 +19,42 @@ export interface Project {
 
 export const projectsData: Project[] = [
   {
+    id: "mykeeps",
+    title: "My Keeps — Smart Cloud Workspace & Note Manager",
+    tagline: "Google Keep inspired workspace with voice memos, PIN lock & multi-media notes",
+    category: "Full Stack",
+    description:
+      "A feature-rich full-stack productivity workspace inspired by Google Keep. Organize ideas with multi-format notes including interactive checklists, Cloudinary-powered image attachments, voice memo recordings, PIN-locked private notes, dynamic color palettes, and bulk batch actions.",
+    keyFeatures: [
+      "Multi-Format Notes: Rich text, interactive checklists, Cloudinary image uploads & voice memos",
+      "PIN-Protected Private Notes: Secure lock/unlock system with password encryption",
+      "Smart Organization: 12+ vibrant pastel color palettes, pinned notes, archive, and trash restore",
+      "Productivity Batch Actions: Multi-select batch operations for archiving, pinning, and coloring",
+      "Robust Full-Stack Engine: Next.js 16, React 19, Better-Auth, Express.js 5 API & MongoDB Atlas",
+    ],
+    tags: [
+      "Next.js 16",
+      "React 19",
+      "TypeScript",
+      "Node.js",
+      "Express.js",
+      "MongoDB",
+      "Cloudinary",
+      "Tailwind CSS",
+    ],
+    images: [
+      "/images/mykeeps/nav-hero.png",
+      "/images/mykeeps/dashboard.png",
+      "/images/mykeeps/logo.png",
+    ],
+    liveUrl: "https://my-keeps-server.onrender.com",
+    githubUrl: "https://github.com/Asmual/My-Keeps",
+    clientGithubUrl: "https://github.com/Asmual/My-Keeps",
+    serverGithubUrl: "https://github.com/Asmual/My-Keeps--Server",
+    featured: true,
+    status: "Live",
+  },
+  {
     id: "arthub",
     title: "ArtHub — Online Art Marketplace",
     tagline: "Global creator platform with Stripe billing & role-based analytics",
