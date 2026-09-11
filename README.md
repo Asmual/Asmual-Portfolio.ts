@@ -1,8 +1,8 @@
-# 🚀 Asmual Obaidul Hoque — Full-Stack Developer Portfolio
+# 🌟 Asmual-Portfolio-ts — Modern Full-Stack Developer Portfolio
 
 <div align="center">
 
-  [![Next.js](https://img.shields.io/badge/Next.js%2016-black?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
+  [![Next.js](https://img.shields.io/badge/Next.js%2016-000000?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
   [![React](https://img.shields.io/badge/React%2019-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://react.dev/)
   [![TypeScript](https://img.shields.io/badge/TypeScript%205-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
   [![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS%20v4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
@@ -10,112 +10,106 @@
   [![Resend](https://img.shields.io/badge/Resend%20API-000000?style=for-the-badge&logo=resend&logoColor=white)](https://resend.com/)
 
   <p align="center">
-    A high-performance, modern, and visually engaging personal developer portfolio built with <strong>Next.js 16 (App Router)</strong>, <strong>React 19</strong>, <strong>TypeScript</strong>, <strong>Tailwind CSS v4</strong>, and <strong>Framer Motion 12</strong>.
+    <strong>Asmual-Portfolio-ts</strong> is a modern, high-performance personal developer portfolio engineered with <strong>Next.js 16 (App Router)</strong>, <strong>React 19</strong>, <strong>TypeScript 5</strong>, <strong>Tailwind CSS v4</strong>, <strong>Framer Motion 12</strong>, and <strong>Lenis Smooth Scroll</strong>.
   </p>
 
   <p align="center">
-    <a href="https://github.com/Asmual/Asmual-Portfolio.ts"><strong>Explore the Repository »</strong></a>
+    <a href="https://github.com/Asmual/Asmual-Portfolio.ts"><strong>View GitHub Repository »</strong></a>
     <br />
     <br />
-    <a href="#-key-features">Key Features</a> •
-    <a href="#-tech-stack">Tech Stack</a> •
-    <a href="#-project-structure">Project Structure</a> •
-    <a href="#-getting-started">Getting Started</a> •
-    <a href="#-contact--connect">Connect</a>
+    <a href="#-portfolio-visual-previews">Screenshots</a> •
+    <a href="#-architecture--tech-stack">Tech Stack</a> •
+    <a href="#-key-ui--animation-features">UI & Animations</a> •
+    <a href="#-folder-structure">Folder Structure</a> •
+    <a href="#-getting-started">Installation</a> •
+    <a href="#-author--connect">Connect</a>
   </p>
 </div>
 
 ---
 
-## 📸 Visual Previews
+## 📸 Portfolio Visual Previews
 
-### 🌟 1. Homepage & Hero Showcase
-![Homepage Preview](./public/images/preview/home-preview.png)
-*Modern Hero section with organic curved avatar frame, floating interactive tech badges, dynamic multi-role typewriter, and metrics ribbon.*
+### 🌟 1. Homepage & Hero Section
+![Portfolio Homepage Preview](./public/images/preview/home-preview.png)
+*Featuring the organic curved developer avatar frame, live status pulse, floating tech chips (`<Next.js 15 & React />`, `<MERN & REST APIs />`), dynamic typewriter roles, and metrics ribbon.*
 
 <br />
 
-### 💼 2. Projects & Interactive Showcase Page
-![Projects Showcase Preview](./public/images/preview/projects-preview.png)
-*Categorized project matrix with real-time category filtering (`All`, `Full Stack`, `MERN`, `Frontend`, `Backend`), keyword search, image slider, and highlights dropdown.*
+### 💼 2. Projects & Showcase Hub
+![Portfolio Projects Showcase](./public/images/preview/projects-preview.png)
+*Interactive project ecosystem featuring category filter tabs (`All`, `Full Stack`, `MERN`, `Frontend`, `Backend`), instant keyword search, pause-on-hover carousel slider, and expandable feature highlights.*
 
 ---
 
-## ✨ Key Features
+## 🚀 Key UI & Animation Features
 
 - **⚡ Futuristic Glassmorphic Page Loader**:
-  - Central frosted glass card with an ambient glow and a 360° rotating neon dashed ring.
-  - Real-time step sequence logger (`Bootstrapping application...`, `Loading interactive modules...`, etc.).
-  - Glowing dual-gradient progress bar and smooth curtain slide-up (`y: "-100%"`) exit transition.
+  - Central frosted glass card with an ambient glowing backdrop.
+  - Infinite 360° rotating neon dashed ring surrounding a glowing code icon.
+  - Dynamic real-time boot sequence steps (`Bootstrapping application...`, `Loading interactive modules...`, etc.).
+  - Glowing dual-gradient progress bar with custom curtain slide-up (`y: "-100%"`) exit animation.
 
-- **🎯 Fluid Custom Cursor & Halo Spotlight**:
+- **🎯 Fluid Custom Cursor & Compact Halo**:
   - Compact 24px trailing halo ring with a center accent dot powered by Framer Motion spring physics.
-  - Automatically handles non-touch devices with zero interference on clickable elements (`pointer-events-none`).
+  - Non-blocking `pointer-events-none` architecture and automatic touch-screen bypass.
 
 - **👨‍💻 Modern Hero Section & Identity**:
-  - Live availability pulse badge (`Available for New Projects & Remote Roles`).
-  - Organic curved avatar border (`rounded-[30%_70%_70%_30%/30%_30%_70%_70%]`) with ambient glow.
+  - Live availability badge (`Available for New Projects & Remote Roles`).
+  - Organic curved avatar border (`rounded-[30%_70%_70%_30%/30%_30%_70%_70%]`) with ambient lighting.
   - Interactive floating chips for `<Next.js 15 & React />` and `<MERN & REST APIs />`.
-  - Continuous typewriter animation cycling through specialized engineering roles.
+  - Typewriter effect cycling dynamically through specialized developer roles.
+  - Metrics strip displaying production applications count (`4+ Production Apps`).
 
-- **🗂️ Dynamic Project Showcase & Filter Hub**:
-  - Centralized TypeScript data architecture (`src/data/projects.ts`).
-  - Instant category filtering and search query matching on both Homepage and dedicated `/projects` page.
-  - Auto-sliding image carousel (pauses on mouse hover) with thumbnail indicator dots.
-  - Expandable "Key Highlights" drawer and direct links to GitHub Repositories & Live Deployments.
+- **🗂️ Centralized Project Showcase**:
+  - Fully typed project repository stored in `src/data/projects.ts`.
+  - Filter pills for `All`, `Full Stack`, `MERN`, `Frontend`, and `Backend`.
+  - Auto-sliding image carousel that pauses on mouse hover.
+  - Expandable "Key Highlights" toggle drawer and direct GitHub repository / live demo links.
 
 - **🛠️ Modular 3-Column Skills Matrix**:
-  - Compact, professional layout categorizing skills into **Frontend Engineering**, **Backend & Databases**, and **Tools & Cloud**.
-  - Official brand icons with color accents and skill level pills.
+  - Clean, modern layout dividing skills into **Frontend Engineering**, **Backend & Databases**, and **Tools & Cloud**.
+  - Authentic brand icons, proficiency level indicators, and responsive grid alignment.
 
 - **📍 Real-Time ScrollSpy & Floating Back-To-Top**:
   - Sticky navbar dynamically tracks viewport scroll position and slides active pill indicator to current section.
   - Floating `↑ TOP` quick-jump button appears smoothly past the Hero section.
 
-- **📬 Direct Contact Hub & Resend API**:
-  - Preset subject quick-select buttons (`Project Inquiry`, `Full-time Role`, `Freelance Work`, `General Consultation`).
-  - One-click copy email button with instant tooltip feedback.
-  - Integrated with Next.js App Router API (`/api/contact`) for secure email delivery via Resend.
+- **📬 Contact Hub & Direct Resend Email Integration**:
+  - Quick preset subject buttons (`Project Inquiry`, `Full-time Role`, `Freelance Work`, `General Consultation`).
+  - One-click copy email button with instant feedback tooltip.
+  - Next.js API route (`/api/contact`) sending inquiries directly via Resend API.
 
 - **🎨 Multi-Theme System**:
   - Seamless switching across **Light**, **Dark**, and **Gray** theme modes using CSS custom properties and Tailwind CSS v4.
 
 ---
 
-## 🛠️ Tech Stack Breakdown
+## 🛠️ Architecture & Tech Stack
 
-### **Core & Framework**
-| Technology | Version | Description |
-| :--- | :--- | :--- |
-| **[Next.js](https://nextjs.org/)** | `16.3.0` | React framework with App Router, Server Components & SEO optimization |
-| **[React](https://react.dev/)** | `19.2.8` | Modern UI library utilizing React 19 Compiler |
-| **[TypeScript](https://www.typescriptlang.org/)** | `5.x` | End-to-end type safety and maintainable contracts |
+### **Core Framework & Runtime**
+- **Framework**: [Next.js 16](https://nextjs.org/) (App Router, Server & Client Components)
+- **UI Library**: [React 19](https://react.dev/) (React 19 Compiler support)
+- **Language**: [TypeScript 5](https://www.typescriptlang.org/) (Strict mode, end-to-end type safety)
 
-### **Styling & UI Architecture**
-| Technology | Version | Description |
-| :--- | :--- | :--- |
-| **[Tailwind CSS](https://tailwindcss.com/)** | `v4` | Next-generation utility-first CSS engine with `@theme` variables |
-| **[Geist Font](https://vercel.com/font)** | Next Google | Clean, high-readability sans-serif & mono typography |
-| **[Lucide Icons](https://lucide.dev/)** | `1.28.0` | Modern, consistent stroke icons |
-| **[React Icons](https://react-icons.github.io/react-icons/)** | `5.7.0` | Brand and tech stack iconography |
+### **Styling, Design System & Icons**
+- **CSS Engine**: [Tailwind CSS v4](https://tailwindcss.com/) with `@theme` token definitions
+- **Typography**: Geist Sans & Geist Mono
+- **Icon Packages**: [Lucide React](https://lucide.dev/) & [React Icons](https://react-icons.github.io/react-icons/) (`fa6`, `si`)
 
 ### **Animations & Motion Physics**
-| Technology | Version | Description |
-| :--- | :--- | :--- |
-| **[Framer Motion](https://www.framer.com/motion/)** | `12.43.0` | Fluid layout animations, scroll triggers, exit transitions, and spring physics |
-| **[Lenis](https://lenis.darkroom.engineering/)** | `1.3.25` | Smooth inertia momentum scrolling engine |
+- **Motion Engine**: [Framer Motion 12](https://www.framer.com/motion/) (`layout`, `AnimatePresence`, spring physics)
+- **Smooth Scroll**: [Lenis](https://lenis.darkroom.engineering/) (`@studio-freight/lenis`)
 
-### **Backend, Auth & Notifications**
-| Technology | Version | Description |
-| :--- | :--- | :--- |
-| **[Resend](https://resend.com/)** | `6.25.0` | Transactional email delivery service for contact form inquiries |
-| **[MongoDB](https://www.mongodb.com/)** | `7.5.0` | High-performance document database integration |
-| **[Better-Auth](https://better-auth.com/)** | `1.6.25` | Scalable authentication system with Mongo adapter |
-| **[React Hot Toast](https://react-hot-toast.com/)** | `2.6.0` | Lightweight toast notifications |
+### **Backend, Database & Services**
+- **Email Delivery**: [Resend API](https://resend.com/) (`/api/contact`)
+- **Database**: [MongoDB](https://www.mongodb.com/) & Mongoose (Adapter support)
+- **Authentication**: Better-Auth (`@better-auth/mongo-adapter`)
+- **Notifications**: React Hot Toast
 
 ---
 
-## 📂 Project Structure
+## 📂 Folder Structure
 
 ```text
 Asmual-Portfolio.ts/
@@ -125,10 +119,10 @@ Asmual-Portfolio.ts/
 │   │   ├── docappint/         # DocAppoint project preview assets
 │   │   ├── mykeeps/           # My Keeps project preview assets
 │   │   ├── suncart/           # SunCart project preview assets
-│   │   ├── preview/           # README & portfolio screenshot previews
+│   │   ├── preview/           # Actual portfolio screenshot previews
 │   │   ├── asmual.png         # Developer profile photo
 │   │   └── as_logo.png        # Brand avatar & logo
-│   └── resume/                # PDF developer resume download
+│   └── resume/                # PDF developer resume
 ├── src/
 │   ├── app/
 │   │   ├── (routes)/          # Standalone pages (/about, /projects, /skills, /contact)
@@ -157,7 +151,7 @@ Asmual-Portfolio.ts/
 ## 🚀 Getting Started
 
 ### Prerequisites
-Make sure you have Node.js 18.x or higher installed on your machine.
+Make sure you have **Node.js 18.x or higher** installed on your system.
 
 ### 1. Clone the Repository
 ```bash
@@ -174,7 +168,7 @@ yarn install
 pnpm install
 ```
 
-### 3. Configure Environment Variables
+### 3. Environment Variables Configuration
 Create a `.env.local` file in the root directory and add the following keys:
 
 ```env
@@ -188,12 +182,12 @@ BETTER_AUTH_SECRET=your_auth_secret_key
 BETTER_AUTH_URL=http://localhost:3000
 ```
 
-### 4. Run the Development Server
+### 4. Run Development Server
 ```bash
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser to view the portfolio.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ### 5. Build for Production
 ```bash
@@ -212,7 +206,7 @@ npm run start
 
 ---
 
-## 📬 Contact & Connect
+## 📬 Author & Connect
 
 <div align="center">
   <h3>Asmual Obaidul Hoque</h3>
