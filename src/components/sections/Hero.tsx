@@ -96,7 +96,7 @@ export default function Hero() {
             {/* Quick Metrics / Highlights Strip */}
             <div className="grid grid-cols-3 gap-2.5 sm:gap-3 w-full max-w-md pt-0.5">
               <div className="p-2 sm:p-2.5 rounded-xl bg-card-bg/60 border border-border/80 backdrop-blur-xs text-center lg:text-left">
-                <p className="text-sm sm:text-base font-extrabold text-foreground">4+</p>
+                <p className="text-sm sm:text-base font-extrabold text-foreground">5+</p>
                 <p className="text-[10px] text-foreground/60 uppercase font-semibold">Production Apps</p>
               </div>
               <div className="p-2 sm:p-2.5 rounded-xl bg-card-bg/60 border border-border/80 backdrop-blur-xs text-center lg:text-left">

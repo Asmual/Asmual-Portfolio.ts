@@ -115,9 +115,9 @@ function ProjectCard({ project }: ProjectCardProps) {
             </p>
           </div>
 
-          {/* Tech Stack Pills */}
+          {/* Tech Stack Pills - Render all tags with natural wrap */}
           <div className="flex flex-wrap gap-1 pt-1">
-            {project.tags.slice(0, 4).map((tag: string, idx: number) => (
+            {project.tags.map((tag: string, idx: number) => (
               <span
                 key={idx}
                 className="text-[9.5px] px-1.5 py-0.5 rounded-md bg-accent/10 border border-accent/20 text-accent font-medium leading-tight"
@@ -125,11 +125,6 @@ function ProjectCard({ project }: ProjectCardProps) {
                 {tag}
               </span>
             ))}
-            {project.tags.length > 4 && (
-              <span className="text-[9px] px-1 py-0.5 rounded-md bg-foreground/5 text-foreground/60 font-medium">
-                +{project.tags.length - 4}
-              </span>
-            )}
           </div>
         </div>
       </div>

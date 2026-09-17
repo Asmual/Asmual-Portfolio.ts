@@ -199,10 +199,11 @@ npm run start
 
 ## 🌐 Featured Projects Showcased
 
-1. **[My Keeps](https://my-keeps-server.onrender.com)** — Smart Cloud Workspace & Note Manager *(Next.js 16, React 19, TypeScript, Express.js 5, MongoDB, Cloudinary, Better-Auth)*
+1. **[My Keeps](https://my-keeps-pink.vercel.app)** — Smart Cloud Workspace & Note Manager *(Next.js 16, React 19, TypeScript, Express.js 5, MongoDB, Cloudinary, Better-Auth)*
 2. **[ArtHub](https://arthub-three.vercel.app)** — Online Art Marketplace *(Next.js 15, React, Tailwind CSS, MongoDB, Express.js, Stripe)*
-3. **[DocAppoint](https://docappoint-eight-drab.vercel.app)** — Doctor Appointment Booking System *(Next.js, TypeScript, Tailwind CSS, Express.js, MongoDB)*
-4. **[SunCart](https://suncart-woad-three.vercel.app/)** — E-Commerce Management Platform *(React, Node.js, Express.js, MongoDB, Tailwind CSS)*
+3. **[Asmual Portfolio (JavaScript Edition)](https://asmual-portfolio.vercel.app)** — Interactive Developer Portfolio *(Next.js, React 19, JavaScript, DaisyUI, Tailwind CSS, Framer Motion)*
+4. **[DocAppoint](https://docappoint-eight-drab.vercel.app)** — Doctor Appointment Booking System *(Next.js, TypeScript, Tailwind CSS, Express.js, MongoDB)*
+5. **[SunCart](https://suncart-woad-three.vercel.app/)** — E-Commerce Management Platform *(React, Node.js, Express.js, MongoDB, Tailwind CSS)*
 
 ---
 
