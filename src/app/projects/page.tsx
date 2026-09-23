@@ -55,7 +55,7 @@ function ProjectShowcaseCard({ project }: { project: Project }) {
                 src={project.images[currentImageIndex]}
                 alt={`${project.title} preview`}
                 fill
-                priority={project.id === "mykeeps" || project.id === "arthub"}
+                priority={project.id === "arthub" || project.id === "docappoint"}
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                 className="object-cover object-top group-hover:scale-105 transition-transform duration-500"
               />
