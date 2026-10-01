@@ -16,7 +16,7 @@ import { motion } from "framer-motion";
 export default function Hero() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const titles = [
-    "Full Stack Software Engineer",
+    "Full Stack Web Developer",
     "Next.js 16 & TypeScript Architect",
     "Node.js, Express & REST API Engineer",
     "PostgreSQL, Redis & MongoDB Developer",
