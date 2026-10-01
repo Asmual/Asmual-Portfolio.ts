@@ -70,7 +70,7 @@ function ProjectCard({ project }: ProjectCardProps) {
           {/* Category Badge & Live Pulse Badge */}
           <div className="absolute top-2 left-2 right-2 flex items-center justify-between z-10 pointer-events-none">
             <span className="px-2 py-0.5 rounded-full bg-background/90 backdrop-blur-md border border-border/80 text-[9.5px] font-semibold text-foreground/90 shadow-xs">
-              {project.category}
+              {project.teamName ? `Team • ${project.teamName}` : project.category}
             </span>
 
             <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-background/90 backdrop-blur-md border border-border/80 text-[9.5px] font-medium text-foreground/90 shadow-xs">
@@ -131,25 +131,37 @@ function ProjectCard({ project }: ProjectCardProps) {
 
       {/* Card Action Buttons Footer */}
       <div className="p-3.5 sm:p-4 pt-0 mt-auto">
-        <div className="flex items-center justify-between gap-2 pt-2.5 border-t border-border/60">
+        <div className="flex items-center justify-between gap-1.5 pt-2.5 border-t border-border/60">
           <a
             href={project.githubUrl || project.clientGithubUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex-1 inline-flex items-center justify-center gap-1.5 py-1.5 px-2 text-[11px] font-semibold rounded-lg bg-background border border-border text-foreground/80 hover:border-accent hover:text-accent transition-colors shadow-2xs"
+            className="flex-1 inline-flex items-center justify-center gap-1 py-1.5 px-2 text-[10.5px] font-semibold rounded-lg bg-background border border-border text-foreground/80 hover:border-accent hover:text-accent transition-colors shadow-2xs truncate"
           >
-            <Code2 className="w-3 h-3" />
-            <span>Code</span>
+            <Code2 className="w-3 h-3 shrink-0" />
+            <span>{project.serverGithubUrl ? "Client" : "Code"}</span>
           </a>
+
+          {project.serverGithubUrl && (
+            <a
+              href={project.serverGithubUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              title="Backend Server Code"
+              className="inline-flex items-center justify-center py-1.5 px-2 text-[10.5px] font-semibold rounded-lg bg-background border border-border text-foreground/80 hover:border-accent hover:text-accent transition-colors shadow-2xs shrink-0"
+            >
+              <span>Server</span>
+            </a>
+          )}
 
           <a
             href={project.liveUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex-1 inline-flex items-center justify-center gap-1.5 py-1.5 px-2 text-[11px] font-semibold rounded-lg bg-accent text-white hover:bg-accent/90 shadow-2xs transition-colors"
+            className="flex-1 inline-flex items-center justify-center gap-1 py-1.5 px-2 text-[10.5px] font-semibold rounded-lg bg-accent text-white hover:bg-accent/90 shadow-2xs transition-colors truncate"
           >
             <span>Live Demo</span>
-            <ExternalLink className="w-3 h-3" />
+            <ExternalLink className="w-3 h-3 shrink-0" />
           </a>
         </div>
       </div>
@@ -162,6 +174,9 @@ export default function Projects() {
 
   const filteredProjects = projectsData.filter((project) => {
     if (selectedCategory === "All") return true;
+    if (selectedCategory === "Team Projects") {
+      return project.category === "Team Projects" || project.isTeamProject;
+    }
     return project.category === selectedCategory;
   });
 

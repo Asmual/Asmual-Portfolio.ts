@@ -1,10 +1,10 @@
-export type ProjectCategory = "All" | "Full Stack" | "MERN" | "Frontend" | "Backend";
+export type ProjectCategory = "All" | "Full Stack" | "Frontend" | "Backend" | "Team Projects";
 
 export interface Project {
   id: string;
   title: string;
   tagline?: string;
-  category: "Full Stack" | "MERN" | "Frontend" | "Backend";
+  category: "Full Stack" | "Frontend" | "Backend" | "Team Projects";
   description: string;
   keyFeatures?: string[];
   tags: string[];
@@ -15,6 +15,8 @@ export interface Project {
   serverGithubUrl?: string;
   featured: boolean;
   status?: "Live" | "Completed" | "In Progress";
+  teamName?: string;
+  isTeamProject?: boolean;
 }
 
 export const projectsData: Project[] = [
@@ -71,7 +73,7 @@ export const projectsData: Project[] = [
     id: "suncart",
     title: "SunCart — E-Commerce Management Dashboard",
     tagline: "Scalable e-commerce store with dynamic inventory & REST APIs",
-    category: "MERN",
+    category: "Full Stack",
     description:
       "Scalable e-commerce solution and administration system featuring dynamic inventory management, RESTful APIs, fast data handling, and secure JWT authentication.",
     keyFeatures: [
@@ -90,6 +92,46 @@ export const projectsData: Project[] = [
     githubUrl: "https://github.com/Asmual/SunCart",
     featured: true,
     status: "Live",
+  },
+  {
+    id: "shopnexus",
+    title: "ShopNexus — Next-Gen AI E-Commerce Ecosystem",
+    tagline: "Multimodal Gemini AI vision, real-time telemetry & hardware 2FA security",
+    category: "Team Projects",
+    description:
+      "An enterprise-grade multimodal AI commerce platform built collaboratively with the HEXADEVS team. Features Google Gemini Vision camera search, real-time live telemetry with 1-click IP Shield firewall, RFC 6238 TOTP 2FA with emergency master override, and 100% zero-reload bilingual localization.",
+    keyFeatures: [
+      "Multimodal AI Vision Search: Live camera & photo OCR analysis via Google Gemini Vision",
+      "Enterprise-Grade 2FA Security: RFC 6238 TOTP engine with emergency master override (752800)",
+      "Real-Time Telemetry & IP Shield: 3-second live visitor heartbeat pulse & 1-click IP firewall defense",
+      "100% Real-Time Bilingual System: Zero-reload English & Bengali toggle with native BDT (৳) currency",
+      "Multi-Carrier Parcel Tracking: 6-step state-machine with courier progress & live ETA calculation",
+      "Dual Invoicing Engine: Print-ready A4 VAT layout & POS thermal slips (58mm/80mm) with dynamic QR",
+      "Collaborative Team Engineering: Built with HEXADEVS team using Next.js 15, Turbopack, and Express.js REST APIs",
+    ],
+    tags: [
+      "Next.js 15",
+      "React 19",
+      "TypeScript",
+      "Google Gemini AI",
+      "Node.js",
+      "Express.js",
+      "MongoDB Atlas",
+      "Tailwind CSS",
+    ],
+    images: [
+      "/images/shopnexus/Home.png",
+      "/images/shopnexus/Product_page.png",
+      "/images/shopnexus/Flashsell_page.png",
+    ],
+    liveUrl: "https://shop-nexus-frontend-ten.vercel.app",
+    githubUrl: "https://github.com/Saad7528/ShopNexus-Frontend",
+    clientGithubUrl: "https://github.com/Saad7528/ShopNexus-Frontend",
+    serverGithubUrl: "https://github.com/Saad7528/ShopNexus-Backend",
+    featured: true,
+    status: "Live",
+    teamName: "HEXADEVS",
+    isTeamProject: true,
   },
   {
     id: "portfolio-js",
@@ -157,7 +199,7 @@ export const projectsData: Project[] = [
 export const projectCategories: ProjectCategory[] = [
   "All",
   "Full Stack",
-  "MERN",
   "Frontend",
   "Backend",
+  "Team Projects",
 ];

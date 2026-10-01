@@ -38,7 +38,7 @@
 
 ### 💼 2. Projects & Showcase Hub
 ![Portfolio Projects Showcase](./public/images/preview/projects-preview.png)
-*Interactive project ecosystem featuring category filter tabs (`All`, `Full Stack`, `MERN`, `Frontend`, `Backend`), instant keyword search, pause-on-hover carousel slider, and expandable feature highlights.*
+*Interactive project ecosystem featuring category filter tabs (`All`, `Full Stack`, `Frontend`, `Backend`, `Team Projects`), instant keyword search, pause-on-hover carousel slider, and expandable feature highlights.*
 
 ---
 
@@ -59,11 +59,11 @@
   - Organic curved avatar border (`rounded-[30%_70%_70%_30%/30%_30%_70%_70%]`) with ambient lighting.
   - Interactive floating chips for `<Next.js 15 & React />` and `<MERN & REST APIs />`.
   - Typewriter effect cycling dynamically through specialized developer roles.
-  - Metrics strip displaying production applications count (`4+ Production Apps`).
+  - Metrics strip displaying production applications count (`6+ Production Apps`).
 
 - **🗂️ Centralized Project Showcase**:
   - Fully typed project repository stored in `src/data/projects.ts`.
-  - Filter pills for `All`, `Full Stack`, `MERN`, `Frontend`, and `Backend`.
+  - Filter pills for `All`, `Full Stack`, `Frontend`, `Backend`, and `Team Projects`.
   - Auto-sliding image carousel that pauses on mouse hover.
   - Expandable "Key Highlights" toggle drawer and direct GitHub repository / live demo links.
 
@@ -199,11 +199,12 @@ npm run start
 
 ## 🌐 Featured Projects Showcased
 
-1. **[My Keeps](https://my-keeps-pink.vercel.app)** — Smart Cloud Workspace & Note Manager *(Next.js 16, React 19, TypeScript, Express.js 5, MongoDB, Cloudinary, Better-Auth)*
+1. **[ShopNexus](https://shop-nexus-frontend-ten.vercel.app)** — Next-Gen AI E-Commerce Ecosystem *(Next.js 15, React 19, Gemini Vision AI, Node.js, Express.js, MongoDB Atlas, Hardware 2FA)* • **HEXADEVS Team Project**
 2. **[ArtHub](https://arthub-three.vercel.app)** — Online Art Marketplace *(Next.js 15, React, Tailwind CSS, MongoDB, Express.js, Stripe)*
-3. **[Asmual Portfolio (JavaScript Edition)](https://asmual-portfolio.vercel.app)** — Interactive Developer Portfolio *(Next.js, React 19, JavaScript, DaisyUI, Tailwind CSS, Framer Motion)*
-4. **[DocAppoint](https://docappoint-eight-drab.vercel.app)** — Doctor Appointment Booking System *(Next.js, TypeScript, Tailwind CSS, Express.js, MongoDB)*
-5. **[SunCart](https://suncart-woad-three.vercel.app/)** — E-Commerce Management Platform *(React, Node.js, Express.js, MongoDB, Tailwind CSS)*
+3. **[DocAppoint](https://docappoint-eight-drab.vercel.app)** — Doctor Appointment Booking System *(Next.js, TypeScript, Tailwind CSS, Express.js, MongoDB)*
+4. **[SunCart](https://suncart-woad-three.vercel.app/)** — E-Commerce Management Platform *(React, Node.js, Express.js, MongoDB, Tailwind CSS)*
+5. **[My Keeps](https://my-keeps-pink.vercel.app)** — Smart Cloud Workspace & Note Manager *(Next.js 16, React 19, TypeScript, Express.js 5, MongoDB, Cloudinary, Better-Auth)*
+6. **[Asmual Portfolio (JavaScript Edition)](https://asmual-portfolio.vercel.app)** — Interactive Developer Portfolio *(Next.js, React 19, JavaScript, DaisyUI, Tailwind CSS, Framer Motion)*
 
 ---
 

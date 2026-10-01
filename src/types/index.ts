@@ -15,22 +15,29 @@ export interface ThemeContextType {
 }
 
 // Project Section Types
-export type ProjectCategory = "Full Stack" | "Frontend" | "Backend" | "MERN";
+export type ProjectCategory = "Full Stack" | "Frontend" | "Backend" | "Team Projects";
 
 export interface Project {
   id: string;
   title: string;
-  slug: string;
+  slug?: string;
+  tagline?: string;
   description: string;
   longDescription?: string;
-  image: string;
-  techStack: string[];
+  image?: string;
+  images?: string[];
+  techStack?: string[];
+  tags?: string[];
   category: ProjectCategory;
   liveUrl?: string;
+  githubUrl?: string;
   clientGithubUrl?: string;
   serverGithubUrl?: string;
   featured: boolean;
   keyFeatures?: string[];
+  teamName?: string;
+  isTeamProject?: boolean;
+  status?: "Live" | "Completed" | "In Progress";
 }
 
 // Skill Section Types
