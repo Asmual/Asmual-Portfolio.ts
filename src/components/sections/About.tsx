@@ -21,22 +21,22 @@ export default function About() {
     {
       icon: Code2,
       title: "Frontend Engineering",
-      desc: "Pixel-perfect, responsive web apps using React 19, Next.js 15, and Tailwind CSS.",
+      desc: "Pixel-perfect, responsive web apps using React 19, Next.js 16, TypeScript, and Tailwind CSS v4.",
     },
     {
       icon: Database,
-      title: "Backend & Database",
-      desc: "Robust RESTful APIs, authentication with JWT, MongoDB aggregations & PostgreSQL.",
+      title: "Backend & Data Architecture",
+      desc: "Scalable RESTful APIs with Node.js & Express, PostgreSQL, Prisma ORM, and MongoDB Atlas.",
     },
     {
       icon: Zap,
-      title: "Performance & UX",
-      desc: "Fast load times, smooth Framer Motion animations, and modern architecture.",
+      title: "Cloud, Caching & BaaS",
+      desc: "High-throughput Redis caching, Supabase BaaS, Docker containerization, and secure auth.",
     },
     {
       icon: Globe2,
-      title: "Remote Collaboration",
-      desc: "Agile workflows, clean Git version control, and clear communication.",
+      title: "Continuous Learning & Agility",
+      desc: "Rapidly adopting emerging technologies, clean architectural patterns, and collaborative Git workflows.",
     },
   ];
 
@@ -73,10 +73,10 @@ export default function About() {
           >
             <div className="space-y-4 text-foreground/80 text-sm sm:text-base leading-relaxed bg-card-bg/40 p-5 sm:p-6 rounded-2xl border border-border/60">
               <p>
-                Hello! I&apos;m <strong className="text-foreground font-bold">Asmual Obaidul Hoque</strong>, a Full Stack Developer based in Bangladesh. I specialize in the modern JavaScript / TypeScript ecosystem—building full-stack products with <span className="text-accent font-semibold">React, Next.js, Node.js, Express,</span> and <span className="text-accent font-semibold">MongoDB</span>.
+                Hello! I&apos;m <strong className="text-foreground font-bold">Asmual Obaidul Hoque</strong>, a Full Stack Software Engineer based in Bangladesh. I specialize in engineering resilient, high-performance web applications across the modern TypeScript ecosystem—architecting end-to-end solutions with <span className="text-accent font-semibold">Next.js 16, React 19, Node.js, Express, PostgreSQL,</span> and <span className="text-accent font-semibold">MongoDB</span>.
               </p>
               <p className="text-xs sm:text-sm text-foreground/75">
-                Whether creating interactive client applications, designing scalable backend APIs, or integrating payment gateways like Stripe, my focus is always on clean architecture, security, and exceptional performance.
+                Driven by continuous learning, I actively expand my technical repertoire with cutting-edge tools like <span className="text-foreground font-semibold">Redis in-memory caching</span>, <span className="text-foreground font-semibold">Supabase</span>, and <span className="text-foreground font-semibold">Docker</span>. From crafting interactive client interfaces and secure payment workflows to designing robust database schemas and high-throughput APIs, I prioritize clean architectural patterns, type safety, and real-world performance.
               </p>
             </div>
 

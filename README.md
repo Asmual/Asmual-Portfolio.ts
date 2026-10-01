@@ -32,7 +32,7 @@
 
 ### 🌟 1. Homepage & Hero Section
 ![Portfolio Homepage Preview](./public/images/preview/home-preview.png)
-*Featuring the organic curved developer avatar frame, live status pulse, floating tech chips (`<Next.js 15 & React />`, `<MERN & REST APIs />`), dynamic typewriter roles, and metrics ribbon.*
+*Featuring the organic curved developer avatar frame, live status pulse, floating tech chips (`<Next.js 16 & React 19 />`, `<Postgres, Redis & APIs />`), dynamic typewriter roles, and metrics ribbon.*
 
 <br />
 
@@ -57,7 +57,7 @@
 - **👨‍💻 Modern Hero Section & Identity**:
   - Live availability badge (`Available for New Projects & Remote Roles`).
   - Organic curved avatar border (`rounded-[30%_70%_70%_30%/30%_30%_70%_70%]`) with ambient lighting.
-  - Interactive floating chips for `<Next.js 15 & React />` and `<MERN & REST APIs />`.
+  - Interactive floating chips for `<Next.js 16 & React 19 />` and `<Postgres, Redis & APIs />`.
   - Typewriter effect cycling dynamically through specialized developer roles.
   - Metrics strip displaying production applications count (`6+ Production Apps`).
 
@@ -101,10 +101,12 @@
 - **Motion Engine**: [Framer Motion 12](https://www.framer.com/motion/) (`layout`, `AnimatePresence`, spring physics)
 - **Smooth Scroll**: [Lenis](https://lenis.darkroom.engineering/) (`@studio-freight/lenis`)
 
-### **Backend, Database & Services**
+### **Backend, Database & Caching Services**
+- **Distributed Caching**: [Redis](https://redis.io/) (In-memory latency optimization & rate-limiting)
+- **BaaS & Real-time**: [Supabase](https://supabase.com/) (Auth, PostgreSQL storage & subscriptions)
+- **Databases**: [PostgreSQL](https://www.postgresql.org/) (Prisma ORM) & [MongoDB Atlas](https://www.mongodb.com/) (Mongoose)
 - **Email Delivery**: [Resend API](https://resend.com/) (`/api/contact`)
-- **Database**: [MongoDB](https://www.mongodb.com/) & Mongoose (Adapter support)
-- **Authentication**: Better-Auth (`@better-auth/mongo-adapter`)
+- **Authentication**: Better-Auth (`@better-auth/mongo-adapter`) & JWT
 - **Notifications**: React Hot Toast
 
 ---

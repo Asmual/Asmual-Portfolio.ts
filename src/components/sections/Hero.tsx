@@ -16,10 +16,10 @@ import { motion } from "framer-motion";
 export default function Hero() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const titles = [
-    "Full Stack Web Developer",
-    "MERN Stack Specialist",
-    "React & Next.js Architect",
-    "TypeScript & REST API Engineer",
+    "Full Stack Software Engineer",
+    "Next.js 16 & TypeScript Architect",
+    "Node.js, Express & REST API Engineer",
+    "PostgreSQL, Redis & MongoDB Developer",
   ];
 
   const [currentTitleIndex, setCurrentTitleIndex] = useState(0);
@@ -89,8 +89,8 @@ export default function Hero() {
             </div>
 
             {/* Bio Description */}
-            <p className="max-w-lg text-xs sm:text-sm text-foreground/80 leading-relaxed">
-              Specialized in engineering robust, modern full-stack web applications with <span className="text-foreground font-semibold">Next.js, React, Node.js, Express, and MongoDB</span>. Focused on clean architecture, secure authentication, high-performance database indexing, and delightful user interfaces.
+            <p className="max-w-xl text-xs sm:text-sm text-foreground/80 leading-relaxed">
+              Full-stack software engineer building reliable, high-performance web systems with <span className="text-foreground font-semibold">Next.js 16, React 19, TypeScript, and Node.js</span>. Specialized in scalable backend architectures with <span className="text-foreground font-semibold">PostgreSQL, MongoDB, and Redis caching</span>, BaaS integrations with <span className="text-foreground font-semibold">Supabase</span>, and continuous modern engineering.
             </p>
 
             {/* Quick Metrics / Highlights Strip */}
@@ -210,12 +210,12 @@ export default function Hero() {
                   <Code2 className="w-3 h-3" />
                 </div>
                 <div className="text-left">
-                  <p className="text-[9px] font-mono font-bold text-foreground leading-tight">Next.js 15 &amp; React</p>
-                  <p className="text-[7.5px] text-foreground/60 leading-none">Frontend Architect</p>
+                  <p className="text-[9px] font-mono font-bold text-foreground leading-tight">Next.js 16 &amp; React 19</p>
+                  <p className="text-[7.5px] text-foreground/60 leading-none">Frontend &amp; App Architecture</p>
                 </div>
               </motion.div>
 
-              {/* Floating Chip 2: Full Stack MERN (Bottom-Right) */}
+              {/* Floating Chip 2: Database & Backend (Bottom-Right) */}
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -226,8 +226,8 @@ export default function Hero() {
                   <Terminal className="w-3 h-3" />
                 </div>
                 <div className="text-left">
-                  <p className="text-[9px] font-mono font-bold text-foreground leading-tight">MERN &amp; REST APIs</p>
-                  <p className="text-[7.5px] text-foreground/60 leading-none">Database &amp; Node.js</p>
+                  <p className="text-[9px] font-mono font-bold text-foreground leading-tight">Postgres, Redis &amp; APIs</p>
+                  <p className="text-[7.5px] text-foreground/60 leading-none">Backend &amp; Distributed Caching</p>
                 </div>
               </motion.div>
             </div>

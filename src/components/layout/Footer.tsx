@@ -36,15 +36,15 @@ export default function Footer(): React.JSX.Element {
       icon: <Globe className="w-3.5 h-3.5 text-accent" />,
     },
     {
-      name: "React & Next.js Architecture",
+      name: "Next.js 16 & React 19 Architecture",
       icon: <Code2 className="w-3.5 h-3.5 text-accent" />,
     },
     {
-      name: "REST APIs & Backend Logic",
+      name: "REST APIs & Microservices",
       icon: <Server className="w-3.5 h-3.5 text-accent" />,
     },
     {
-      name: "MongoDB & Database Systems",
+      name: "PostgreSQL, Redis & MongoDB",
       icon: <Database className="w-3.5 h-3.5 text-accent" />,
     },
   ];
@@ -114,7 +114,7 @@ export default function Footer(): React.JSX.Element {
             </Link>
 
             <p className="max-w-sm text-xs leading-relaxed text-foreground/70">
-              Full-Stack Web Developer dedicated to engineering performant, secure, and modern digital web applications using the JavaScript &amp; TypeScript ecosystem.
+              Full Stack Software Engineer specializing in resilient web applications with Next.js 16, React 19, TypeScript, Node.js, PostgreSQL, Redis caching, and Supabase.
             </p>
 
             <div className="flex flex-col gap-2 pt-1">
