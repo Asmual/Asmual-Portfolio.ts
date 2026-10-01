@@ -199,12 +199,12 @@ npm run start
 
 ## 🌐 Featured Projects Showcased
 
-1. **[ShopNexus](https://shop-nexus-frontend-ten.vercel.app)** — Next-Gen AI E-Commerce Ecosystem *(Next.js 15, React 19, Gemini Vision AI, Node.js, Express.js, MongoDB Atlas, Hardware 2FA)* • **HEXADEVS Team Project**
-2. **[ArtHub](https://arthub-three.vercel.app)** — Online Art Marketplace *(Next.js 15, React, Tailwind CSS, MongoDB, Express.js, Stripe)*
-3. **[DocAppoint](https://docappoint-eight-drab.vercel.app)** — Doctor Appointment Booking System *(Next.js, TypeScript, Tailwind CSS, Express.js, MongoDB)*
+1. **[ArtHub](https://arthub-three.vercel.app)** — Online Art Marketplace *(Next.js 15, React, Tailwind CSS, MongoDB, Express.js, Stripe)*
+2. **[DocAppoint](https://docappoint-eight-drab.vercel.app)** — Doctor Appointment Booking System *(Next.js, TypeScript, Tailwind CSS, Express.js, MongoDB)*
+3. **[ShopNexus](https://shop-nexus-frontend-ten.vercel.app)** — Next-Gen AI E-Commerce Ecosystem *(Next.js 15, React 19, Gemini Vision AI, Node.js, Express.js, MongoDB Atlas, Hardware 2FA)* • **HEXADEVS Team Project**
 4. **[SunCart](https://suncart-woad-three.vercel.app/)** — E-Commerce Management Platform *(React, Node.js, Express.js, MongoDB, Tailwind CSS)*
-5. **[My Keeps](https://my-keeps-pink.vercel.app)** — Smart Cloud Workspace & Note Manager *(Next.js 16, React 19, TypeScript, Express.js 5, MongoDB, Cloudinary, Better-Auth)*
-6. **[Asmual Portfolio (JavaScript Edition)](https://asmual-portfolio.vercel.app)** — Interactive Developer Portfolio *(Next.js, React 19, JavaScript, DaisyUI, Tailwind CSS, Framer Motion)*
+5. **[Asmual Portfolio (JavaScript Edition)](https://asmual-portfolio.vercel.app)** — Interactive Developer Portfolio *(Next.js, React 19, JavaScript, DaisyUI, Tailwind CSS, Framer Motion)*
+6. **[My Keeps](https://my-keeps-pink.vercel.app)** — Smart Cloud Workspace & Note Manager *(Next.js 16, React 19, TypeScript, Express.js 5, MongoDB, Cloudinary, Better-Auth)*
 
 ---
 

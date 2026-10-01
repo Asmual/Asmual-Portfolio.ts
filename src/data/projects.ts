@@ -70,30 +70,6 @@ export const projectsData: Project[] = [
     status: "Live",
   },
   {
-    id: "suncart",
-    title: "SunCart — E-Commerce Management Dashboard",
-    tagline: "Scalable e-commerce store with dynamic inventory & REST APIs",
-    category: "Full Stack",
-    description:
-      "Scalable e-commerce solution and administration system featuring dynamic inventory management, RESTful APIs, fast data handling, and secure JWT authentication.",
-    keyFeatures: [
-      "Full product lifecycle & category administration",
-      "Cart management & responsive checkout flow",
-      "JWT-based user authentication and protected admin routes",
-      "RESTful API architecture with optimized query indexing",
-    ],
-    tags: ["React", "Node.js", "Express.js", "MongoDB", "Tailwind CSS"],
-    images: [
-      "/images/suncart/nav-hero.png",
-      "/images/suncart/all-product.png",
-      "/images/suncart/product-details.png",
-    ],
-    liveUrl: "https://suncart-woad-three.vercel.app/",
-    githubUrl: "https://github.com/Asmual/SunCart",
-    featured: true,
-    status: "Live",
-  },
-  {
     id: "shopnexus",
     title: "ShopNexus — Next-Gen AI E-Commerce Ecosystem",
     tagline: "Multimodal Gemini AI vision, real-time telemetry & hardware 2FA security",
@@ -132,6 +108,30 @@ export const projectsData: Project[] = [
     status: "Live",
     teamName: "HEXADEVS",
     isTeamProject: true,
+  },
+  {
+    id: "suncart",
+    title: "SunCart — E-Commerce Management Dashboard",
+    tagline: "Scalable e-commerce store with dynamic inventory & REST APIs",
+    category: "Full Stack",
+    description:
+      "Scalable e-commerce solution and administration system featuring dynamic inventory management, RESTful APIs, fast data handling, and secure JWT authentication.",
+    keyFeatures: [
+      "Full product lifecycle & category administration",
+      "Cart management & responsive checkout flow",
+      "JWT-based user authentication and protected admin routes",
+      "RESTful API architecture with optimized query indexing",
+    ],
+    tags: ["React", "Node.js", "Express.js", "MongoDB", "Tailwind CSS"],
+    images: [
+      "/images/suncart/nav-hero.png",
+      "/images/suncart/all-product.png",
+      "/images/suncart/product-details.png",
+    ],
+    liveUrl: "https://suncart-woad-three.vercel.app/",
+    githubUrl: "https://github.com/Asmual/SunCart",
+    featured: true,
+    status: "Live",
   },
   {
     id: "portfolio-js",
