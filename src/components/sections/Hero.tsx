@@ -17,7 +17,7 @@ export default function Hero() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const titles = [
     "Full Stack Web Developer",
-    "Next.js 16 & TypeScript Architect",
+    "Next.js & TypeScript Architect",
     "Node.js, Express & REST API Engineer",
     "PostgreSQL, Redis & MongoDB Developer",
   ];
@@ -90,7 +90,7 @@ export default function Hero() {
 
             {/* Bio Description */}
             <p className="max-w-xl text-xs sm:text-sm text-foreground/80 leading-relaxed">
-              Full-stack software engineer building reliable, high-performance web systems with <span className="text-foreground font-semibold">Next.js 16, React 19, TypeScript, and Node.js</span>. Specialized in scalable backend architectures with <span className="text-foreground font-semibold">PostgreSQL, MongoDB, and Redis caching</span>, BaaS integrations with <span className="text-foreground font-semibold">Supabase</span>, and continuous modern engineering.
+              Full-stack software engineer building reliable, high-performance web systems with <span className="text-foreground font-semibold">Next.js, React, TypeScript, and Node.js</span>. Specialized in scalable backend architectures with <span className="text-foreground font-semibold">PostgreSQL, MongoDB, and Redis caching</span>, BaaS integrations with <span className="text-foreground font-semibold">Supabase</span>, and continuous modern engineering.
             </p>
 
             {/* Quick Metrics / Highlights Strip */}
@@ -210,7 +210,7 @@ export default function Hero() {
                   <Code2 className="w-3 h-3" />
                 </div>
                 <div className="text-left">
-                  <p className="text-[9px] font-mono font-bold text-foreground leading-tight">Next.js 16 &amp; React 19</p>
+                  <p className="text-[9px] font-mono font-bold text-foreground leading-tight">Next.js &amp; React</p>
                   <p className="text-[7.5px] text-foreground/60 leading-none">Frontend &amp; App Architecture</p>
                 </div>
               </motion.div>

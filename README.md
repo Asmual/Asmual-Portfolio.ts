@@ -2,15 +2,15 @@
 
 <div align="center">
 
-  [![Next.js](https://img.shields.io/badge/Next.js%2016-000000?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
-  [![React](https://img.shields.io/badge/React%2019-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://react.dev/)
-  [![TypeScript](https://img.shields.io/badge/TypeScript%205-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-  [![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS%20v4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
-  [![Framer Motion](https://img.shields.io/badge/Framer%20Motion%2012-black?style=for-the-badge&logo=framer&logoColor=blue)](https://www.framer.com/motion/)
+  [![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
+  [![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://react.dev/)
+  [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+  [![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+  [![Framer Motion](https://img.shields.io/badge/Framer%20Motion-black?style=for-the-badge&logo=framer&logoColor=blue)](https://www.framer.com/motion/)
   [![Resend](https://img.shields.io/badge/Resend%20API-000000?style=for-the-badge&logo=resend&logoColor=white)](https://resend.com/)
 
   <p align="center">
-    <strong>Asmual-Portfolio-ts</strong> is a modern, high-performance personal developer portfolio engineered with <strong>Next.js 16 (App Router)</strong>, <strong>React 19</strong>, <strong>TypeScript 5</strong>, <strong>Tailwind CSS v4</strong>, <strong>Framer Motion 12</strong>, and <strong>Lenis Smooth Scroll</strong>.
+    <strong>Asmual-Portfolio-ts</strong> is a modern, high-performance personal developer portfolio engineered with <strong>Next.js (App Router)</strong>, <strong>React</strong>, <strong>TypeScript</strong>, <strong>Tailwind CSS</strong>, <strong>Framer Motion</strong>, and <strong>Lenis Smooth Scroll</strong>.
   </p>
 
   <p align="center">
@@ -32,7 +32,7 @@
 
 ### 🌟 1. Homepage & Hero Section
 ![Portfolio Homepage Preview](./public/images/preview/home-preview.png)
-*Featuring the organic curved developer avatar frame, live status pulse, floating tech chips (`<Next.js 16 & React 19 />`, `<Postgres, Redis & APIs />`), dynamic typewriter roles, and metrics ribbon.*
+*Featuring the organic curved developer avatar frame, live status pulse, floating tech chips (`<Next.js & React />`, `<Postgres, Redis & APIs />`), dynamic typewriter roles, and metrics ribbon.*
 
 <br />
 
@@ -57,7 +57,7 @@
 - **👨‍💻 Modern Hero Section & Identity**:
   - Live availability badge (`Available for New Projects & Remote Roles`).
   - Organic curved avatar border (`rounded-[30%_70%_70%_30%/30%_30%_70%_70%]`) with ambient lighting.
-  - Interactive floating chips for `<Next.js 16 & React 19 />` and `<Postgres, Redis & APIs />`.
+  - Interactive floating chips for `<Next.js & React />` and `<Postgres, Redis & APIs />`.
   - Typewriter effect cycling dynamically through specialized developer roles.
   - Metrics strip displaying production applications count (`6+ Production Apps`).
 
@@ -81,24 +81,24 @@
   - Next.js API route (`/api/contact`) sending inquiries directly via Resend API.
 
 - **🎨 Multi-Theme System**:
-  - Seamless switching across **Light**, **Dark**, and **Gray** theme modes using CSS custom properties and Tailwind CSS v4.
+  - Seamless switching across **Light**, **Dark**, and **Gray** theme modes using CSS custom properties and Tailwind CSS.
 
 ---
 
 ## 🛠️ Architecture & Tech Stack
 
 ### **Core Framework & Runtime**
-- **Framework**: [Next.js 16](https://nextjs.org/) (App Router, Server & Client Components)
-- **UI Library**: [React 19](https://react.dev/) (React 19 Compiler support)
-- **Language**: [TypeScript 5](https://www.typescriptlang.org/) (Strict mode, end-to-end type safety)
+- **Framework**: [Next.js](https://nextjs.org/) (App Router, Server & Client Components)
+- **UI Library**: [React](https://react.dev/) (Concurrent rendering & Server Actions)
+- **Language**: [TypeScript](https://www.typescriptlang.org/) (Strict mode, end-to-end type safety)
 
 ### **Styling, Design System & Icons**
-- **CSS Engine**: [Tailwind CSS v4](https://tailwindcss.com/) with `@theme` token definitions
+- **CSS Engine**: [Tailwind CSS](https://tailwindcss.com/) with `@theme` token definitions
 - **Typography**: Geist Sans & Geist Mono
 - **Icon Packages**: [Lucide React](https://lucide.dev/) & [React Icons](https://react-icons.github.io/react-icons/) (`fa6`, `si`)
 
 ### **Animations & Motion Physics**
-- **Motion Engine**: [Framer Motion 12](https://www.framer.com/motion/) (`layout`, `AnimatePresence`, spring physics)
+- **Motion Engine**: [Framer Motion](https://www.framer.com/motion/) (`layout`, `AnimatePresence`, spring physics) & [GSAP](https://greensock.com/)
 - **Smooth Scroll**: [Lenis](https://lenis.darkroom.engineering/) (`@studio-freight/lenis`)
 
 ### **Backend, Database & Caching Services**
@@ -130,7 +130,7 @@ Asmual-Portfolio.ts/
 │   │   ├── (routes)/          # Standalone pages (/about, /projects, /skills, /contact)
 │   │   ├── api/
 │   │   │   └── contact/       # Next.js API route handling Resend email delivery
-│   │   ├── globals.css        # Tailwind v4 theme definitions, color-mix & variables
+│   │   ├── globals.css        # Tailwind CSS theme definitions, color-mix & variables
 │   │   ├── layout.tsx         # Root layout mounting cursor, loader, scroll & back-to-top
 │   │   └── page.tsx           # Portfolio landing page assembling all core sections
 │   ├── components/
@@ -201,12 +201,12 @@ npm run start
 
 ## 🌐 Featured Projects Showcased
 
-1. **[ArtHub](https://arthub-three.vercel.app)** — Online Art Marketplace *(Next.js 15, React, Tailwind CSS, MongoDB, Express.js, Stripe)*
+1. **[ArtHub](https://arthub-three.vercel.app)** — Online Art Marketplace *(Next.js, React, Tailwind CSS, MongoDB, Express.js, Stripe)*
 2. **[DocAppoint](https://docappoint-eight-drab.vercel.app)** — Doctor Appointment Booking System *(Next.js, TypeScript, Tailwind CSS, Express.js, MongoDB)*
-3. **[ShopNexus](https://shop-nexus-frontend-ten.vercel.app)** — Next-Gen AI E-Commerce Ecosystem *(Next.js 15, React 19, Gemini Vision AI, Node.js, Express.js, MongoDB Atlas, Hardware 2FA)* • **HEXADEVS Team Project**
+3. **[ShopNexus](https://shop-nexus-frontend-ten.vercel.app)** — Next-Gen AI E-Commerce Ecosystem *(Next.js, React, Gemini Vision AI, Node.js, Express.js, MongoDB Atlas, Hardware 2FA)* • **HEXADEVS Team Project**
 4. **[SunCart](https://suncart-woad-three.vercel.app/)** — E-Commerce Management Platform *(React, Node.js, Express.js, MongoDB, Tailwind CSS)*
-5. **[Asmual Portfolio (JavaScript Edition)](https://asmual-portfolio.vercel.app)** — Interactive Developer Portfolio *(Next.js, React 19, JavaScript, DaisyUI, Tailwind CSS, Framer Motion)*
-6. **[My Keeps](https://my-keeps-pink.vercel.app)** — Smart Cloud Workspace & Note Manager *(Next.js 16, React 19, TypeScript, Express.js 5, MongoDB, Cloudinary, Better-Auth)*
+5. **[Asmual Portfolio (JavaScript Edition)](https://asmual-portfolio.vercel.app)** — Interactive Developer Portfolio *(Next.js, React, JavaScript, DaisyUI, Tailwind CSS, Framer Motion)*
+6. **[My Keeps](https://my-keeps-pink.vercel.app)** — Smart Cloud Workspace & Note Manager *(Next.js, React, TypeScript, Express.js, MongoDB, Cloudinary, Better-Auth)*
 
 ---
 

@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     template: "%s | Asmual",
   },
   description:
-    "Official portfolio of Asmual (Asmual Obaidul Hoque) — Full Stack Web Developer specializing in Next.js 16, React 19, TypeScript, Node.js, Express, PostgreSQL, Redis, and MongoDB.",
+    "Official portfolio of Asmual (Asmual Obaidul Hoque) — Full Stack Web Developer specializing in Next.js, React, TypeScript, Node.js, Express, PostgreSQL, Redis, and MongoDB.",
   keywords: [
     "Asmual",
     "Asmual developer",
@@ -39,8 +39,8 @@ export const metadata: Metadata = {
     "developer Asmual",
     "Asmual Bangladesh",
     "Full Stack Web Developer",
-    "Next.js 16 Developer",
-    "React 19 Developer",
+    "Next.js Developer",
+    "React Developer",
     "TypeScript Developer",
   ],
   authors: [{ name: "Asmual", url: siteUrl }],
@@ -111,7 +111,7 @@ const jsonLdSchema = {
         name: "Self-Employed / Full Stack Engineer",
       },
       description:
-        "Asmual (Asmual Obaidul Hoque) is a Full Stack Web Developer based in Bangladesh, specializing in Next.js 16, React 19, TypeScript, Node.js, Express, PostgreSQL, Redis caching, and MongoDB.",
+        "Asmual (Asmual Obaidul Hoque) is a Full Stack Web Developer based in Bangladesh, specializing in Next.js, React, TypeScript, Node.js, Express, PostgreSQL, Redis caching, and MongoDB.",
       address: {
         "@type": "PostalAddress",
         addressLocality: "Dhaka",

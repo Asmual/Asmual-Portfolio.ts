@@ -36,7 +36,7 @@ export default function Footer(): React.JSX.Element {
       icon: <Globe className="w-3.5 h-3.5 text-accent" />,
     },
     {
-      name: "Next.js 16 & React 19 Architecture",
+      name: "Next.js & React Architecture",
       icon: <Code2 className="w-3.5 h-3.5 text-accent" />,
     },
     {
@@ -114,7 +114,7 @@ export default function Footer(): React.JSX.Element {
             </Link>
 
             <p className="max-w-sm text-xs leading-relaxed text-foreground/70">
-              Full Stack Software Engineer specializing in resilient web applications with Next.js 16, React 19, TypeScript, Node.js, PostgreSQL, Redis caching, and Supabase.
+              Full Stack Software Engineer specializing in resilient web applications with Next.js, React, TypeScript, Node.js, PostgreSQL, Redis caching, and Supabase.
             </p>
 
             <div className="flex flex-col gap-2 pt-1">
@@ -215,7 +215,7 @@ export default function Footer(): React.JSX.Element {
           <p className="inline-flex items-center justify-center gap-1 text-center sm:text-right">
             <span>Built with</span>
             <Heart className="h-3.5 w-3.5 fill-accent text-accent" />
-            <span>using Next.js 16 &amp; Tailwind CSS</span>
+            <span>using Next.js &amp; Tailwind CSS</span>
           </p>
         </div>
       </div>

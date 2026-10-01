@@ -29,10 +29,10 @@ export default function AboutPage() {
       category: "Frontend Engineering",
       icon: Code2,
       skills: [
-        "Next.js 16 (App Router & Server Actions)",
-        "React 19 & Concurrent Features",
+        "Next.js (App Router & Server Actions)",
+        "React & Component Architecture",
         "TypeScript (Strict Type Safety)",
-        "Tailwind CSS v4 & Modern Styling",
+        "Tailwind CSS & Modern Styling",
         "Framer Motion & Interactive UI/UX",
       ],
     },
@@ -82,7 +82,7 @@ export default function AboutPage() {
     },
     {
       title: "Continuous Learning & Agility",
-      desc: "Actively studying emerging industry standards, from Next.js 16 App Router optimizations to Supabase BaaS and Gemini AI integrations, turning modern tech into functional software.",
+      desc: "Actively studying emerging industry standards, from Next.js App Router optimizations to Supabase BaaS and Gemini AI integrations, turning modern tech into functional software.",
     },
     {
       title: "User-First Engineering & Design",
@@ -140,7 +140,7 @@ export default function AboutPage() {
               My path into software development began with a passion for designing engaging, responsive web interfaces. Over time, that enthusiasm quickly matured into a deep engineering curiosity for complete full-stack architecture—spanning asynchronous server backends, database schema normalization, and distributed caching layers.
             </p>
             <p>
-              Today, I specialize in the modern TypeScript and JavaScript ecosystems. On the frontend, I craft lightning-fast web applications utilizing <strong className="text-foreground">Next.js 16 (App Router)</strong>, <strong className="text-foreground">React 19</strong>, and <strong className="text-foreground">Tailwind CSS v4</strong>. On the backend, I build scalable RESTful architectures with <strong className="text-foreground">Node.js</strong> and <strong className="text-foreground">Express</strong>, orchestrating robust data storage across both relational (<strong className="text-foreground">PostgreSQL with Prisma ORM</strong>) and document-oriented (<strong className="text-foreground">MongoDB Atlas with Mongoose</strong>) databases.
+              Today, I specialize in the modern TypeScript and JavaScript ecosystems. On the frontend, I craft lightning-fast web applications utilizing <strong className="text-foreground">Next.js (App Router)</strong>, <strong className="text-foreground">React</strong>, and <strong className="text-foreground">Tailwind CSS</strong>. On the backend, I build scalable RESTful architectures with <strong className="text-foreground">Node.js</strong> and <strong className="text-foreground">Express</strong>, orchestrating robust data storage across both relational (<strong className="text-foreground">PostgreSQL with Prisma ORM</strong>) and document-oriented (<strong className="text-foreground">MongoDB Atlas with Mongoose</strong>) databases.
             </p>
             <p>
               To ensure low latency and high availability under heavy workloads, I integrate <strong className="text-foreground">Redis</strong> for high-throughput in-memory caching and session rate-limiting, and adopt <strong className="text-foreground">Supabase</strong> for accelerated backend-as-a-service workflows, real-time channels, and role-based access control.

@@ -55,7 +55,7 @@ export const projectsData: Project[] = [
     overview:
       "ArtHub is an enterprise-grade digital art discovery, bidding, and procurement ecosystem engineered for digital creators, galleries, and global collectors. It bridges modern creator economics with secure Stripe multi-tier subscription billing and real-time portfolio showcase analytics.",
     architecture:
-      "Engineered with Next.js 15 App Router, React, Tailwind CSS, Express.js microservice architecture, and MongoDB Atlas. Features granular JWT session authentication, asynchronous Stripe webhook listeners, and optimized database aggregation pipelines.",
+      "Engineered with Next.js App Router, React, Tailwind CSS, Express.js microservice architecture, and MongoDB Atlas. Features granular JWT session authentication, asynchronous Stripe webhook listeners, and optimized database aggregation pipelines.",
     metrics: [
       { label: "Payment Success Rate", value: "99.8%" },
       { label: "Catalog TTFB", value: "<240ms" },
@@ -113,7 +113,7 @@ export const projectsData: Project[] = [
       "Dynamic artwork catalogue with real-time bidding & purchase management",
       "High-performance MongoDB aggregation pipelines",
     ],
-    tags: ["Next.js 15", "React", "Tailwind CSS", "MongoDB", "Express.js", "Stripe"],
+    tags: ["Next.js", "React", "Tailwind CSS", "MongoDB", "Express.js", "Stripe"],
     images: [
       "/images/arthub/nav-hero.png",
       "/images/arthub/browse-artwork.png",
@@ -218,9 +218,9 @@ export const projectsData: Project[] = [
     description:
       "An enterprise-grade multimodal AI commerce platform built collaboratively with the HEXADEVS team. Features Google Gemini Vision camera search, real-time live telemetry with 1-click IP Shield firewall, RFC 6238 TOTP 2FA with emergency master override, and 100% zero-reload bilingual localization.",
     overview:
-      "ShopNexus is an enterprise-grade multimodal AI e-commerce ecosystem built by the HEXADEVS team. It unifies Google Gemini Multimodal Vision search, hardware/software RFC 6238 TOTP 2FA authentication with emergency master override, 3-second live telemetry cyber defense, and dual POS thermal/A4 smart invoicing into an ultra-fast Next.js 15 Turbopack architecture.",
+      "ShopNexus is an enterprise-grade multimodal AI e-commerce ecosystem built by the HEXADEVS team. It unifies Google Gemini Multimodal Vision search, hardware/software RFC 6238 TOTP 2FA authentication with emergency master override, 3-second live telemetry cyber defense, and dual POS thermal/A4 smart invoicing into an ultra-fast Next.js Turbopack architecture.",
     architecture:
-      "Full-stack architecture with Next.js 15 App Router, React 19, Google Gemini Vision API, Node.js/Express.js REST microservices, MongoDB Atlas Vector search, Zustand global state management, and RFC 6238 Web Crypto HMAC security pipelines.",
+      "Full-stack architecture with Next.js App Router, React, Google Gemini Vision API, Node.js/Express.js REST microservices, MongoDB Atlas Vector search, Zustand global state management, and RFC 6238 Web Crypto HMAC security pipelines.",
     metrics: [
       { label: "Compiled Routes", value: "42+ Static & Dynamic" },
       { label: "Gemini AI Precision", value: "96% Vision Match" },
@@ -289,11 +289,11 @@ export const projectsData: Project[] = [
       "100% Real-Time Bilingual System: Zero-reload English & Bengali toggle with native BDT (৳) currency",
       "Multi-Carrier Parcel Tracking: 6-step state-machine with courier progress & live ETA calculation",
       "Dual Invoicing Engine: Print-ready A4 VAT layout & POS thermal slips (58mm/80mm) with dynamic QR",
-      "Collaborative Team Engineering: Built with HEXADEVS team using Next.js 15, Turbopack, and Express.js REST APIs",
+      "Collaborative Team Engineering: Built with HEXADEVS team using Next.js, Turbopack, and Express.js REST APIs",
     ],
     tags: [
-      "Next.js 15",
-      "React 19",
+      "Next.js",
+      "React",
       "TypeScript",
       "Google Gemini AI",
       "Node.js",
@@ -402,11 +402,11 @@ export const projectsData: Project[] = [
     role: "Frontend Engineer & UI Designer",
     duration: "2 Weeks • Production Portfolio",
     description:
-      "Personal developer showcase website crafted with Next.js, React, JavaScript, DaisyUI, Tailwind CSS v4, and Framer Motion. Features interactive animated hero, skills display, and dark/light modes.",
+      "Personal developer showcase website crafted with Next.js, React, JavaScript, DaisyUI, Tailwind CSS, and Framer Motion. Features interactive animated hero, skills display, and dark/light modes.",
     overview:
-      "An interactive developer showcase website built with Next.js, React 19, JavaScript, DaisyUI, Tailwind CSS, and Framer Motion. Engineered to highlight visual craftsmanship through custom typing heroes, spring physics animations, momentum scrolling, and theme personalization.",
+      "An interactive developer showcase website built with Next.js, React, JavaScript, DaisyUI, Tailwind CSS, and Framer Motion. Engineered to highlight visual craftsmanship through custom typing heroes, spring physics animations, momentum scrolling, and theme personalization.",
     architecture:
-      "Next.js App Router, DaisyUI theme engine, Tailwind CSS v4 design tokens, Lenis smooth scrolling integration, and Cloudinary media optimization.",
+      "Next.js App Router, DaisyUI theme engine, Tailwind CSS design tokens, Lenis smooth scrolling integration, and Cloudinary media optimization.",
     metrics: [
       { label: "Lighthouse Performance", value: "100/100" },
       { label: "Layout Shift (CLS)", value: "0.00" },
@@ -444,7 +444,7 @@ export const projectsData: Project[] = [
           "Injected a blocking inline pre-render script in the document `<head>` to evaluate stored theme preferences and set HTML theme classes before DOM render.",
       },
       {
-        title: "React 19 SSR Hydration Mismatches in Animations",
+        title: "React SSR Hydration Mismatches in Animations",
         problem:
           "Browser-calculated viewport dimensions conflicted with server pre-rendered markup in Framer Motion spring components.",
         solution:
@@ -464,7 +464,7 @@ export const projectsData: Project[] = [
       "Lenis smooth momentum scrolling & Framer Motion transitions",
       "Cloudinary media integration & MongoDB Atlas connectivity",
     ],
-    tags: ["Next.js", "React 19", "JavaScript", "Tailwind CSS", "DaisyUI", "Framer Motion"],
+    tags: ["Next.js", "React", "JavaScript", "Tailwind CSS", "DaisyUI", "Framer Motion"],
     images: [
       "/images/portfolio_js/Portfolio-Home.png",
       "/images/portfolio_js/Portfolio-Project.png",
@@ -485,9 +485,9 @@ export const projectsData: Project[] = [
     description:
       "A feature-rich full-stack productivity workspace inspired by Google Keep. Organize ideas with multi-format notes including interactive checklists, Cloudinary-powered image attachments, voice memo recordings, PIN-locked private notes, dynamic color palettes, and bulk batch actions.",
     overview:
-      "Inspired by Google Keep, My Keeps is a feature-rich full-stack productivity workspace engineered with Next.js 16, React 19, Express.js 5 API, and MongoDB Atlas. It empowers users to capture multi-format notes including interactive checklists, Cloudinary voice memos, image attachments, PIN-protected private notes, and bulk batch actions.",
+      "Inspired by Google Keep, My Keeps is a feature-rich full-stack productivity workspace engineered with Next.js, React, Express.js API, and MongoDB Atlas. It empowers users to capture multi-format notes including interactive checklists, Cloudinary voice memos, image attachments, PIN-protected private notes, and bulk batch actions.",
     architecture:
-      "Full-stack architecture featuring Next.js 16 App Router, React 19, Better-Auth session infrastructure, Express.js 5 microservice endpoints, Cloudinary Audio/Image Media API, and MongoDB Atlas document collections.",
+      "Full-stack architecture featuring Next.js App Router, React, Better-Auth session infrastructure, Express.js microservice endpoints, Cloudinary Audio/Image Media API, and MongoDB Atlas document collections.",
     metrics: [
       { label: "Note Formats", value: "Text, Checklist, Voice, Images" },
       { label: "Color Palettes", value: "12+ Vibrant Pastel Styles" },
@@ -544,11 +544,11 @@ export const projectsData: Project[] = [
       "PIN-Protected Private Notes: Secure lock/unlock system with password encryption",
       "Smart Organization: 12+ vibrant pastel color palettes, pinned notes, archive, and trash restore",
       "Productivity Batch Actions: Multi-select batch operations for archiving, pinning, and coloring",
-      "Robust Full-Stack Engine: Next.js 16, React 19, Better-Auth, Express.js 5 API & MongoDB Atlas",
+      "Robust Full-Stack Engine: Next.js, React, Better-Auth, Express.js API & MongoDB Atlas",
     ],
     tags: [
-      "Next.js 16",
-      "React 19",
+      "Next.js",
+      "React",
       "TypeScript",
       "Node.js",
       "Express.js",

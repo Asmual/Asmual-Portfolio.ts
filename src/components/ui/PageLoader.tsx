@@ -122,7 +122,7 @@ export default function PageLoader() {
 
             {/* Subtext info */}
             <p className="text-[10px] font-mono text-foreground/45 uppercase tracking-wider">
-              React 19 • Next.js 16 • TypeScript
+              React • Next.js • TypeScript
             </p>
           </motion.div>
         </motion.div>
