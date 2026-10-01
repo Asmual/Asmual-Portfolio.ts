@@ -17,6 +17,22 @@ export interface ThemeContextType {
 // Project Section Types
 export type ProjectCategory = "Full Stack" | "Frontend" | "Backend" | "Team Projects";
 
+export interface ProjectChallenge {
+  title: string;
+  problem: string;
+  solution: string;
+}
+
+export interface ProjectMetric {
+  label: string;
+  value: string;
+}
+
+export interface DetailedFeature {
+  title: string;
+  description: string;
+}
+
 export interface Project {
   id: string;
   title: string;
@@ -38,6 +54,13 @@ export interface Project {
   teamName?: string;
   isTeamProject?: boolean;
   status?: "Live" | "Completed" | "In Progress";
+  role?: string;
+  duration?: string;
+  overview?: string;
+  architecture?: string;
+  metrics?: ProjectMetric[];
+  detailedFeatures?: DetailedFeature[];
+  challengesSolved?: ProjectChallenge[];
 }
 
 // Skill Section Types

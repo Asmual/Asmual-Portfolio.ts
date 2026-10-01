@@ -45,8 +45,12 @@ function ProjectCard({ project }: ProjectCardProps) {
     >
       {/* Top Media & Content Area */}
       <div className="flex flex-col flex-1">
-        {/* Compact Interactive Image Preview with Auto-Slide */}
-        <div className="relative w-full h-36 sm:h-40 overflow-hidden bg-foreground/5">
+        {/* Compact Interactive Image Preview with Auto-Slide & Link to Details */}
+        <Link 
+          href={`/projects/${project.id}`}
+          className="relative w-full h-36 sm:h-40 overflow-hidden bg-foreground/5 block cursor-pointer group/img"
+          title={`View ${project.title} full details`}
+        >
           <AnimatePresence mode="wait">
             <motion.div
               key={currentImageIndex}
@@ -62,7 +66,7 @@ function ProjectCard({ project }: ProjectCardProps) {
                 fill
                 priority={project.id === "arthub" || project.id === "docappoint"}
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                className="object-cover object-top group-hover:scale-105 transition-transform duration-500"
+                className="object-cover object-top group-hover/img:scale-105 transition-transform duration-500"
               />
             </motion.div>
           </AnimatePresence>
@@ -85,6 +89,7 @@ function ProjectCard({ project }: ProjectCardProps) {
               <button
                 key={index}
                 onClick={(e) => {
+                  e.preventDefault();
                   e.stopPropagation();
                   setCurrentImageIndex(index);
                 }}
@@ -97,13 +102,19 @@ function ProjectCard({ project }: ProjectCardProps) {
               />
             ))}
           </div>
-        </div>
+        </Link>
 
         {/* Card Body Details with Compact Padding */}
         <div className="p-3.5 sm:p-4 space-y-2.5 flex-1 flex flex-col justify-between">
           <div className="space-y-1">
-            <h3 className="text-xs sm:text-sm font-bold text-foreground group-hover:text-accent transition-colors line-clamp-1 leading-snug">
-              {project.title}
+            <h3 className="text-xs sm:text-sm font-bold text-foreground transition-colors line-clamp-1 leading-snug">
+              <Link
+                href={`/projects/${project.id}`}
+                className="hover:text-accent hover:underline transition-colors inline-block"
+                title={`View ${project.title} case study`}
+              >
+                {project.title}
+              </Link>
             </h3>
             {project.tagline && (
               <p className="text-[10.5px] text-accent font-medium line-clamp-1">
