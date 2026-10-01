@@ -76,7 +76,7 @@ export default function Hero() {
             {/* Main Headline with Moderate Font Size */}
             <div className="space-y-1">
               <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-foreground leading-tight">
-                Hi, I&apos;m <span className="text-foreground">Asmual Obaidul Hoque</span>
+                Hi, I&apos;m <span className="text-accent">Asmual</span> Obaidul Hoque
               </h1>
 
               {/* Dynamic Typewriter Role */}
