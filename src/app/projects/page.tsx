@@ -186,16 +186,6 @@ export default function ProjectsPage() {
     });
   }, [selectedCategory, searchQuery]);
 
-      const matchesSearch =
-        project.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        project.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (project.tagline && project.tagline.toLowerCase().includes(searchQuery.toLowerCase())) ||
-        project.tags.some((t) => t.toLowerCase().includes(searchQuery.toLowerCase()));
-
-      return matchesCategory && matchesSearch;
-    });
-  }, [selectedCategory, searchQuery]);
-
   return (
     <main className="min-h-screen text-foreground py-8 sm:py-12 px-4 sm:px-6 lg:px-8 transition-colors duration-300 relative overflow-hidden">
       {/* Ambient Lighting Glows */}
