@@ -113,7 +113,7 @@ export const projectsData: Project[] = [
     id: "suncart",
     title: "SunCart — E-Commerce Management Dashboard",
     tagline: "Scalable e-commerce store with dynamic inventory & REST APIs",
-    category: "Full Stack",
+    category: "Frontend",
     description:
       "Scalable e-commerce solution and administration system featuring dynamic inventory management, RESTful APIs, fast data handling, and secure JWT authentication.",
     keyFeatures: [

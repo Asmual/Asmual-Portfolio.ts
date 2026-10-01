@@ -117,18 +117,20 @@ export default function Navbar() {
           ))}
         </nav>
 
-        {/* Right Side: Theme Switcher & Actions */}
-        <div className="flex items-center gap-2.5">
-          <ThemeToggle />
-
+        {/* Right Side: Actions, Theme Switcher & Mobile Menu */}
+        <div className="flex items-center gap-1.5 sm:gap-2.5">
+          {/* Hire Me CTA - Accessible directly on mobile and desktop */}
           <Link
             href={pathname === "/" ? "#contact" : "/#contact"}
             onClick={(e) => handleScroll(e, "#contact", "Contact")}
-            className="hidden sm:inline-flex items-center gap-1 px-4 py-1.5 text-xs font-semibold rounded-full bg-accent text-white shadow-sm hover:opacity-90 transition-all duration-300 cursor-pointer"
+            className="inline-flex items-center gap-1 px-2.5 sm:px-4 py-1 sm:py-1.5 text-[11px] sm:text-xs font-semibold rounded-full bg-accent text-white shadow-xs hover:opacity-90 active:scale-95 transition-all duration-200 cursor-pointer shrink-0"
           >
-            Hire Me
-            <ArrowUpRight className="w-3.5 h-3.5" />
+            <span>Hire Me</span>
+            <ArrowUpRight className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
           </Link>
+
+          {/* Theme Mode Switcher */}
+          <ThemeToggle />
 
           {/* Mobile Navigation Toggle */}
           <button
@@ -160,20 +162,6 @@ export default function Navbar() {
               />
             ))}
           </nav>
-
-          <div className="pt-1.5 sm:hidden">
-            <Link
-              href={pathname === "/" ? "#contact" : "/#contact"}
-              onClick={(e) => {
-                handleScroll(e, "#contact", "Contact");
-                setIsOpen(false);
-              }}
-              className="flex items-center justify-center gap-1.5 w-full py-2 text-xs font-semibold rounded-lg bg-accent text-white shadow-sm hover:opacity-90 transition-all cursor-pointer"
-            >
-              Hire Me
-              <ArrowUpRight className="w-3.5 h-3.5" />
-            </Link>
-          </div>
         </div>
       )}
     </header>

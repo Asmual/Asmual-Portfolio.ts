@@ -198,9 +198,17 @@ export default function Footer(): React.JSX.Element {
 
         {/* Bottom Bar without duplicate back to top button */}
         <div className="flex flex-col gap-3 pt-6 text-xs text-foreground/60 sm:flex-row sm:items-center sm:justify-between">
-          {/* Left: Copyright */}
+          {/* Left: Copyright & Admin Portal Access */}
           <p className="text-center sm:text-left">
-            © {new Date().getFullYear()} <strong className="text-foreground font-semibold">Asmual Obaidul Hoque</strong>. All rights reserved.
+            © {new Date().getFullYear()}{" "}
+            <Link
+              href="/login"
+              title="Admin Portal Access"
+              className="text-foreground font-semibold hover:text-accent transition-colors duration-200 cursor-pointer"
+            >
+              Asmual Obaidul Hoque
+            </Link>
+            . All rights reserved.
           </p>
 
           {/* Right: Tech Stack info */}
