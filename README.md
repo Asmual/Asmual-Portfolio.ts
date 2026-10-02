@@ -59,7 +59,7 @@
   - Organic curved avatar border (`rounded-[30%_70%_70%_30%/30%_30%_70%_70%]`) with ambient lighting.
   - Interactive floating chips for `<Next.js & React />` and `<Postgres, Redis & APIs />`.
   - Typewriter effect cycling dynamically through specialized developer roles.
-  - Metrics strip displaying production applications count (`6+ Production Apps`).
+  - Metrics strip displaying production applications count (`7+ Production Apps`).
 
 - **🗂️ Centralized Project Showcase**:
   - Fully typed project repository stored in `src/data/projects.ts`.
@@ -204,9 +204,10 @@ npm run start
 1. **[ArtHub](https://arthub-three.vercel.app)** — Online Art Marketplace *(Next.js, React, Tailwind CSS, MongoDB, Express.js, Stripe)*
 2. **[DocAppoint](https://docappoint-eight-drab.vercel.app)** — Doctor Appointment Booking System *(Next.js, TypeScript, Tailwind CSS, Express.js, MongoDB)*
 3. **[ShopNexus](https://shop-nexus-frontend-ten.vercel.app)** — Next-Gen AI E-Commerce Ecosystem *(Next.js, React, Gemini Vision AI, Node.js, Express.js, MongoDB Atlas, Hardware 2FA)* • **HEXADEVS Team Project**
-4. **[SunCart](https://suncart-woad-three.vercel.app/)** — E-Commerce Management Platform *(React, Node.js, Express.js, MongoDB, Tailwind CSS)*
-5. **[Asmual Portfolio (JavaScript Edition)](https://asmual-portfolio.vercel.app)** — Interactive Developer Portfolio *(Next.js, React, JavaScript, DaisyUI, Tailwind CSS, Framer Motion)*
-6. **[My Keeps](https://my-keeps-pink.vercel.app)** — Smart Cloud Workspace & Note Manager *(Next.js, React, TypeScript, Express.js, MongoDB, Cloudinary, Better-Auth)*
+4. **[Law Firm Solutions](https://law-firm-solutions.vercel.app)** — Supreme Court Legal Litigation & Chamber Management *(Node.js, Express.js, TypeScript, MongoDB Atlas, Mongoose, JWT, Next.js, jsPDF)*
+5. **[SunCart](https://suncart-woad-three.vercel.app/)** — E-Commerce Management Platform *(React, Node.js, Express.js, MongoDB, Tailwind CSS)*
+6. **[Asmual Portfolio (JavaScript Edition)](https://asmual-portfolio.vercel.app)** — Interactive Developer Portfolio *(Next.js, React, JavaScript, DaisyUI, Tailwind CSS, Framer Motion)*
+7. **[My Keeps](https://my-keeps-pink.vercel.app)** — Smart Cloud Workspace & Note Manager *(Next.js, React, TypeScript, Express.js, MongoDB, Cloudinary, Better-Auth)*
 
 ---
 

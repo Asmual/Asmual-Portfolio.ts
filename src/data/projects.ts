@@ -314,6 +314,100 @@ export const projectsData: Project[] = [
     status: "Live",
   },
   {
+    id: "lawfirm",
+    title: "Law Firm Solutions — Legal Litigation & Chamber Management",
+    tagline: "Supreme Court litigation management, automated cause lists & forensic audit logging",
+    category: "Backend",
+    role: "Backend Architect & Full Stack Developer",
+    duration: "4 Weeks • Enterprise Chamber System",
+    description:
+      "A specialized legal litigation and court chamber management platform engineered for Supreme Court & High Court advocates. Features comprehensive litigation tracking, automated daily court cause lists, multi-bank institutional client directories, forensic audit trail logging, and granular role-based access control.",
+    overview:
+      "Law Firm Solutions is an enterprise-grade litigation docket and chamber administration system built specifically for legal advocates and barristers handling high-volume Supreme Court and financial institution litigation. It eliminates paperwork fragmentation through centralized court case files, automated hearing reminders, multi-bank legal tracking, and dynamic PDF cause list generation.",
+    architecture:
+      "Engineered with a decoupled enterprise architecture featuring a dedicated Node.js, Express, and TypeScript REST API server backed by MongoDB Atlas with Mongoose schemas. Incorporates double-layer JWT authentication with HTTP-only secure cookie sessions, Zod request payload validation, Helmet cyber-defense headers, and an automated jsPDF court reporting engine on the Next.js frontend.",
+    metrics: [
+      { label: "Case Docket Registry", value: "Comprehensive Court Dockets" },
+      { label: "RBAC Hierarchy", value: "3-Tier (Admin / Advocate / Associate)" },
+      { label: "Forensic Audit Logging", value: "100% Action Tracing" },
+      { label: "Report Export Engine", value: "Instant jsPDF AutoTable" },
+    ],
+    detailedFeatures: [
+      {
+        title: "Litigation Docket & Court Case Lifecycle Engine",
+        description:
+          "End-to-end management of civil, criminal, and company court cases with chamber file numbering, multi-party tracking, next hearing alarms, and stage-by-stage order updates.",
+      },
+      {
+        title: "Role-Based Access Control (RBAC) & Practitioner Roster",
+        description:
+          "Strict 3-tier authorization model distinguishing Chamber Heads (Admin), Senior Advocates, and Junior Associates with dedicated role dashboards and protected API routes.",
+      },
+      {
+        title: "Financial Institutions & Bank Client Directory",
+        description:
+          "Dedicated client registry organizing state-owned, commercial, Islamic banks, and NBFIs with consolidated institution-wise litigation summaries.",
+      },
+      {
+        title: "Automated Court Cause List & PDF Reporting",
+        description:
+          "Client-side document synthesis pipeline generating print-ready Supreme Court daily cause list dockets and associate monthly worklogs via jsPDF-AutoTable.",
+      },
+    ],
+    challengesSolved: [
+      {
+        title: "Chamber Forensic Accountability & Mutation Auditing",
+        problem:
+          "In high-stakes litigation, unmonitored alterations to hearing dates or case outcomes could result in legal malpractice or missed court appearances.",
+        solution:
+          "Architected an automated forensic audit logging system capturing actor identity, action type, client IP, and before/after mutation snapshots on every case update.",
+      },
+      {
+        title: "High-Volume Bank Litigation Data Aggregation",
+        problem:
+          "Chambers handling dozens of institutional clients (banks, financial corporations) experienced severe latency when generating aggregate case statistics.",
+        solution:
+          "Structured indexed Mongoose aggregation pipelines grouping active litigations by financial institution, court bench, and status with sub-50ms query latency.",
+      },
+      {
+        title: "Dual Secure Session & Token Lifecycle",
+        problem:
+          "Legal practitioners accessing chamber dockets on public or shared court computers risked session hijackings or credential exposure.",
+        solution:
+          "Implemented HTTP-only signed cookie sessions paired with short-lived JWT access tokens and cryptographically salted password hashing with PBKDF2 and BcryptJS.",
+      },
+    ],
+    keyFeatures: [
+      "Litigation Docket: Case files, chamber registry, court bench tracking & hearing reminders",
+      "3-Tier RBAC: Custom dashboards and route protection for Admin, Advocate, and Associate",
+      "Forensic Audit Logs: Immutable activity tracking for all case updates, orders, and user actions",
+      "Automated Reports: Print-ready PDF court cause lists and bank client reports via jsPDF",
+      "Institutional Directory: Dedicated directory for commercial banks, state-owned banks, and NBFIs",
+    ],
+    tags: [
+      "Node.js",
+      "Express.js",
+      "TypeScript",
+      "MongoDB Atlas",
+      "Mongoose",
+      "JWT",
+      "Next.js",
+      "Tailwind CSS",
+      "REST APIs",
+    ],
+    images: [
+      "/images/lawfirm/home.png",
+      "/images/lawfirm/admin.png",
+      "/images/lawfirm/register.png",
+    ],
+    liveUrl: "https://law-firm-solutions.vercel.app",
+    githubUrl: "https://github.com/Asmual/Law-Firm-Solutions-Server",
+    clientGithubUrl: "https://github.com/Asmual/Law-Firm-Solutions",
+    serverGithubUrl: "https://github.com/Asmual/Law-Firm-Solutions-Server",
+    featured: true,
+    status: "Live",
+  },
+  {
     id: "suncart",
     title: "SunCart — E-Commerce Management Dashboard",
     tagline: "Scalable e-commerce store with dynamic inventory & REST APIs",
