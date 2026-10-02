@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -13,6 +13,8 @@ export default function Navbar() {
   const [activeNav, setActiveNav] = useState("Home");
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
+  const isManualScrollingRef = useRef(false);
+  const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const navLinks: NavItem[] = [
     { name: "Home", href: "#home" },
@@ -35,7 +37,10 @@ export default function Navbar() {
     const sectionIds = ["home", "projects", "skills", "about", "contact"];
 
     const handleScrollSpy = () => {
-      const scrollPosition = window.scrollY + 220; // Offset for navbar height
+      // Don't override activeNav while a smooth click scroll is currently animating
+      if (isManualScrollingRef.current) return;
+
+      const scrollPosition = window.scrollY + 200; // Offset for navbar height
 
       // If scrolled near bottom of page, highlight Contact
       if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 60) {
@@ -60,7 +65,10 @@ export default function Navbar() {
     window.addEventListener("scroll", handleScrollSpy, { passive: true });
     handleScrollSpy();
 
-    return () => window.removeEventListener("scroll", handleScrollSpy);
+    return () => {
+      window.removeEventListener("scroll", handleScrollSpy);
+      if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
+    };
   }, [pathname]);
 
   const handleScroll = (e: React.MouseEvent<HTMLAnchorElement>, targetHref: string, name: string) => {
@@ -72,7 +80,21 @@ export default function Navbar() {
         e.preventDefault();
         const element = document.getElementById(targetId);
         if (element) {
-          element.scrollIntoView({ behavior: "smooth" });
+          // Lock ScrollSpy while smooth scrolling
+          isManualScrollingRef.current = true;
+          if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
+          scrollTimeoutRef.current = setTimeout(() => {
+            isManualScrollingRef.current = false;
+          }, 850);
+
+          // Use Lenis for silky smooth momentum scroll if available
+          const lenis = (window as any).__lenis;
+          if (lenis && typeof lenis.scrollTo === "function") {
+            lenis.scrollTo(element, { offset: -70, duration: 1.0 });
+          } else {
+            const y = element.getBoundingClientRect().top + window.scrollY - 70;
+            window.scrollTo({ top: y, behavior: "smooth" });
+          }
         }
       }
     }
@@ -191,22 +213,29 @@ function NavLink({
       onClick={onClick}
       className={`relative ${
         isMobile ? "px-3 py-2 rounded-lg text-xs" : "px-3.5 py-1 text-xs"
-      } font-medium rounded-full transition-colors duration-200 select-none cursor-pointer`}
+      } font-medium rounded-full transition-colors duration-200 select-none cursor-pointer group`}
     >
       {isActive && (
         <motion.span
           layoutId={layoutId}
-          className={`absolute inset-0 bg-accent shadow-sm ${
+          className={`absolute inset-0 bg-accent shadow-xs ${
             isMobile ? "rounded-lg" : "rounded-full"
           }`}
           transition={{ type: "spring", stiffness: 380, damping: 30 }}
         />
       )}
+      {!isActive && (
+        <span
+          className={`absolute inset-0 opacity-0 group-hover:opacity-100 bg-foreground/5 transition-opacity duration-150 pointer-events-none ${
+            isMobile ? "rounded-lg" : "rounded-full"
+          }`}
+        />
+      )}
       <span
-        className={`relative z-10 transition-colors duration-200 ${
+        className={`relative z-10 font-medium transition-colors duration-200 ${
           isActive
-            ? "text-white font-semibold"
-            : "text-foreground/85 hover:text-foreground"
+            ? "text-white"
+            : "text-foreground/75 group-hover:text-foreground"
         }`}
       >
         {link.name}

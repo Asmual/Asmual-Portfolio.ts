@@ -104,8 +104,8 @@ export default function Hero() {
                 <p className="text-[10px] text-foreground/60 uppercase font-semibold">TypeScript &amp; React</p>
               </div>
               <div className="p-2 sm:p-2.5 rounded-xl bg-card-bg/60 border border-border/80 backdrop-blur-xs text-center lg:text-left">
-                <p className="text-sm sm:text-base font-extrabold text-accent">Fast</p>
-                <p className="text-[10px] text-foreground/60 uppercase font-semibold">API &amp; DB Speeds</p>
+                <p className="text-sm sm:text-base font-extrabold text-accent">REST</p>
+                <p className="text-[10px] text-foreground/60 uppercase font-semibold">APIs &amp; Databases</p>
               </div>
             </div>
 
