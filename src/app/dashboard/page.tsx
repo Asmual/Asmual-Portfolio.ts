@@ -26,6 +26,7 @@ import {
   ArrowLeft,
   RefreshCw,
   AlertTriangle,
+  Pencil,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Project, ProjectCategory } from "@/data/projects";
@@ -124,7 +125,32 @@ export default function DashboardPage() {
   const [isDeletingProject, setIsDeletingProject] = useState(false);
   const [deleteStatusMessage, setDeleteStatusMessage] = useState<string | null>(null);
 
+  // Custom Edit Modal State
+  const [editingProject, setEditingProject] = useState<Project | null>(null);
+  const [editTitle, setEditTitle] = useState("");
+  const [editTagline, setEditTagline] = useState("");
+  const [editCategory, setEditCategory] = useState<ProjectCategory>("Full Stack");
+  const [editDescription, setEditDescription] = useState("");
+  const [editOverview, setEditOverview] = useState("");
+  const [editArchitecture, setEditArchitecture] = useState("");
+  const [editTags, setEditTags] = useState<string[]>([]);
+  const [editCustomTagInput, setEditCustomTagInput] = useState("");
+  const [editImages, setEditImages] = useState<string[]>([]);
+  const [isUploadingEditImage, setIsUploadingEditImage] = useState(false);
+  const [editCustomImageUrl, setEditCustomImageUrl] = useState("");
+  const [editLiveUrl, setEditLiveUrl] = useState("");
+  const [editGithubUrl, setEditGithubUrl] = useState("");
+  const [editServerGithubUrl, setEditServerGithubUrl] = useState("");
+  const [editRole, setEditRole] = useState("Full Stack Developer");
+  const [editStatus, setEditStatus] = useState<"Live" | "Completed" | "In Progress">("Live");
+  const [editDuration, setDurationEdit] = useState("Production System");
+  const [editKeyFeatures, setEditKeyFeatures] = useState<string[]>([]);
+  const [newEditFeatureInput, setNewEditFeatureInput] = useState("");
+  const [isSavingEdit, setIsSavingEdit] = useState(false);
+  const [editErrorMessage, setEditErrorMessage] = useState<string | null>(null);
+
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const editFileInputRef = useRef<HTMLInputElement>(null);
 
   const loadProjects = async () => {
     setIsLoadingProjects(true);
@@ -400,6 +426,154 @@ export default function DashboardPage() {
       alert(`Delete error: ${msg}`);
     } finally {
       setIsDeletingProject(false);
+    }
+  };
+
+  const openEditModal = (p: Project) => {
+    setEditingProject(p);
+    setEditTitle(p.title || "");
+    setEditTagline(p.tagline || "");
+    setEditCategory(p.category || "Full Stack");
+    setEditDescription(p.description || "");
+    setEditOverview(p.overview || "");
+    setEditArchitecture(p.architecture || "");
+    setEditTags(p.tags ? [...p.tags] : []);
+    setEditImages(p.images ? [...p.images] : []);
+    setEditLiveUrl(p.liveUrl || "");
+    setEditGithubUrl(p.githubUrl || p.clientGithubUrl || "");
+    setEditServerGithubUrl(p.serverGithubUrl || "");
+    setEditRole(p.role || "Full Stack Developer");
+    setEditStatus(p.status || "Live");
+    setDurationEdit(p.duration || "Production System");
+    setEditKeyFeatures(p.keyFeatures ? [...p.keyFeatures] : []);
+    setEditErrorMessage(null);
+  };
+
+  const toggleEditTag = (tech: string) => {
+    setEditTags((prev) =>
+      prev.includes(tech) ? prev.filter((t) => t !== tech) : [...prev, tech]
+    );
+  };
+
+  const addCustomEditTag = () => {
+    const trimmed = editCustomTagInput.trim();
+    if (trimmed && !editTags.includes(trimmed)) {
+      setEditTags((prev) => [...prev, trimmed]);
+      setEditCustomTagInput("");
+    }
+  };
+
+  const handleEditFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    setIsUploadingEditImage(true);
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      const formData = new FormData();
+      formData.append("file", file);
+
+      try {
+        const res = await fetch("/api/upload", {
+          method: "POST",
+          body: formData,
+        });
+
+        const data = await res.json();
+        if (res.ok && data.url) {
+          setEditImages((prev) => [...prev, data.url]);
+        }
+      } catch (err) {
+        console.error("Edit upload failed:", err);
+      }
+    }
+    setIsUploadingEditImage(false);
+    if (editFileInputRef.current) editFileInputRef.current.value = "";
+  };
+
+  const addEditManualImageUrl = () => {
+    const trimmed = editCustomImageUrl.trim();
+    if (trimmed && !editImages.includes(trimmed)) {
+      setEditImages((prev) => [...prev, trimmed]);
+      setEditCustomImageUrl("");
+    }
+  };
+
+  const removeEditImage = (urlToRemove: string) => {
+    setEditImages((prev) => prev.filter((url) => url !== urlToRemove));
+  };
+
+  const addEditFeature = () => {
+    const trimmed = newEditFeatureInput.trim();
+    if (trimmed) {
+      setEditKeyFeatures((prev) => [...prev, trimmed]);
+      setNewEditFeatureInput("");
+    }
+  };
+
+  const removeEditFeature = (idx: number) => {
+    setEditKeyFeatures((prev) => prev.filter((_, i) => i !== idx));
+  };
+
+  const handleSaveEditedProject = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingProject) return;
+
+    if (!editTitle.trim() || !editDescription.trim() || !editLiveUrl.trim()) {
+      setEditErrorMessage("Title, description, and live URL are required.");
+      return;
+    }
+
+    if (editImages.length === 0) {
+      setEditErrorMessage("Please provide at least one screenshot for the project.");
+      return;
+    }
+
+    setIsSavingEdit(true);
+    setEditErrorMessage(null);
+
+    const payload = {
+      id: editingProject.id,
+      title: editTitle.trim(),
+      tagline: editTagline.trim(),
+      category: editCategory,
+      description: editDescription.trim(),
+      overview: editOverview.trim(),
+      architecture: editArchitecture.trim(),
+      tags: editTags,
+      images: editImages,
+      liveUrl: editLiveUrl.trim(),
+      githubUrl: editGithubUrl.trim() || undefined,
+      serverGithubUrl: editServerGithubUrl.trim() || undefined,
+      role: editRole,
+      status: editStatus,
+      duration: editDuration,
+      keyFeatures: editKeyFeatures,
+    };
+
+    try {
+      const res = await fetch("/api/projects", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+      if (res.ok && data.success && data.project) {
+        setProjects((prev) =>
+          prev.map((proj) => (proj.id === editingProject.id ? data.project : proj))
+        );
+        setEditingProject(null);
+        setDeleteStatusMessage(`Project "${data.project.title}" has been successfully updated!`);
+        setTimeout(() => setDeleteStatusMessage(null), 4000);
+      } else {
+        setEditErrorMessage(data.message || "Failed to update project.");
+      }
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Update failed.";
+      setEditErrorMessage(msg);
+    } finally {
+      setIsSavingEdit(false);
     }
   };
 
@@ -1173,14 +1347,25 @@ export default function DashboardPage() {
                         <ExternalLink className="w-3 h-3" />
                       </a>
 
-                      <button
-                        type="button"
-                        onClick={() => setProjectToDelete(proj)}
-                        className="p-1.5 rounded-lg text-foreground/50 hover:text-rose-500 hover:bg-rose-500/10 transition-colors cursor-pointer"
-                        title="Delete project"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
+                      <div className="flex items-center gap-1">
+                        <button
+                          type="button"
+                          onClick={() => openEditModal(proj)}
+                          className="p-1.5 rounded-lg text-foreground/50 hover:text-accent hover:bg-accent/10 transition-colors cursor-pointer"
+                          title="Edit project"
+                        >
+                          <Pencil className="w-3.5 h-3.5" />
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => setProjectToDelete(proj)}
+                          className="p-1.5 rounded-lg text-foreground/50 hover:text-rose-500 hover:bg-rose-500/10 transition-colors cursor-pointer"
+                          title="Delete project"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -1270,6 +1455,448 @@ export default function DashboardPage() {
                   )}
                 </button>
               </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Custom Edit Project Modal */}
+      <AnimatePresence>
+        {editingProject && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-md overflow-y-auto">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              transition={{ duration: 0.2 }}
+              className="relative w-full max-w-3xl bg-card-bg border border-border rounded-3xl p-5 sm:p-7 shadow-2xl space-y-6 my-8 max-h-[90vh] overflow-y-auto"
+            >
+              {/* Modal Header */}
+              <div className="flex items-center justify-between pb-3 border-b border-border sticky -top-5 sm:-top-7 bg-card-bg/95 backdrop-blur-sm pt-1 z-10">
+                <div className="flex items-center gap-2.5">
+                  <div className="p-2 rounded-xl bg-accent/15 text-accent border border-accent/20">
+                    <Pencil className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <h3 className="text-base font-bold text-foreground">
+                      Edit Project: {editingProject.title}
+                    </h3>
+                    <p className="text-[11px] text-foreground/60">
+                      Update images, tech stack, titles, and details in MongoDB
+                    </p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setEditingProject(null)}
+                  className="p-2 rounded-xl text-foreground/50 hover:text-foreground hover:bg-foreground/5 transition-colors cursor-pointer"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* Error Alert */}
+              {editErrorMessage && (
+                <div className="p-3.5 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-500 text-xs flex items-center gap-2">
+                  <AlertCircle className="w-4 h-4 shrink-0" />
+                  <span>{editErrorMessage}</span>
+                </div>
+              )}
+
+              <form onSubmit={handleSaveEditedProject} className="space-y-6">
+                {/* 1. Identity & Details */}
+                <div className="space-y-4">
+                  <h4 className="text-xs font-bold text-foreground uppercase tracking-wider text-accent flex items-center gap-1.5">
+                    <FolderKanban className="w-3.5 h-3.5" />
+                    <span>Project Identity & Classification</span>
+                  </h4>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                    <div className="space-y-1">
+                      <label className="text-xs font-semibold text-foreground/80">Title *</label>
+                      <input
+                        type="text"
+                        value={editTitle}
+                        onChange={(e) => setEditTitle(e.target.value)}
+                        required
+                        className="w-full px-3 py-2 text-xs rounded-xl bg-background border border-border focus:border-accent focus:outline-none text-foreground"
+                      />
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="text-xs font-semibold text-foreground/80">Tagline</label>
+                      <input
+                        type="text"
+                        value={editTagline}
+                        onChange={(e) => setEditTagline(e.target.value)}
+                        className="w-full px-3 py-2 text-xs rounded-xl bg-background border border-border focus:border-accent focus:outline-none text-foreground"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+                    <div className="space-y-1">
+                      <label className="text-xs font-semibold text-foreground/80">Category</label>
+                      <select
+                        value={editCategory}
+                        onChange={(e) => setEditCategory(e.target.value as ProjectCategory)}
+                        className="w-full px-3 py-2 text-xs rounded-xl bg-background border border-border focus:border-accent focus:outline-none text-foreground"
+                      >
+                        {categories.map((c) => (
+                          <option key={c} value={c}>
+                            {c}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="text-xs font-semibold text-foreground/80">Role</label>
+                      <input
+                        type="text"
+                        value={editRole}
+                        onChange={(e) => setEditRole(e.target.value)}
+                        className="w-full px-3 py-2 text-xs rounded-xl bg-background border border-border focus:border-accent focus:outline-none text-foreground"
+                      />
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="text-xs font-semibold text-foreground/80">Status</label>
+                      <select
+                        value={editStatus}
+                        onChange={(e) => setEditStatus(e.target.value as any)}
+                        className="w-full px-3 py-2 text-xs rounded-xl bg-background border border-border focus:border-accent focus:outline-none text-foreground"
+                      >
+                        <option value="Live">Live</option>
+                        <option value="Completed">Completed</option>
+                        <option value="In Progress">In Progress</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="text-xs font-semibold text-foreground/80">Short Description (Card) *</label>
+                    <textarea
+                      rows={2}
+                      value={editDescription}
+                      onChange={(e) => setEditDescription(e.target.value)}
+                      required
+                      className="w-full px-3 py-2 text-xs rounded-xl bg-background border border-border focus:border-accent focus:outline-none text-foreground leading-relaxed resize-y"
+                    />
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="text-xs font-semibold text-foreground/80">Detailed Technical Overview</label>
+                    <textarea
+                      rows={3}
+                      value={editOverview}
+                      onChange={(e) => setEditOverview(e.target.value)}
+                      className="w-full px-3 py-2 text-xs rounded-xl bg-background border border-border focus:border-accent focus:outline-none text-foreground leading-relaxed resize-y"
+                    />
+                  </div>
+                </div>
+
+                {/* 2. Live & Code URLs */}
+                <div className="space-y-3 pt-3 border-t border-border/60">
+                  <h4 className="text-xs font-bold text-foreground uppercase tracking-wider text-accent flex items-center gap-1.5">
+                    <ExternalLink className="w-3.5 h-3.5" />
+                    <span>Project Links</span>
+                  </h4>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                    <div className="space-y-1">
+                      <label className="text-xs font-semibold text-foreground/80">Live Demo URL *</label>
+                      <input
+                        type="url"
+                        value={editLiveUrl}
+                        onChange={(e) => setEditLiveUrl(e.target.value)}
+                        required
+                        className="w-full px-3 py-2 text-xs rounded-xl bg-background border border-border focus:border-accent focus:outline-none text-foreground"
+                      />
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="text-xs font-semibold text-foreground/80">Client / Main GitHub URL</label>
+                      <input
+                        type="url"
+                        value={editGithubUrl}
+                        onChange={(e) => setEditGithubUrl(e.target.value)}
+                        className="w-full px-3 py-2 text-xs rounded-xl bg-background border border-border focus:border-accent focus:outline-none text-foreground"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="text-xs font-semibold text-foreground/80">Server GitHub URL (Optional)</label>
+                    <input
+                      type="url"
+                      value={editServerGithubUrl}
+                      onChange={(e) => setEditServerGithubUrl(e.target.value)}
+                      className="w-full px-3 py-2 text-xs rounded-xl bg-background border border-border focus:border-accent focus:outline-none text-foreground"
+                    />
+                  </div>
+                </div>
+
+                {/* 3. Screenshots & Cloudinary Photos */}
+                <div className="space-y-3 pt-3 border-t border-border/60">
+                  <div className="flex items-center justify-between">
+                    <h4 className="text-xs font-bold text-foreground uppercase tracking-wider text-accent flex items-center gap-1.5">
+                      <ImageIcon className="w-3.5 h-3.5" />
+                      <span>Screenshots & Media ({editImages.length})</span>
+                    </h4>
+                    <span className="text-[10px] text-foreground/50">Cloudinary CDN</span>
+                  </div>
+
+                  {/* Existing thumbnails */}
+                  {editImages.length > 0 && (
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                      {editImages.map((imgUrl, idx) => (
+                        <div
+                          key={idx}
+                          className="relative aspect-video rounded-xl overflow-hidden border border-border group bg-background"
+                        >
+                          <Image
+                            src={imgUrl}
+                            alt={`Preview ${idx + 1}`}
+                            fill
+                            sizes="(max-width: 640px) 50vw, 25vw"
+                            className="object-cover"
+                          />
+                          <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1">
+                            <button
+                              type="button"
+                              onClick={() => removeEditImage(imgUrl)}
+                              className="p-1.5 rounded-lg bg-rose-600 text-white hover:bg-rose-700 transition-colors cursor-pointer"
+                              title="Delete screenshot"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                            <a
+                              href={imgUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="p-1.5 rounded-lg bg-card-bg text-foreground hover:bg-background transition-colors"
+                              title="View full image"
+                            >
+                              <ExternalLink className="w-3.5 h-3.5" />
+                            </a>
+                          </div>
+                          {idx === 0 && (
+                            <span className="absolute bottom-1 left-1 px-1.5 py-0.5 rounded text-[9px] font-bold bg-accent text-white shadow-xs">
+                              Cover
+                            </span>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Upload new photo or enter URL */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
+                    <div>
+                      <input
+                        ref={editFileInputRef}
+                        type="file"
+                        accept="image/*"
+                        multiple
+                        onChange={handleEditFileUpload}
+                        className="hidden"
+                      />
+                      <button
+                        type="button"
+                        disabled={isUploadingEditImage}
+                        onClick={() => editFileInputRef.current?.click()}
+                        className="w-full flex items-center justify-center gap-2 p-2.5 text-xs font-semibold rounded-xl border border-dashed border-border hover:border-accent/60 bg-background text-foreground/80 hover:text-foreground transition-all cursor-pointer disabled:opacity-60"
+                      >
+                        {isUploadingEditImage ? (
+                          <>
+                            <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                            <span>Uploading to Cloudinary...</span>
+                          </>
+                        ) : (
+                          <>
+                            <Upload className="w-3.5 h-3.5 text-accent" />
+                            <span>Upload New Screenshots</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
+
+                    <div className="flex gap-1.5">
+                      <input
+                        type="url"
+                        value={editCustomImageUrl}
+                        onChange={(e) => setEditCustomImageUrl(e.target.value)}
+                        placeholder="Or paste image URL directly..."
+                        className="flex-1 px-3 py-2 text-xs rounded-xl bg-background border border-border focus:border-accent focus:outline-none text-foreground placeholder:text-foreground/40"
+                      />
+                      <button
+                        type="button"
+                        onClick={addEditManualImageUrl}
+                        className="px-3 py-2 text-xs font-semibold rounded-xl bg-accent text-white hover:bg-accent/90 transition-colors cursor-pointer shrink-0"
+                      >
+                        Add URL
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 4. Technology Stack Chips */}
+                <div className="space-y-3 pt-3 border-t border-border/60">
+                  <div className="flex items-center justify-between">
+                    <h4 className="text-xs font-bold text-foreground uppercase tracking-wider text-accent flex items-center gap-1.5">
+                      <Code2 className="w-3.5 h-3.5" />
+                      <span>Technologies &amp; Tools ({editTags.length})</span>
+                    </h4>
+                  </div>
+
+                  {/* Active tags badges */}
+                  <div className="flex flex-wrap gap-1.5 min-h-[30px] p-2 rounded-xl bg-background border border-border">
+                    {editTags.length === 0 ? (
+                      <span className="text-xs text-foreground/40 italic">No technologies selected. Click below or type to add.</span>
+                    ) : (
+                      editTags.map((t) => (
+                        <span
+                          key={t}
+                          className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg text-xs font-medium bg-accent/15 text-accent border border-accent/30"
+                        >
+                          {t}
+                          <button
+                            type="button"
+                            onClick={() => toggleEditTag(t)}
+                            className="hover:text-rose-500 cursor-pointer"
+                          >
+                            <X className="w-3 h-3" />
+                          </button>
+                        </span>
+                      ))
+                    )}
+                  </div>
+
+                  {/* Popular preset chips */}
+                  <div className="flex flex-wrap gap-1 max-h-28 overflow-y-auto p-1">
+                    {popularTechnologies.map((tech) => {
+                      const isSelected = editTags.includes(tech);
+                      return (
+                        <button
+                          key={tech}
+                          type="button"
+                          onClick={() => toggleEditTag(tech)}
+                          className={`px-2 py-0.5 text-[11px] font-medium rounded-lg border transition-all cursor-pointer ${
+                            isSelected
+                              ? "bg-accent text-white border-accent"
+                              : "bg-background border-border text-foreground/70 hover:border-accent/50"
+                          }`}
+                        >
+                          {tech}
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {/* Custom tag input */}
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={editCustomTagInput}
+                      onChange={(e) => setEditCustomTagInput(e.target.value)}
+                      placeholder="Add custom technology (e.g., Pinecone, BullMQ)..."
+                      className="flex-1 px-3 py-1.5 text-xs rounded-xl bg-background border border-border focus:border-accent focus:outline-none text-foreground placeholder:text-foreground/40"
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          addCustomEditTag();
+                        }
+                      }}
+                    />
+                    <button
+                      type="button"
+                      onClick={addCustomEditTag}
+                      className="px-3 py-1.5 text-xs font-semibold rounded-xl bg-accent text-white hover:bg-accent/90 transition-colors cursor-pointer"
+                    >
+                      Add
+                    </button>
+                  </div>
+                </div>
+
+                {/* 5. Key Features */}
+                <div className="space-y-3 pt-3 border-t border-border/60">
+                  <h4 className="text-xs font-bold text-foreground uppercase tracking-wider text-accent flex items-center gap-1.5">
+                    <CheckCircle2 className="w-3.5 h-3.5" />
+                    <span>Key Features ({editKeyFeatures.length})</span>
+                  </h4>
+
+                  <div className="space-y-1.5">
+                    {editKeyFeatures.map((feat, i) => (
+                      <div
+                        key={i}
+                        className="flex items-center justify-between p-2 rounded-xl bg-background border border-border text-xs text-foreground/90 gap-2"
+                      >
+                        <span className="truncate">{feat}</span>
+                        <button
+                          type="button"
+                          onClick={() => removeEditFeature(i)}
+                          className="text-foreground/40 hover:text-rose-500 cursor-pointer shrink-0"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={newEditFeatureInput}
+                      onChange={(e) => setNewEditFeatureInput(e.target.value)}
+                      placeholder="Add a key feature highlight..."
+                      className="flex-1 px-3 py-1.5 text-xs rounded-xl bg-background border border-border focus:border-accent focus:outline-none text-foreground placeholder:text-foreground/40"
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          addEditFeature();
+                        }
+                      }}
+                    />
+                    <button
+                      type="button"
+                      onClick={addEditFeature}
+                      className="px-3 py-1.5 text-xs font-semibold rounded-xl bg-accent text-white hover:bg-accent/90 transition-colors cursor-pointer"
+                    >
+                      Add Feature
+                    </button>
+                  </div>
+                </div>
+
+                {/* Actions */}
+                <div className="flex items-center justify-end gap-2.5 pt-4 border-t border-border sticky -bottom-5 sm:-bottom-7 bg-card-bg/95 backdrop-blur-sm pb-1">
+                  <button
+                    type="button"
+                    disabled={isSavingEdit}
+                    onClick={() => setEditingProject(null)}
+                    className="px-4 py-2 text-xs font-semibold rounded-xl bg-background border border-border hover:bg-foreground/5 text-foreground/80 hover:text-foreground transition-all cursor-pointer disabled:opacity-60"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={isSavingEdit}
+                    className="inline-flex items-center gap-1.5 px-5 py-2 text-xs font-bold rounded-xl bg-accent hover:bg-accent/90 active:scale-98 text-white transition-all shadow-md shadow-accent/25 cursor-pointer disabled:opacity-60"
+                  >
+                    {isSavingEdit ? (
+                      <>
+                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                        <span>Saving to MongoDB...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Check className="w-3.5 h-3.5" />
+                        <span>Save Changes</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+              </form>
             </motion.div>
           </div>
         )}

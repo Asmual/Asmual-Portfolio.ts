@@ -153,3 +153,72 @@ export async function DELETE(req: NextRequest) {
     return NextResponse.json({ success: false, message: error?.message }, { status: 500 });
   }
 }
+
+export async function PUT(req: NextRequest) {
+  try {
+    const session = await getAdminSession();
+    if (!session) {
+      return NextResponse.json(
+        { success: false, message: "Unauthorized. Admin session required." },
+        { status: 401 }
+      );
+    }
+
+    const body = await req.json();
+    const { id, ...updateData } = body;
+
+    if (!id) {
+      return NextResponse.json(
+        { success: false, message: "Project ID is required for update." },
+        { status: 400 }
+      );
+    }
+
+    const updateFields: any = {
+      updatedAt: new Date().toISOString(),
+    };
+
+    if (updateData.title !== undefined) updateFields.title = updateData.title.trim();
+    if (updateData.tagline !== undefined) updateFields.tagline = updateData.tagline.trim();
+    if (updateData.category !== undefined) updateFields.category = updateData.category;
+    if (updateData.description !== undefined) updateFields.description = updateData.description.trim();
+    if (updateData.overview !== undefined) updateFields.overview = updateData.overview.trim();
+    if (updateData.architecture !== undefined) updateFields.architecture = updateData.architecture.trim();
+    if (updateData.tags !== undefined && Array.isArray(updateData.tags)) updateFields.tags = updateData.tags;
+    if (updateData.images !== undefined && Array.isArray(updateData.images)) updateFields.images = updateData.images;
+    if (updateData.liveUrl !== undefined) updateFields.liveUrl = updateData.liveUrl.trim();
+    if (updateData.githubUrl !== undefined) updateFields.githubUrl = updateData.githubUrl.trim() || undefined;
+    if (updateData.clientGithubUrl !== undefined) updateFields.clientGithubUrl = updateData.clientGithubUrl.trim() || undefined;
+    if (updateData.serverGithubUrl !== undefined) updateFields.serverGithubUrl = updateData.serverGithubUrl.trim() || undefined;
+    if (updateData.featured !== undefined) updateFields.featured = Boolean(updateData.featured);
+    if (updateData.isTeamProject !== undefined) updateFields.isTeamProject = Boolean(updateData.isTeamProject);
+    if (updateData.keyFeatures !== undefined && Array.isArray(updateData.keyFeatures)) updateFields.keyFeatures = updateData.keyFeatures;
+    if (updateData.metrics !== undefined && Array.isArray(updateData.metrics)) updateFields.metrics = updateData.metrics;
+    if (updateData.status !== undefined) updateFields.status = updateData.status;
+    if (updateData.duration !== undefined) updateFields.duration = updateData.duration;
+    if (updateData.role !== undefined) updateFields.role = updateData.role;
+
+    const db = await getDb();
+    const result = await db.collection("projects").updateOne({ id }, { $set: updateFields });
+
+    if (result.matchedCount === 0) {
+      return NextResponse.json({ success: false, message: "Project not found in database." }, { status: 404 });
+    }
+
+    const updatedDoc: any = await db.collection("projects").findOne({ id });
+    const { _id: _, ...sanitized } = updatedDoc || {};
+
+    return NextResponse.json({
+      success: true,
+      message: "Project updated successfully!",
+      project: sanitized,
+    });
+  } catch (error: any) {
+    console.error("Project update error:", error);
+    return NextResponse.json(
+      { success: false, message: error?.message || "Failed to update project." },
+      { status: 500 }
+    );
+  }
+}
+
