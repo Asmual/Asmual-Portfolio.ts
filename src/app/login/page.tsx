@@ -39,6 +39,12 @@ export default function LoginPage() {
       .catch(() => {});
   }, [router]);
 
+  const handleQuickFill = () => {
+    setUsername("Asmual@admin.com");
+    setPassword("Asmual@#772800");
+    setStatusMessage(null);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!username.trim() || !password.trim()) return;
@@ -73,10 +79,11 @@ export default function LoginPage() {
         });
         setIsLoading(false);
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const errorMsg = err instanceof Error ? err.message : "Connection error. Please try again.";
       setStatusMessage({
         type: "error",
-        text: err?.message || "Connection error. Please try again.",
+        text: errorMsg,
       });
       setIsLoading(false);
     }
@@ -154,6 +161,18 @@ export default function LoginPage() {
             <span className="leading-relaxed font-medium">{statusMessage.text}</span>
           </motion.div>
         )}
+
+        {/* Quick Fill Helper for Mobile Convenience */}
+        <div className="mb-4 p-2.5 rounded-xl bg-accent/5 border border-accent/20 flex items-center justify-between text-xs">
+          <span className="text-foreground/70 text-[11px]">Administrator Access:</span>
+          <button
+            type="button"
+            onClick={handleQuickFill}
+            className="text-[11px] font-semibold text-accent hover:underline cursor-pointer flex items-center gap-1"
+          >
+            <span>Fill Credentials</span>
+          </button>
+        </div>
 
         {/* Form Controls */}
         <form onSubmit={handleSubmit} className="space-y-4">
