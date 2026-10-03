@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { 
   ArrowLeft, 
   Lock, 
@@ -12,33 +13,73 @@ import {
   ShieldCheck, 
   LogIn, 
   KeyRound,
-  CheckCircle2
+  CheckCircle2,
+  AlertCircle
 } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function LoginPage() {
-  const [username, setUsername] = useState("");
+  const router = useRouter();
+  const [username, setUsername] = useState("Asmual@admin.com");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false);
+  const [rememberMe, setRememberMe] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
-  const [statusMessage, setStatusMessage] = useState<{ type: "success" | "info"; text: string } | null>(null);
+  const [statusMessage, setStatusMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Check if admin is already logged in
+  useEffect(() => {
+    fetch("/api/auth/me")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.authenticated) {
+          router.push("/dashboard");
+        }
+      })
+      .catch(() => {});
+  }, [router]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!username.trim() || !password.trim()) return;
 
     setIsLoading(true);
     setStatusMessage(null);
 
-    // Simulated login feedback for UI evaluation
-    setTimeout(() => {
-      setIsLoading(false);
-      setStatusMessage({
-        type: "success",
-        text: "Portal UI verified! Ready for Better-Auth & MongoDB credentials integration.",
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username: username.trim(),
+          password: password.trim(),
+        }),
       });
-    }, 800);
+
+      const data = await res.json();
+
+      if (res.ok && data.success) {
+        setStatusMessage({
+          type: "success",
+          text: "Login successful! Redirecting to Administrator Dashboard...",
+        });
+        setTimeout(() => {
+          router.push("/dashboard");
+        }, 800);
+      } else {
+        setStatusMessage({
+          type: "error",
+          text: data.message || "Invalid administrator credentials. Access denied.",
+        });
+        setIsLoading(false);
+      }
+    } catch (err: any) {
+      setStatusMessage({
+        type: "error",
+        text: err?.message || "Connection error. Please try again.",
+      });
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -90,7 +131,7 @@ export default function LoginPage() {
           </h1>
 
           <p className="text-xs text-foreground/60 max-w-xs mx-auto">
-            Enter your administrative credentials to manage portfolio projects, telemetry, and content.
+            Enter your administrative credentials to manage portfolio projects, Cloudinary assets, and Gemini AI.
           </p>
         </div>
 
@@ -99,10 +140,18 @@ export default function LoginPage() {
           <motion.div
             initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-5 p-3 rounded-xl bg-accent/10 border border-accent/30 text-accent text-xs flex items-start gap-2.5"
+            className={`mb-5 p-3 rounded-xl border text-xs flex items-start gap-2.5 ${
+              statusMessage.type === "success"
+                ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-500"
+                : "bg-rose-500/10 border-rose-500/30 text-rose-500"
+            }`}
           >
-            <CheckCircle2 className="w-4 h-4 shrink-0 mt-0.5" />
-            <span className="leading-relaxed">{statusMessage.text}</span>
+            {statusMessage.type === "success" ? (
+              <CheckCircle2 className="w-4 h-4 shrink-0 mt-0.5" />
+            ) : (
+              <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+            )}
+            <span className="leading-relaxed font-medium">{statusMessage.text}</span>
           </motion.div>
         )}
 
@@ -126,7 +175,7 @@ export default function LoginPage() {
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                placeholder="admin@asmual.dev"
+                placeholder="Asmual@admin.com"
                 required
                 className="w-full pl-9 pr-3.5 py-2.5 text-xs sm:text-sm rounded-xl bg-background border border-border/80 focus:border-accent focus:ring-1 focus:ring-accent focus:outline-none transition-all duration-200 text-foreground placeholder:text-foreground/40"
               />
@@ -166,7 +215,7 @@ export default function LoginPage() {
             </div>
           </div>
 
-          {/* Remember Me & Security Prompt */}
+          {/* Remember Me */}
           <div className="flex items-center justify-between text-xs pt-1">
             <label className="flex items-center gap-2 cursor-pointer select-none text-foreground/70 hover:text-foreground">
               <input
@@ -175,12 +224,8 @@ export default function LoginPage() {
                 onChange={(e) => setRememberMe(e.target.checked)}
                 className="w-3.5 h-3.5 rounded border-border accent-accent cursor-pointer"
               />
-              <span>Remember this device</span>
+              <span>Remember administrator session</span>
             </label>
-
-            <span className="text-foreground/40 hover:text-accent transition-colors text-[11px] cursor-not-allowed">
-              Forgot Password?
-            </span>
           </div>
 
           {/* Submit Action Button */}
