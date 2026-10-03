@@ -145,19 +145,21 @@ export default function Navbar() {
           <Link
             href={pathname === "/" ? "#contact" : "/#contact"}
             onClick={(e) => handleScroll(e, "#contact", "Contact")}
-            className="inline-flex items-center gap-1 px-2.5 sm:px-4 py-1 sm:py-1.5 text-[11px] sm:text-xs font-semibold rounded-full bg-accent text-white shadow-xs hover:opacity-90 active:scale-95 transition-all duration-200 cursor-pointer shrink-0"
+            className="order-1 md:order-2 inline-flex items-center gap-1 px-2.5 sm:px-4 py-1 sm:py-1.5 text-[11px] sm:text-xs font-semibold rounded-full bg-accent text-white shadow-xs hover:opacity-90 active:scale-95 transition-all duration-200 cursor-pointer shrink-0"
           >
             <span>Hire Me</span>
             <ArrowUpRight className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
           </Link>
 
           {/* Theme Mode Switcher */}
-          <ThemeToggle />
+          <div className="order-2 md:order-1 flex items-center">
+            <ThemeToggle />
+          </div>
 
           {/* Mobile Navigation Toggle */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden p-1.5 rounded-lg bg-card-bg border border-border text-foreground hover:border-accent transition-colors cursor-pointer"
+            className="order-3 md:hidden p-1.5 rounded-lg bg-card-bg border border-border text-foreground hover:border-accent transition-colors cursor-pointer"
             aria-label="Toggle Navigation Menu"
           >
             {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
