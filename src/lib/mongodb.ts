@@ -31,5 +31,6 @@ export default clientPromise;
 
 export async function getDb(): Promise<Db> {
   const connectedClient = await clientPromise;
-  return connectedClient.db();
+  // Uses database name from MONGODB_URI or defaults to "Asmual-Obaidul-Hoque"
+  return connectedClient.db(process.env.MONGODB_DB_NAME || "Asmual-Obaidul-Hoque");
 }
