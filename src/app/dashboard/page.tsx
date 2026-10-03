@@ -25,7 +25,9 @@ import {
   Image as ImageIcon,
   ArrowLeft,
   RefreshCw,
+  AlertTriangle,
 } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Project, ProjectCategory } from "@/data/projects";
 
 // Curated library of clickable technology chips
@@ -116,6 +118,11 @@ export default function DashboardPage() {
     type: "success" | "error";
     message: string;
   } | null>(null);
+
+  // Custom Delete Modal State
+  const [projectToDelete, setProjectToDelete] = useState<Project | null>(null);
+  const [isDeletingProject, setIsDeletingProject] = useState(false);
+  const [deleteStatusMessage, setDeleteStatusMessage] = useState<string | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -373,21 +380,26 @@ export default function DashboardPage() {
     }
   };
 
-  const handleDeleteProject = async (projectId: string, projectTitle: string) => {
-    if (!confirm(`Are you sure you want to delete "${projectTitle}" from your portfolio?`)) {
-      return;
-    }
+  const confirmDeleteProject = async () => {
+    if (!projectToDelete) return;
 
+    setIsDeletingProject(true);
     try {
-      const res = await fetch(`/api/projects?id=${projectId}`, { method: "DELETE" });
+      const res = await fetch(`/api/projects?id=${projectToDelete.id}`, { method: "DELETE" });
       const data = await res.json();
       if (res.ok && data.success) {
-        setProjects((prev) => prev.filter((p) => p.id !== projectId));
+        setProjects((prev) => prev.filter((p) => p.id !== projectToDelete.id));
+        setDeleteStatusMessage(`Project "${projectToDelete.title}" has been permanently deleted.`);
+        setProjectToDelete(null);
+        setTimeout(() => setDeleteStatusMessage(null), 4000);
       } else {
         alert(data.message || "Failed to delete project.");
       }
-    } catch (err: any) {
-      alert(`Delete error: ${err?.message}`);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Delete failed.";
+      alert(`Delete error: ${msg}`);
+    } finally {
+      setIsDeletingProject(false);
     }
   };
 
@@ -1086,6 +1098,13 @@ export default function DashboardPage() {
               </button>
             </div>
 
+            {deleteStatusMessage && (
+              <div className="p-3 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-500 text-xs flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 shrink-0" />
+                <span className="font-medium">{deleteStatusMessage}</span>
+              </div>
+            )}
+
             {isLoadingProjects ? (
               <div className="py-12 text-center text-xs text-foreground/60 flex flex-col items-center gap-2">
                 <Loader2 className="w-6 h-6 text-accent animate-spin" />
@@ -1155,7 +1174,8 @@ export default function DashboardPage() {
                       </a>
 
                       <button
-                        onClick={() => handleDeleteProject(proj.id, proj.title)}
+                        type="button"
+                        onClick={() => setProjectToDelete(proj)}
                         className="p-1.5 rounded-lg text-foreground/50 hover:text-rose-500 hover:bg-rose-500/10 transition-colors cursor-pointer"
                         title="Delete project"
                       >
@@ -1169,6 +1189,91 @@ export default function DashboardPage() {
           </div>
         )}
       </main>
+
+      {/* Custom Delete Confirmation Warning Modal */}
+      <AnimatePresence>
+        {projectToDelete && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 15 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 15 }}
+              transition={{ duration: 0.2 }}
+              className="relative w-full max-w-md bg-card-bg border border-rose-500/30 rounded-3xl p-6 sm:p-7 shadow-2xl space-y-5 overflow-hidden"
+            >
+              {/* Ambient Glow */}
+              <div className="pointer-events-none absolute -top-12 -right-12 w-44 h-44 bg-rose-500/10 blur-2xl rounded-full -z-10" />
+
+              <div className="flex items-start gap-3.5">
+                <div className="p-3 rounded-2xl bg-rose-500/15 border border-rose-500/30 text-rose-500 shrink-0">
+                  <AlertTriangle className="w-6 h-6" />
+                </div>
+                <div className="space-y-1">
+                  <h3 className="text-base font-bold text-foreground">
+                    Delete Project?
+                  </h3>
+                  <p className="text-xs text-foreground/70 leading-relaxed">
+                    This action is permanent and cannot be undone. Are you sure you want to remove this project from your portfolio?
+                  </p>
+                </div>
+              </div>
+
+              {/* Project Card Highlight */}
+              <div className="p-3 rounded-2xl bg-background border border-border/80 flex items-center gap-3">
+                {projectToDelete.images && projectToDelete.images[0] && (
+                  <div className="relative w-12 h-12 rounded-xl overflow-hidden bg-foreground/5 shrink-0 border border-border">
+                    <Image
+                      src={projectToDelete.images[0]}
+                      alt={projectToDelete.title}
+                      fill
+                      sizes="48px"
+                      className="object-cover"
+                    />
+                  </div>
+                )}
+                <div className="min-w-0 flex-1">
+                  <span className="text-[10px] font-semibold text-accent uppercase tracking-wider block">
+                    {projectToDelete.category}
+                  </span>
+                  <p className="text-xs font-bold text-foreground truncate">
+                    {projectToDelete.title}
+                  </p>
+                </div>
+              </div>
+
+              {/* Modal Actions */}
+              <div className="flex items-center justify-end gap-2.5 pt-2">
+                <button
+                  type="button"
+                  disabled={isDeletingProject}
+                  onClick={() => setProjectToDelete(null)}
+                  className="px-4 py-2 text-xs font-semibold rounded-xl bg-card-bg border border-border hover:bg-background text-foreground/80 hover:text-foreground transition-all cursor-pointer disabled:opacity-60"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  disabled={isDeletingProject}
+                  onClick={confirmDeleteProject}
+                  className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-xl bg-rose-600 hover:bg-rose-700 active:scale-98 text-white transition-all shadow-md shadow-rose-600/25 cursor-pointer disabled:opacity-60"
+                >
+                  {isDeletingProject ? (
+                    <>
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      <span>Deleting...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Trash2 className="w-3.5 h-3.5" />
+                      <span>Yes, Delete Project</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
