@@ -182,8 +182,20 @@ function ProjectCard({ project }: ProjectCardProps) {
 
 export default function Projects() {
   const [selectedCategory, setSelectedCategory] = useState<ProjectCategory>("All");
+  const [projects, setProjects] = useState<Project[]>(projectsData);
 
-  const filteredProjects = projectsData.filter((project) => {
+  useEffect(() => {
+    fetch("/api/projects")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.projects && data.projects.length > 0) {
+          setProjects(data.projects);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const filteredProjects = projects.filter((project) => {
     if (selectedCategory === "All") return true;
     if (selectedCategory === "Team Projects") {
       return project.category === "Team Projects" || project.isTeamProject;

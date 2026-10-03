@@ -179,9 +179,21 @@ function ProjectShowcaseCard({ project }: { project: Project }) {
 export default function ProjectsPage() {
   const [selectedCategory, setSelectedCategory] = useState<ProjectCategory>("All");
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [projectsList, setProjectsList] = useState<Project[]>(projectsData);
+
+  useEffect(() => {
+    fetch("/api/projects")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.projects && data.projects.length > 0) {
+          setProjectsList(data.projects);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const filteredProjects = useMemo(() => {
-    return projectsData.filter((project) => {
+    return projectsList.filter((project) => {
       const matchesCategory =
         selectedCategory === "All" ||
         (selectedCategory === "Team Projects"
@@ -196,7 +208,7 @@ export default function ProjectsPage() {
 
       return matchesCategory && matchesSearch;
     });
-  }, [selectedCategory, searchQuery]);
+  }, [selectedCategory, searchQuery, projectsList]);
 
   return (
     <main className="min-h-screen text-foreground py-8 sm:py-12 px-4 sm:px-6 lg:px-8 transition-colors duration-300 relative overflow-hidden">
