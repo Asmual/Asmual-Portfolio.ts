@@ -23,7 +23,7 @@ export async function GET() {
 
     // Map _id to string if needed and strip MongoDB internal ObjectId
     const sanitized = projects.map((p: any) => {
-      const { _id, ...rest } = p;
+      const { _id: _, ...rest } = p;
       return rest;
     });
 

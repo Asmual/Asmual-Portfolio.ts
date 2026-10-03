@@ -25,10 +25,7 @@ import {
   Image as ImageIcon,
   ArrowLeft,
   RefreshCw,
-  Eye,
-  Sliders,
 } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
 import { Project, ProjectCategory } from "@/data/projects";
 
 // Curated library of clickable technology chips
@@ -122,6 +119,21 @@ export default function DashboardPage() {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const loadProjects = async () => {
+    setIsLoadingProjects(true);
+    try {
+      const res = await fetch("/api/projects");
+      const data = await res.json();
+      if (data.projects) {
+        setProjects(data.projects);
+      }
+    } catch (err) {
+      console.error("Failed to load projects:", err);
+    } finally {
+      setIsLoadingProjects(false);
+    }
+  };
+
   // Check auth status on mount
   useEffect(() => {
     fetch("/api/auth/me")
@@ -139,21 +151,6 @@ export default function DashboardPage() {
         router.push("/login");
       });
   }, [router]);
-
-  const loadProjects = async () => {
-    setIsLoadingProjects(true);
-    try {
-      const res = await fetch("/api/projects");
-      const data = await res.json();
-      if (data.projects) {
-        setProjects(data.projects);
-      }
-    } catch (err) {
-      console.error("Failed to load projects:", err);
-    } finally {
-      setIsLoadingProjects(false);
-    }
-  };
 
   const handleLogout = async () => {
     try {
@@ -439,6 +436,11 @@ export default function DashboardPage() {
                 </span>
                 <span>Admin Console</span>
               </span>
+              {adminUser?.email && (
+                <span className="text-[11px] font-mono text-foreground/50 hidden md:inline">
+                  ({adminUser.email})
+                </span>
+              )}
             </div>
           </div>
 
