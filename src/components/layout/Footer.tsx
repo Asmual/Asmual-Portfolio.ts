@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -22,6 +22,19 @@ import { SiLeetcode } from "react-icons/si";
 import { NavItem, SocialLink, ServiceItem } from "@/types/index";
 
 export default function Footer(): React.JSX.Element {
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/auth/me")
+      .then((res) => res.json())
+      .then((data) => {
+        setIsAdmin(Boolean(data.authenticated));
+      })
+      .catch(() => {
+        setIsAdmin(false);
+      });
+  }, []);
+
   const navLinks: NavItem[] = [
     { name: "Home", href: "#home" },
     { name: "About", href: "#about" },
@@ -106,10 +119,21 @@ export default function Footer(): React.JSX.Element {
                 </div>
               </div>
 
-              <span className="font-mono font-bold text-sm sm:text-base tracking-tight text-foreground/90 group-hover:text-accent transition-colors duration-300 leading-none">
-                <span className="text-accent">&lt;</span>
-                Asmual
-                <span className="text-accent"> /&gt;</span>
+              <span className="font-mono font-bold text-sm sm:text-base tracking-tight text-foreground/90 group-hover:text-accent transition-colors duration-300 leading-none inline-flex items-center gap-1.5">
+                <span>
+                  <span className="text-accent">&lt;</span>
+                  Asmual
+                  <span className="text-accent"> /&gt;</span>
+                </span>
+                {isAdmin && (
+                  <span
+                    title="Administrator Active • Click to open Dashboard"
+                    className="relative flex h-2.5 w-2.5 items-center justify-center ml-0.5"
+                  >
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500 shadow-sm shadow-emerald-500/80" />
+                  </span>
+                )}
               </span>
             </Link>
 
@@ -147,6 +171,17 @@ export default function Footer(): React.JSX.Element {
                   </Link>
                 </li>
               ))}
+              {isAdmin && (
+                <li>
+                  <Link
+                    href="/dashboard"
+                    className="group inline-flex items-center gap-1.5 text-emerald-500 font-semibold transition-all duration-200 hover:text-emerald-400"
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                    <span>Admin Dashboard</span>
+                  </Link>
+                </li>
+              )}
             </ul>
           </div>
 
