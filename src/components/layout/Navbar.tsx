@@ -40,7 +40,7 @@ export default function Navbar() {
       // Don't override activeNav while a smooth click scroll is currently animating
       if (isManualScrollingRef.current) return;
 
-      const scrollPosition = window.scrollY + 200; // Offset for navbar height
+      const scrollPosition = window.scrollY + 100; // Offset for navbar height + buffer
 
       // If scrolled near bottom of page, highlight Contact
       if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 60) {
@@ -85,15 +85,24 @@ export default function Navbar() {
           if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
           scrollTimeoutRef.current = setTimeout(() => {
             isManualScrollingRef.current = false;
-          }, 850);
+          }, 1100);
 
+          const navHeight = 64;
           // Use Lenis for silky smooth momentum scroll if available
           const lenis = (window as any).__lenis;
           if (lenis && typeof lenis.scrollTo === "function") {
-            lenis.scrollTo(element, { offset: -70, duration: 1.0 });
+            if (targetId === "home") {
+              lenis.scrollTo(0, { duration: 1.0 });
+            } else {
+              lenis.scrollTo(element, { offset: -navHeight, duration: 1.0 });
+            }
           } else {
-            const y = element.getBoundingClientRect().top + window.scrollY - 70;
-            window.scrollTo({ top: y, behavior: "smooth" });
+            if (targetId === "home") {
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            } else {
+              const y = element.getBoundingClientRect().top + window.scrollY - navHeight;
+              window.scrollTo({ top: y, behavior: "smooth" });
+            }
           }
         }
       }

@@ -192,7 +192,7 @@ export default function Projects() {
   });
 
   return (
-    <section id="projects" className="py-10 sm:py-14 px-4 sm:px-6 lg:px-8 relative overflow-hidden transition-colors duration-300 border-t border-border/50 scroll-mt-16">
+    <section id="projects" className="py-10 sm:py-14 px-4 sm:px-6 lg:px-8 relative overflow-hidden transition-colors duration-300 border-t border-border/50">
       {/* Ambient Glow */}
       <div className="pointer-events-none absolute top-1/3 right-1/4 w-80 h-80 bg-accent/10 blur-3xl rounded-full -z-10" />
 
