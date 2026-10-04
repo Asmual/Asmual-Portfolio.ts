@@ -64,8 +64,13 @@ Respond ONLY with a valid JSON object (no markdown code blocks, no backticks, ju
       },
     };
 
-    // Try gemini-3.8-flash first, then gemini-2.0-flash fallback
-    const models = ["gemini-3.8-flash", "gemini-2.0-flash"];
+    // Primary and reliable fallbacks using active Google Gemini models
+    const models = [
+      "gemini-3.8-flash",
+      "gemini-3.5-flash",
+      "gemini-flash-lite-latest",
+      "gemini-3.5-flash-lite",
+    ];
     let responseData = null;
     let lastError = null;
 
@@ -84,23 +89,40 @@ Respond ONLY with a valid JSON object (no markdown code blocks, no backticks, ju
 
         if (res.ok) {
           const data = await res.json();
-          const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-          if (text) {
-            responseData = JSON.parse(text);
+          const parts = data?.candidates?.[0]?.content?.parts || [];
+          
+          let rawText = "";
+          for (const part of parts) {
+            if (part?.text && !part?.thought) {
+              rawText += part.text;
+            }
+          }
+          if (!rawText && parts[0]?.text) {
+            rawText = parts[0].text;
+          }
+
+          if (rawText) {
+            let cleanText = rawText.trim();
+            if (cleanText.startsWith("```")) {
+              cleanText = cleanText.replace(/^```[a-zA-Z]*\n?/, "").replace(/\n?```$/, "").trim();
+            }
+            responseData = JSON.parse(cleanText);
             break;
           }
         } else {
           const errData = await res.json();
-          lastError = errData?.error?.message || `Model ${model} failed with ${res.status}`;
+          lastError = errData?.error?.message || `Model ${model} returned status ${res.status}`;
+          console.warn(`[Gemini API] ${model} attempt failed:`, lastError);
         }
       } catch (err: any) {
         lastError = err?.message;
+        console.warn(`[Gemini API] ${model} error:`, err?.message);
       }
     }
 
     if (!responseData) {
       return NextResponse.json(
-        { success: false, message: lastError || "Failed to generate project content from AI." },
+        { success: false, message: lastError || "Failed to generate project content from AI. Please try again." },
         { status: 502 }
       );
     }

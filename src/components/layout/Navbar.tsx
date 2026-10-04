@@ -71,6 +71,38 @@ export default function Navbar() {
     };
   }, [pathname]);
 
+  const executeScroll = (targetId: string) => {
+    const element = document.getElementById(targetId);
+    if (!element) return;
+
+    // Lock ScrollSpy while smooth scrolling
+    isManualScrollingRef.current = true;
+    if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
+    scrollTimeoutRef.current = setTimeout(() => {
+      isManualScrollingRef.current = false;
+    }, 1200);
+
+    const navHeight = 64;
+    const lenis = (window as any).__lenis;
+    if (lenis && typeof lenis.scrollTo === "function") {
+      if (targetId === "home") {
+        lenis.scrollTo(0, { duration: 1.0 });
+      } else {
+        // html element already has scroll-padding-top: 64px in globals.css.
+        // Lenis reads container scrollPaddingTop automatically, so offset: 0 aligns
+        // the target element precisely flush with the bottom edge of the sticky navbar with 0px overlap.
+        lenis.scrollTo(element, { offset: 0, duration: 1.0 });
+      }
+    } else {
+      if (targetId === "home") {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        const y = element.getBoundingClientRect().top + window.scrollY - navHeight;
+        window.scrollTo({ top: y, behavior: "smooth" });
+      }
+    }
+  };
+
   const handleScroll = (e: React.MouseEvent<HTMLAnchorElement>, targetHref: string, name: string) => {
     setActiveNav(name);
 
@@ -78,33 +110,7 @@ export default function Navbar() {
       const targetId = targetHref.replace("#", "");
       if (pathname === "/") {
         e.preventDefault();
-        const element = document.getElementById(targetId);
-        if (element) {
-          // Lock ScrollSpy while smooth scrolling
-          isManualScrollingRef.current = true;
-          if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
-          scrollTimeoutRef.current = setTimeout(() => {
-            isManualScrollingRef.current = false;
-          }, 1100);
-
-          const navHeight = 64;
-          // Use Lenis for silky smooth momentum scroll if available
-          const lenis = (window as any).__lenis;
-          if (lenis && typeof lenis.scrollTo === "function") {
-            if (targetId === "home") {
-              lenis.scrollTo(0, { duration: 1.0 });
-            } else {
-              lenis.scrollTo(element, { offset: -navHeight, duration: 1.0 });
-            }
-          } else {
-            if (targetId === "home") {
-              window.scrollTo({ top: 0, behavior: "smooth" });
-            } else {
-              const y = element.getBoundingClientRect().top + window.scrollY - navHeight;
-              window.scrollTo({ top: y, behavior: "smooth" });
-            }
-          }
-        }
+        executeScroll(targetId);
       }
     }
   };
@@ -187,8 +193,17 @@ export default function Navbar() {
                 pathname={pathname}
                 isActive={activeNav === link.name}
                 onClick={(e) => {
-                  handleScroll(e, link.href, link.name);
+                  if (pathname === "/" && link.href.startsWith("#")) {
+                    e.preventDefault();
+                  }
+                  setActiveNav(link.name);
                   setIsOpen(false);
+                  setTimeout(() => {
+                    const targetId = link.href.replace("#", "");
+                    if (pathname === "/") {
+                      executeScroll(targetId);
+                    }
+                  }, 80);
                 }}
                 layoutId="nav-active-pill-mobile"
                 isMobile

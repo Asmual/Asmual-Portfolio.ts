@@ -84,6 +84,7 @@ export default function DashboardPage() {
   const [aiPrompt, setAiPrompt] = useState("");
   const [isGeneratingAi, setIsGeneratingAi] = useState(false);
   const [aiSuccessMessage, setAiSuccessMessage] = useState<string | null>(null);
+  const [aiErrorMessage, setAiErrorMessage] = useState<string | null>(null);
 
   // Form State
   const [title, setTitle] = useState("");
@@ -264,6 +265,7 @@ export default function DashboardPage() {
 
     setIsGeneratingAi(true);
     setAiSuccessMessage(null);
+    setAiErrorMessage(null);
 
     try {
       const res = await fetch("/api/ai/generate-project", {
@@ -294,10 +296,11 @@ export default function DashboardPage() {
           "✨ Gemini AI generated project title, description, category, tags, and key features! Review and polish them below."
         );
       } else {
-        alert(result.message || "AI generation failed. Please try again.");
+        const errorMsg = result.message || "AI generation failed. Please try again.";
+        setAiErrorMessage(errorMsg);
       }
     } catch (err: any) {
-      alert(`AI generation error: ${err?.message}`);
+      setAiErrorMessage(`AI generation error: ${err?.message || "Network request failed"}`);
     } finally {
       setIsGeneratingAi(false);
     }
@@ -801,6 +804,13 @@ export default function DashboardPage() {
                 <div className="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 text-xs flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 shrink-0" />
                   <span>{aiSuccessMessage}</span>
+                </div>
+              )}
+
+              {aiErrorMessage && (
+                <div className="p-2.5 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-500 text-xs flex items-center gap-2">
+                  <AlertCircle className="w-4 h-4 shrink-0" />
+                  <span>{aiErrorMessage}</span>
                 </div>
               )}
             </div>

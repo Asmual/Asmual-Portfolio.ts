@@ -113,6 +113,19 @@ export default function Hero() {
             <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 pt-1">
               <Link
                 href="#projects"
+                onClick={(e) => {
+                  e.preventDefault();
+                  const element = document.getElementById("projects");
+                  if (element) {
+                    const lenis = (window as any).__lenis;
+                    if (lenis && typeof lenis.scrollTo === "function") {
+                      lenis.scrollTo(element, { offset: 0, duration: 1.0 });
+                    } else {
+                      const y = element.getBoundingClientRect().top + window.scrollY - 64;
+                      window.scrollTo({ top: y, behavior: "smooth" });
+                    }
+                  }
+                }}
                 className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-accent text-white text-xs font-semibold shadow-md hover:bg-accent/90 transition-all duration-300 group cursor-pointer"
               >
                 <span>View My Work</span>

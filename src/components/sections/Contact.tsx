@@ -79,7 +79,7 @@ export default function Contact() {
   };
 
   return (
-    <section id="contact" className="min-h-[calc(100vh-4rem)] flex flex-col justify-center py-14 sm:py-20 relative bg-background border-t border-border/50 overflow-hidden transition-colors duration-300">
+    <section id="contact" className="py-12 sm:py-16 lg:py-20 relative bg-background border-t border-border/50 overflow-hidden transition-colors duration-300">
       {/* Ambient Lighting Glow */}
       <div className="absolute top-1/2 right-1/4 -translate-y-1/2 w-96 h-96 bg-accent/5 blur-3xl rounded-full pointer-events-none -z-10" />
 
