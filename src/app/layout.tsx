@@ -4,6 +4,7 @@ import PageLoader from "@/components/ui/PageLoader";
 import CustomCursor from "@/components/ui/CustomCursor";
 import BackToTop from "@/components/ui/BackToTop";
 import SmoothScroll from "@/components/providers/SmoothScroll";
+import VisitorTracker from "@/components/providers/VisitorTracker";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -185,6 +186,7 @@ export default function RootLayout({
         />
       </head>
       <body suppressHydrationWarning className="min-h-full flex flex-col">
+        <VisitorTracker />
         <CustomCursor />
         <BackToTop />
         <PageLoader />

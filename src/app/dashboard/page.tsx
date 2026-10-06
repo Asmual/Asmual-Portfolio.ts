@@ -27,9 +27,18 @@ import {
   RefreshCw,
   AlertTriangle,
   Pencil,
+  Users,
+  Globe,
+  Smartphone,
+  Monitor,
+  TrendingUp,
+  Calendar,
+  Clock,
+  Tablet,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Project, ProjectCategory } from "@/data/projects";
+import { getCountryFlag } from "@/lib/analytics";
 
 // Curated library of clickable technology chips
 const popularTechnologies = [
@@ -77,8 +86,12 @@ export default function DashboardPage() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [isLoadingProjects, setIsLoadingProjects] = useState(true);
 
-  // Active view tab: "create" | "manage"
-  const [activeTab, setActiveTab] = useState<"create" | "manage">("create");
+  // Active view tab: "create" | "manage" | "analytics"
+  const [activeTab, setActiveTab] = useState<"create" | "manage" | "analytics">("create");
+
+  // Visitor Analytics State
+  const [analyticsData, setAnalyticsData] = useState<any | null>(null);
+  const [isLoadingAnalytics, setIsLoadingAnalytics] = useState(false);
 
   // AI Prompt State
   const [aiPrompt, setAiPrompt] = useState("");
@@ -168,6 +181,21 @@ export default function DashboardPage() {
     }
   };
 
+  const loadAnalytics = async () => {
+    setIsLoadingAnalytics(true);
+    try {
+      const res = await fetch("/api/analytics/stats");
+      const data = await res.json();
+      if (res.ok && data.success && data.data) {
+        setAnalyticsData(data.data);
+      }
+    } catch (err) {
+      console.error("Failed to load analytics:", err);
+    } finally {
+      setIsLoadingAnalytics(false);
+    }
+  };
+
   // Check auth status on mount
   useEffect(() => {
     fetch("/api/auth/me")
@@ -179,6 +207,7 @@ export default function DashboardPage() {
           setIsAdmin(true);
           setAdminUser(data.user);
           loadProjects();
+          loadAnalytics();
         }
       })
       .catch(() => {
@@ -740,6 +769,22 @@ export default function DashboardPage() {
           >
             <Layers className="w-3.5 h-3.5" />
             <span>Manage Projects ({projects.length})</span>
+          </button>
+
+          <button
+            onClick={() => {
+              setActiveTab("analytics");
+              loadAnalytics();
+            }}
+            className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+              activeTab === "analytics"
+                ? "bg-accent text-white shadow-xs"
+                : "bg-card-bg text-foreground/70 hover:text-foreground border border-border"
+            }`}
+          >
+            <Users className="w-3.5 h-3.5" />
+            <span>Visitor Analytics</span>
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
           </button>
         </div>
 
@@ -1380,6 +1425,315 @@ export default function DashboardPage() {
                   </div>
                 ))}
               </div>
+            )}
+          </div>
+        )}
+
+        {/* TAB 3: VISITOR ANALYTICS */}
+        {activeTab === "analytics" && (
+          <div className="space-y-6">
+            {/* Header with Refresh Button */}
+            <div className="p-5 sm:p-6 rounded-2xl bg-card-bg border border-border shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <div className="flex items-center gap-2">
+                  <div className="p-2 rounded-xl bg-accent/10 border border-accent/20 text-accent">
+                    <Users className="w-5 h-5" />
+                  </div>
+                  <h2 className="text-base font-bold text-foreground">
+                    Visitor Analytics &amp; Traffic Overview
+                  </h2>
+                </div>
+                <p className="text-xs text-foreground/60 mt-1">
+                  Privacy-first real-time audience metrics and visitor geography stored in your MongoDB Atlas database.
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={loadAnalytics}
+                disabled={isLoadingAnalytics}
+                className="inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold rounded-xl bg-card-bg border border-border hover:border-accent hover:text-accent transition-all cursor-pointer self-start sm:self-auto shadow-2xs disabled:opacity-60"
+              >
+                <RefreshCw className={`w-3.5 h-3.5 ${isLoadingAnalytics ? "animate-spin text-accent" : ""}`} />
+                <span>Refresh Data</span>
+              </button>
+            </div>
+
+            {isLoadingAnalytics && !analyticsData ? (
+              <div className="py-20 flex flex-col items-center justify-center gap-3 text-foreground/60">
+                <Loader2 className="w-6 h-6 animate-spin text-accent" />
+                <span className="text-xs font-medium">Loading visitor analytics...</span>
+              </div>
+            ) : (
+              <>
+                {/* 5 Key Metric Cards */}
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3.5">
+                  {/* Card 1: Live Now */}
+                  <div className="p-4 rounded-2xl bg-card-bg border border-emerald-500/30 shadow-xs space-y-2 relative overflow-hidden">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-500">
+                        Live Now
+                      </span>
+                      <span className="relative flex h-2.5 w-2.5">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                        <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500" />
+                      </span>
+                    </div>
+                    <p className="text-2xl font-extrabold text-foreground">
+                      {analyticsData?.liveCount || 1}
+                    </p>
+                    <p className="text-[11px] text-foreground/50">Active in last 5 mins</p>
+                  </div>
+
+                  {/* Card 2: Today */}
+                  <div className="p-4 rounded-2xl bg-card-bg border border-border shadow-xs space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-foreground/60">
+                        Today
+                      </span>
+                      <Calendar className="w-3.5 h-3.5 text-accent" />
+                    </div>
+                    <p className="text-2xl font-extrabold text-foreground">
+                      {analyticsData?.todayCount ?? 0}
+                    </p>
+                    <p className="text-[11px] text-foreground/50">Since midnight (00:00)</p>
+                  </div>
+
+                  {/* Card 3: This Week */}
+                  <div className="p-4 rounded-2xl bg-card-bg border border-border shadow-xs space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-foreground/60">
+                        This Week
+                      </span>
+                      <TrendingUp className="w-3.5 h-3.5 text-accent" />
+                    </div>
+                    <p className="text-2xl font-extrabold text-foreground">
+                      {analyticsData?.weekCount ?? 0}
+                    </p>
+                    <p className="text-[11px] text-foreground/50">Last 7 days total</p>
+                  </div>
+
+                  {/* Card 4: This Month */}
+                  <div className="p-4 rounded-2xl bg-card-bg border border-border shadow-xs space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-foreground/60">
+                        This Month
+                      </span>
+                      <Clock className="w-3.5 h-3.5 text-accent" />
+                    </div>
+                    <p className="text-2xl font-extrabold text-foreground">
+                      {analyticsData?.monthCount ?? 0}
+                    </p>
+                    <p className="text-[11px] text-foreground/50">Last 30 days total</p>
+                  </div>
+
+                  {/* Card 5: All-time Pageviews & Unique */}
+                  <div className="p-4 rounded-2xl bg-card-bg border border-border shadow-xs space-y-2 col-span-2 sm:col-span-1">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-foreground/60">
+                        All-Time Views
+                      </span>
+                      <Users className="w-3.5 h-3.5 text-accent" />
+                    </div>
+                    <p className="text-2xl font-extrabold text-accent">
+                      {analyticsData?.totalCount ?? 0}
+                    </p>
+                    <p className="text-[11px] text-foreground/50">
+                      {analyticsData?.uniqueCount ?? 0} unique visitors
+                    </p>
+                  </div>
+                </div>
+
+                {/* Middle Grid: Devices & Countries */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* Device Distribution */}
+                  <div className="p-5 rounded-2xl bg-card-bg border border-border shadow-xs space-y-4">
+                    <div className="flex items-center justify-between pb-2 border-b border-border/60">
+                      <h3 className="text-xs font-bold uppercase tracking-wider text-foreground flex items-center gap-2">
+                        <Monitor className="w-4 h-4 text-accent" />
+                        <span>Device Breakdown</span>
+                      </h3>
+                      <span className="text-[11px] text-foreground/50 font-mono">
+                        {(analyticsData?.devices?.Desktop || 0) + (analyticsData?.devices?.Mobile || 0) + (analyticsData?.devices?.Tablet || 0)} Total
+                      </span>
+                    </div>
+
+                    {(() => {
+                      const desktop = analyticsData?.devices?.Desktop || 0;
+                      const mobile = analyticsData?.devices?.Mobile || 0;
+                      const tablet = analyticsData?.devices?.Tablet || 0;
+                      const total = Math.max(1, desktop + mobile + tablet);
+
+                      const dPct = Math.round((desktop / total) * 100);
+                      const mPct = Math.round((mobile / total) * 100);
+                      const tPct = Math.round((tablet / total) * 100);
+
+                      return (
+                        <div className="space-y-3.5 text-xs">
+                          {/* Desktop */}
+                          <div className="space-y-1.5">
+                            <div className="flex items-center justify-between text-foreground/80">
+                              <span className="inline-flex items-center gap-1.5">
+                                <Monitor className="w-3.5 h-3.5 text-accent" />
+                                <span className="font-semibold">Desktop</span>
+                              </span>
+                              <span className="font-mono font-bold text-foreground">
+                                {desktop} ({dPct}%)
+                              </span>
+                            </div>
+                            <div className="w-full h-2 rounded-full bg-foreground/5 overflow-hidden">
+                              <div
+                                className="h-full bg-accent rounded-full transition-all duration-500"
+                                style={{ width: `${dPct}%` }}
+                              />
+                            </div>
+                          </div>
+
+                          {/* Mobile */}
+                          <div className="space-y-1.5">
+                            <div className="flex items-center justify-between text-foreground/80">
+                              <span className="inline-flex items-center gap-1.5">
+                                <Smartphone className="w-3.5 h-3.5 text-emerald-500" />
+                                <span className="font-semibold">Mobile</span>
+                              </span>
+                              <span className="font-mono font-bold text-foreground">
+                                {mobile} ({mPct}%)
+                              </span>
+                            </div>
+                            <div className="w-full h-2 rounded-full bg-foreground/5 overflow-hidden">
+                              <div
+                                className="h-full bg-emerald-500 rounded-full transition-all duration-500"
+                                style={{ width: `${mPct}%` }}
+                              />
+                            </div>
+                          </div>
+
+                          {/* Tablet */}
+                          <div className="space-y-1.5">
+                            <div className="flex items-center justify-between text-foreground/80">
+                              <span className="inline-flex items-center gap-1.5">
+                                <Tablet className="w-3.5 h-3.5 text-purple-500" />
+                                <span className="font-semibold">Tablet</span>
+                              </span>
+                              <span className="font-mono font-bold text-foreground">
+                                {tablet} ({tPct}%)
+                              </span>
+                            </div>
+                            <div className="w-full h-2 rounded-full bg-foreground/5 overflow-hidden">
+                              <div
+                                className="h-full bg-purple-500 rounded-full transition-all duration-500"
+                                style={{ width: `${tPct}%` }}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })()}
+                  </div>
+
+                  {/* Top Countries */}
+                  <div className="p-5 rounded-2xl bg-card-bg border border-border shadow-xs space-y-3">
+                    <div className="flex items-center justify-between pb-2 border-b border-border/60">
+                      <h3 className="text-xs font-bold uppercase tracking-wider text-foreground flex items-center gap-2">
+                        <Globe className="w-4 h-4 text-accent" />
+                        <span>Top Locations</span>
+                      </h3>
+                      <span className="text-[11px] text-foreground/50">Geographic Source</span>
+                    </div>
+
+                    {(!analyticsData?.topCountries || analyticsData.topCountries.length === 0) ? (
+                      <p className="text-xs text-foreground/50 italic py-6 text-center">
+                        No geographic visits logged yet. Real visitor countries will show here.
+                      </p>
+                    ) : (
+                      <div className="space-y-2">
+                        {analyticsData.topCountries.map((c: any, idx: number) => (
+                          <div
+                            key={idx}
+                            className="flex items-center justify-between p-2 rounded-xl bg-background border border-border/70 text-xs"
+                          >
+                            <div className="flex items-center gap-2.5">
+                              <span className="text-base">{getCountryFlag(c.countryCode)}</span>
+                              <span className="font-medium text-foreground">{c.country}</span>
+                            </div>
+                            <span className="font-mono font-bold text-accent px-2 py-0.5 rounded-md bg-accent/10">
+                              {c.count} {c.count === 1 ? "visit" : "visits"}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Recent Visitor Activity Stream */}
+                <div className="p-5 sm:p-6 rounded-2xl bg-card-bg border border-border shadow-xs space-y-3.5">
+                  <div className="flex items-center justify-between pb-2 border-b border-border/60">
+                    <div>
+                      <h3 className="text-xs font-bold uppercase tracking-wider text-foreground flex items-center gap-2">
+                        <Clock className="w-4 h-4 text-accent" />
+                        <span>Recent Visitors Stream</span>
+                      </h3>
+                      <p className="text-[11px] text-foreground/50 mt-0.5">
+                        Latest real-time pageviews and visitor technology
+                      </p>
+                    </div>
+                    <span className="text-[10px] font-mono text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+                      Live Feed
+                    </span>
+                  </div>
+
+                  {(!analyticsData?.recentVisitors || analyticsData.recentVisitors.length === 0) ? (
+                    <p className="text-xs text-foreground/50 italic py-8 text-center">
+                      No visitor stream logged yet. Refresh or browse pages on the live site to populate.
+                    </p>
+                  ) : (
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-left text-xs">
+                        <thead>
+                          <tr className="text-[10.5px] uppercase font-semibold text-foreground/50 border-b border-border/60">
+                            <th className="pb-2">Location</th>
+                            <th className="pb-2">Page Visited</th>
+                            <th className="pb-2">Device &amp; Browser</th>
+                            <th className="pb-2 text-right">Time</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-border/40">
+                          {analyticsData.recentVisitors.map((v: any, i: number) => {
+                            const dateObj = new Date(v.timestamp);
+                            const formattedTime = dateObj.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+                            const formattedDate = dateObj.toLocaleDateString([], { month: "short", day: "numeric" });
+
+                            return (
+                              <tr key={i} className="hover:bg-foreground/2 transition-colors">
+                                <td className="py-2.5">
+                                  <div className="flex items-center gap-2">
+                                    <span className="text-sm">{getCountryFlag(v.countryCode)}</span>
+                                    <div>
+                                      <span className="font-semibold text-foreground block">
+                                        {v.city ? `${v.city}, ` : ""}{v.country}
+                                      </span>
+                                    </div>
+                                  </div>
+                                </td>
+                                <td className="py-2.5 font-mono text-accent">
+                                  {v.path}
+                                </td>
+                                <td className="py-2.5 text-foreground/75">
+                                  {v.device} • {v.browser} ({v.os})
+                                </td>
+                                <td className="py-2.5 text-right text-foreground/50 font-mono text-[11px]">
+                                  {formattedDate} {formattedTime}
+                                </td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+                </div>
+              </>
             )}
           </div>
         )}

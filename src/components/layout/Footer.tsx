@@ -20,6 +20,7 @@ import {
 } from "react-icons/fa6";
 import { SiLeetcode } from "react-icons/si";
 import { NavItem, SocialLink, ServiceItem } from "@/types/index";
+import LiveVisitorBadge from "@/components/ui/LiveVisitorBadge";
 
 export default function Footer(): React.JSX.Element {
   const [isAdmin, setIsAdmin] = useState(false);
@@ -245,6 +246,11 @@ export default function Footer(): React.JSX.Element {
             </Link>
             . All rights reserved.
           </p>
+
+          {/* Middle: Real-time Live Visitor Badge */}
+          <div className="flex justify-center">
+            <LiveVisitorBadge variant="footer" />
+          </div>
 
           {/* Right: Tech Stack info */}
           <p className="inline-flex items-center justify-center gap-1 text-center sm:text-right">

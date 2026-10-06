@@ -12,6 +12,7 @@ import {
 import { FaGithub, FaLinkedin, FaXTwitter } from "react-icons/fa6";
 import { SiLeetcode } from "react-icons/si";
 import { motion } from "framer-motion";
+import LiveVisitorBadge from "@/components/ui/LiveVisitorBadge";
 
 export default function Hero() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -67,10 +68,14 @@ export default function Hero() {
             transition={{ duration: 0.5 }}
             className="lg:col-span-7 flex flex-col items-center lg:items-start text-center lg:text-left order-2 lg:order-1 space-y-4"
           >
-            {/* Live Availability Status Badge */}
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/10 border border-accent/25 text-accent text-xs font-semibold shadow-xs">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span>Available for New Projects &amp; Remote Roles</span>
+            {/* Live Availability Status & Live Visitors Badge Strip */}
+            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/10 border border-accent/25 text-accent text-xs font-semibold shadow-xs">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                <span>Available for New Projects &amp; Remote Roles</span>
+              </div>
+
+              <LiveVisitorBadge variant="hero" />
             </div>
 
             {/* Main Headline with Moderate Font Size */}
