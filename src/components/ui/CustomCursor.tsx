@@ -1,16 +1,32 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 
 const DOT_COUNT = 16;
 const BASE_SIZE = 10; // 10px base circle
 
 export default function CustomCursor() {
+  const [isEnabled, setIsEnabled] = useState(false);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const dotElementsRef = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
+    // Only enable on desktop devices with a fine pointer (mouse/trackpad) and hover capability
+    const hasFinePointer =
+      typeof window !== "undefined" &&
+      window.matchMedia("(pointer: fine) and (hover: hover)").matches;
+
+    if (!hasFinePointer) {
+      return;
+    }
+
+    setIsEnabled(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isEnabled) return;
+
     // Initialize dots at offscreen coordinates
     const dots = Array.from({ length: DOT_COUNT }, () => ({
       x: -100,
@@ -23,13 +39,21 @@ export default function CustomCursor() {
     let isHovering = false;
     let isClicking = false;
 
-    const handleMouseMove = (e: MouseEvent) => {
+    const handlePointerMove = (e: PointerEvent) => {
+      // Ignore simulated touch or pen events
+      if (e.pointerType === "touch" || e.pointerType === "pen") {
+        if (containerRef.current) {
+          containerRef.current.style.opacity = "0";
+        }
+        isVisible = false;
+        return;
+      }
+
       targetX = e.clientX;
       targetY = e.clientY;
 
       if (!isVisible) {
         isVisible = true;
-        // Snap all dots to mouse position on initial entrance
         dots.forEach((dot) => {
           dot.x = targetX;
           dot.y = targetY;
@@ -71,12 +95,22 @@ export default function CustomCursor() {
       }
     };
 
-    window.addEventListener("mousemove", handleMouseMove, { passive: true });
+    const handleTouchStart = () => {
+      // Touch screen interaction detected -> immediately hide cursor
+      isVisible = false;
+      if (containerRef.current) {
+        containerRef.current.style.opacity = "0";
+        containerRef.current.style.display = "none";
+      }
+    };
+
+    window.addEventListener("pointermove", handlePointerMove, { passive: true });
     window.addEventListener("mouseover", handleMouseOver, { passive: true });
     window.addEventListener("mousedown", handleMouseDown, { passive: true });
     window.addEventListener("mouseup", handleMouseUp, { passive: true });
     document.addEventListener("mouseleave", handleMouseLeave);
     document.addEventListener("mouseenter", handleMouseEnter);
+    window.addEventListener("touchstart", handleTouchStart, { passive: true });
 
     // High performance ticker (Composite-only transform & opacity)
     const onTick = () => {
@@ -91,7 +125,6 @@ export default function CustomCursor() {
       for (let i = 1; i < DOT_COUNT; i++) {
         const prev = dots[i - 1];
         const current = dots[i];
-        // Elastic damping interpolation factor
         const ease = 0.36 + (i / DOT_COUNT) * 0.08;
         current.x += (prev.x - current.x) * ease;
         current.y += (prev.y - current.y) * ease;
@@ -122,25 +155,24 @@ export default function CustomCursor() {
 
     return () => {
       gsap.ticker.remove(onTick);
-      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("pointermove", handlePointerMove);
       window.removeEventListener("mouseover", handleMouseOver);
       window.removeEventListener("mousedown", handleMouseDown);
       window.removeEventListener("mouseup", handleMouseUp);
       document.removeEventListener("mouseleave", handleMouseLeave);
       document.removeEventListener("mouseenter", handleMouseEnter);
+      window.removeEventListener("touchstart", handleTouchStart);
     };
-  }, []);
+  }, [isEnabled]);
+
+  if (!isEnabled) return null;
 
   return (
     <div
       ref={containerRef}
       aria-hidden="true"
+      className="hidden md:block select-none pointer-events-none fixed inset-0 z-99999"
       style={{
-        position: "fixed",
-        inset: 0,
-        zIndex: 99999,
-        pointerEvents: "none",
-        userSelect: "none",
         opacity: 0,
         transition: "opacity 0.2s ease-out",
       }}
