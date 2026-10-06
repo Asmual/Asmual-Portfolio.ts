@@ -104,10 +104,10 @@ function ProjectCard({ project }: ProjectCardProps) {
           </div>
         </Link>
 
-        {/* Card Body Details with Compact Padding */}
-        <div className="p-3.5 sm:p-4 space-y-2.5 flex-1 flex flex-col justify-between">
+        {/* Card Body Details with Compact Clean Padding */}
+        <div className="p-3 sm:p-3.5 space-y-2 flex-1 flex flex-col justify-between">
           <div className="space-y-1">
-            <h3 className="text-xs sm:text-sm font-bold text-foreground transition-colors line-clamp-1 leading-snug">
+            <h3 className="text-xs sm:text-[13px] font-bold text-foreground transition-colors line-clamp-1 leading-snug">
               <Link
                 href={`/projects/${project.id}`}
                 className="hover:text-accent hover:underline transition-colors inline-block"
@@ -116,19 +116,14 @@ function ProjectCard({ project }: ProjectCardProps) {
                 {project.title}
               </Link>
             </h3>
-            {project.tagline && (
-              <p className="text-[10.5px] text-accent font-medium line-clamp-1">
-                {project.tagline}
-              </p>
-            )}
-            <p className="text-foreground/75 text-[11px] leading-relaxed line-clamp-2 pt-0.5">
+            <p className="text-foreground/75 text-[11px] leading-relaxed line-clamp-2">
               {project.description}
             </p>
           </div>
 
-          {/* Tech Stack Pills - Render all tags with natural wrap */}
-          <div className="flex flex-wrap gap-1 pt-1">
-            {project.tags.map((tag: string, idx: number) => (
+          {/* Tech Stack Pills - Uniform 3 tags + count badge to eliminate uneven vertical growth */}
+          <div className="flex flex-wrap items-center gap-1 pt-0.5">
+            {project.tags.slice(0, 3).map((tag: string, idx: number) => (
               <span
                 key={idx}
                 className="text-[9.5px] px-1.5 py-0.5 rounded-md bg-accent/10 border border-accent/20 text-accent font-medium leading-tight"
@@ -136,6 +131,11 @@ function ProjectCard({ project }: ProjectCardProps) {
                 {tag}
               </span>
             ))}
+            {project.tags.length > 3 && (
+              <span className="text-[9px] px-1.5 py-0.5 rounded-md bg-foreground/5 border border-border/60 text-foreground/60 font-mono">
+                +{project.tags.length - 3}
+              </span>
+            )}
           </div>
         </div>
       </div>
@@ -208,7 +208,7 @@ export default function Projects() {
       {/* Ambient Glow */}
       <div className="pointer-events-none absolute top-1/3 right-1/4 w-80 h-80 bg-accent/10 blur-3xl rounded-full -z-10" />
 
-      <div className="max-w-7xl mx-auto space-y-6 sm:space-y-8">
+      <div className="max-w-6xl mx-auto space-y-6 sm:space-y-8">
         {/* Section Header */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
           <div className="space-y-1.5">

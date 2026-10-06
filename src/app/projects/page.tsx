@@ -100,10 +100,10 @@ function ProjectShowcaseCard({ project }: { project: Project }) {
           </div>
         </Link>
 
-        {/* Card Body Content */}
-        <div className="p-3.5 sm:p-4 space-y-2.5 flex-1 flex flex-col justify-between">
+        {/* Card Body Content with Compact Padding */}
+        <div className="p-3 sm:p-3.5 space-y-2 flex-1 flex flex-col justify-between">
           <div className="space-y-1">
-            <h2 className="text-xs sm:text-sm font-bold text-foreground transition-colors line-clamp-1 leading-snug">
+            <h2 className="text-xs sm:text-[13px] font-bold text-foreground transition-colors line-clamp-1 leading-snug">
               <Link
                 href={`/projects/${project.id}`}
                 className="hover:text-accent hover:underline transition-colors inline-block"
@@ -112,26 +112,26 @@ function ProjectShowcaseCard({ project }: { project: Project }) {
                 {project.title}
               </Link>
             </h2>
-            {project.tagline && (
-              <p className="text-[10.5px] text-accent font-medium line-clamp-1">
-                {project.tagline}
-              </p>
-            )}
-            <p className="text-[11px] text-foreground/75 leading-relaxed line-clamp-2 pt-0.5">
+            <p className="text-[11px] text-foreground/75 leading-relaxed line-clamp-2">
               {project.description}
             </p>
           </div>
 
-          {/* Tech Stack Badges - Render all tags with natural wrap */}
-          <div className="flex flex-wrap gap-1 pt-1">
-            {project.tags.map((tag, idx) => (
+          {/* Tech Stack Badges - Uniform 3 tags + counter badge */}
+          <div className="flex flex-wrap items-center gap-1 pt-0.5">
+            {project.tags.slice(0, 3).map((tag, idx) => (
               <span
                 key={idx}
-                className="text-[9.5px] px-1.5 py-0.5 rounded-md bg-accent/10 border border-accent/20 text-accent font-medium"
+                className="text-[9.5px] px-1.5 py-0.5 rounded-md bg-accent/10 border border-accent/20 text-accent font-medium leading-tight"
               >
                 {tag}
               </span>
             ))}
+            {project.tags.length > 3 && (
+              <span className="text-[9px] px-1.5 py-0.5 rounded-md bg-foreground/5 border border-border/60 text-foreground/60 font-mono">
+                +{project.tags.length - 3}
+              </span>
+            )}
           </div>
         </div>
       </div>
@@ -216,7 +216,7 @@ export default function ProjectsPage() {
       <div className="pointer-events-none absolute top-20 left-1/4 w-96 h-96 bg-accent/10 blur-3xl rounded-full -z-10" />
       <div className="pointer-events-none absolute bottom-20 right-1/4 w-96 h-96 bg-accent/5 blur-3xl rounded-full -z-10" />
 
-      <div className="max-w-7xl mx-auto space-y-6 sm:space-y-8">
+      <div className="max-w-6xl mx-auto space-y-6 sm:space-y-8">
         {/* Back Link with Entrance Animation */}
         <motion.div
           initial={{ opacity: 0, x: -15 }}

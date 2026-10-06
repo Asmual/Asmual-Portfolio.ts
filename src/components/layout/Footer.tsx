@@ -100,7 +100,7 @@ export default function Footer(): React.JSX.Element {
       <div className="pointer-events-none absolute -left-32 top-10 h-48 w-48 rounded-full bg-accent/5 blur-3xl" />
       <div className="pointer-events-none absolute -right-32 bottom-5 h-48 w-48 rounded-full bg-accent/5 blur-3xl" />
 
-      <div className="relative mx-auto max-w-7xl px-4 pt-12 pb-8 sm:px-6 lg:px-8">
+      <div className="relative mx-auto max-w-6xl px-4 pt-12 pb-8 sm:px-6 lg:px-8">
         {/* Main Footer Grid */}
         <div className="grid grid-cols-1 gap-8 border-b border-border/60 pb-10 md:grid-cols-2 lg:grid-cols-12 lg:gap-x-8">
           
