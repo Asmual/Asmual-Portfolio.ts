@@ -38,7 +38,7 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Project, ProjectCategory } from "@/data/projects";
-import { getCountryFlag } from "@/lib/analytics";
+import { getCountryFlag, formatDuration } from "@/lib/analytics";
 
 // Curated library of clickable technology chips
 const popularTechnologies = [
@@ -1482,7 +1482,7 @@ export default function DashboardPage() {
                     <p className="text-2xl font-extrabold text-foreground">
                       {analyticsData?.liveCount || 1}
                     </p>
-                    <p className="text-[11px] text-foreground/50">Active in last 5 mins</p>
+                    <p className="text-[11px] text-foreground/50">Active devices right now</p>
                   </div>
 
                   {/* Card 2: Today */}
@@ -1494,9 +1494,11 @@ export default function DashboardPage() {
                       <Calendar className="w-3.5 h-3.5 text-accent" />
                     </div>
                     <p className="text-2xl font-extrabold text-foreground">
-                      {analyticsData?.todayCount ?? 0}
+                      {analyticsData?.todayUnique ?? 0}
                     </p>
-                    <p className="text-[11px] text-foreground/50">Since midnight (00:00)</p>
+                    <p className="text-[11px] text-foreground/50">
+                      Unique devices • {analyticsData?.todayPageviews ?? 0} views
+                    </p>
                   </div>
 
                   {/* Card 3: This Week */}
@@ -1508,9 +1510,9 @@ export default function DashboardPage() {
                       <TrendingUp className="w-3.5 h-3.5 text-accent" />
                     </div>
                     <p className="text-2xl font-extrabold text-foreground">
-                      {analyticsData?.weekCount ?? 0}
+                      {analyticsData?.weekUnique ?? 0}
                     </p>
-                    <p className="text-[11px] text-foreground/50">Last 7 days total</p>
+                    <p className="text-[11px] text-foreground/50">Unique devices (7 days)</p>
                   </div>
 
                   {/* Card 4: This Month */}
@@ -1522,9 +1524,9 @@ export default function DashboardPage() {
                       <Clock className="w-3.5 h-3.5 text-accent" />
                     </div>
                     <p className="text-2xl font-extrabold text-foreground">
-                      {analyticsData?.monthCount ?? 0}
+                      {analyticsData?.monthUnique ?? 0}
                     </p>
-                    <p className="text-[11px] text-foreground/50">Last 30 days total</p>
+                    <p className="text-[11px] text-foreground/50">Unique devices (30 days)</p>
                   </div>
 
                   {/* Card 5: All-time Pageviews & Unique */}
@@ -1536,10 +1538,10 @@ export default function DashboardPage() {
                       <Users className="w-3.5 h-3.5 text-accent" />
                     </div>
                     <p className="text-2xl font-extrabold text-accent">
-                      {analyticsData?.totalCount ?? 0}
+                      {analyticsData?.totalPageviews ?? 0}
                     </p>
                     <p className="text-[11px] text-foreground/50">
-                      {analyticsData?.uniqueCount ?? 0} unique visitors
+                      {analyticsData?.totalUnique ?? 0} unique devices
                     </p>
                   </div>
                 </div>
@@ -1666,6 +1668,66 @@ export default function DashboardPage() {
                   </div>
                 </div>
 
+                {/* Currently Active Devices (Live Now) */}
+                {analyticsData?.activeDevices && analyticsData.activeDevices.length > 0 && (
+                  <div className="p-5 sm:p-6 rounded-2xl bg-card-bg border border-emerald-500/30 shadow-xs space-y-3.5">
+                    <div className="flex items-center justify-between pb-2 border-b border-border/60">
+                      <div className="flex items-center gap-2">
+                        <span className="relative flex h-2.5 w-2.5">
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                          <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500" />
+                        </span>
+                        <h3 className="text-xs font-bold uppercase tracking-wider text-foreground">
+                          Active Live Devices ({analyticsData.activeDevices.length})
+                        </h3>
+                      </div>
+                      <span className="text-[10px] font-mono text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+                        1 Device = 1 Visitor
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                      {analyticsData.activeDevices.map((dev: any, idx: number) => (
+                        <div
+                          key={idx}
+                          className="p-3.5 rounded-xl bg-background border border-emerald-500/20 text-xs space-y-2 hover:border-emerald-500/40 transition-colors"
+                        >
+                          <div className="flex items-center justify-between">
+                            <span className="font-bold text-foreground flex items-center gap-1.5">
+                              {dev.device === "Mobile" ? (
+                                <Smartphone className="w-3.5 h-3.5 text-emerald-500" />
+                              ) : dev.device === "Tablet" ? (
+                                <Tablet className="w-3.5 h-3.5 text-purple-500" />
+                              ) : (
+                                <Monitor className="w-3.5 h-3.5 text-accent" />
+                              )}
+                              <span>{dev.deviceModel || dev.device}</span>
+                            </span>
+                            <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-500 font-semibold">
+                              {formatDuration(dev.durationSeconds)}
+                            </span>
+                          </div>
+
+                          <div className="flex items-center justify-between text-foreground/70 text-[11px]">
+                            <span className="flex items-center gap-1.5">
+                              <span>{getCountryFlag(dev.countryCode)}</span>
+                              <span>{dev.city ? `${dev.city}, ` : ""}{dev.country}</span>
+                            </span>
+                            <span className="font-mono text-accent truncate max-w-[120px]" title={dev.path}>
+                              {dev.path}
+                            </span>
+                          </div>
+
+                          <div className="text-[10.5px] text-foreground/50 border-t border-border/40 pt-1.5 flex items-center justify-between">
+                            <span>{dev.browser} • {dev.os}</span>
+                            <span className="font-mono text-[9.5px]">ID: {dev.visitorId?.slice(0, 8)}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
                 {/* Recent Visitor Activity Stream */}
                 <div className="p-5 sm:p-6 rounded-2xl bg-card-bg border border-border shadow-xs space-y-3.5">
                   <div className="flex items-center justify-between pb-2 border-b border-border/60">
@@ -1675,7 +1737,7 @@ export default function DashboardPage() {
                         <span>Recent Visitors Stream</span>
                       </h3>
                       <p className="text-[11px] text-foreground/50 mt-0.5">
-                        Latest real-time pageviews and visitor technology
+                        Latest real-time pageviews, device specifics, and stay duration
                       </p>
                     </div>
                     <span className="text-[10px] font-mono text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
@@ -1695,6 +1757,7 @@ export default function DashboardPage() {
                             <th className="pb-2">Location</th>
                             <th className="pb-2">Page Visited</th>
                             <th className="pb-2">Device &amp; Browser</th>
+                            <th className="pb-2">Duration</th>
                             <th className="pb-2 text-right">Time</th>
                           </tr>
                         </thead>
@@ -1720,7 +1783,11 @@ export default function DashboardPage() {
                                   {v.path}
                                 </td>
                                 <td className="py-2.5 text-foreground/75">
-                                  {v.device} • {v.browser} ({v.os})
+                                  <span className="font-medium text-foreground">{v.deviceModel || v.device}</span>
+                                  <span className="text-foreground/50 text-[11px] block">{v.browser} ({v.os})</span>
+                                </td>
+                                <td className="py-2.5 font-mono text-[11px] text-foreground/70">
+                                  {formatDuration(v.durationSeconds || 0)}
                                 </td>
                                 <td className="py-2.5 text-right text-foreground/50 font-mono text-[11px]">
                                   {formattedDate} {formattedTime}

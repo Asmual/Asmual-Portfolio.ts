@@ -22,53 +22,97 @@ export async function GET() {
     const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
     const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-    const fiveMinutesAgo = new Date(now.getTime() - 5 * 60 * 1000);
+    const activeCutoff = new Date(now.getTime() - 75 * 1000); // 75s window
 
-    // Parallel queries for fast loading
+    // Parallel queries
     const [
-      activeCount,
-      todayCount,
-      weekCount,
-      monthCount,
-      totalCount,
-      uniqueVisitors,
-      recentVisitors,
+      activeVisitorsList,
+      todayUniqueList,
+      weekUniqueList,
+      monthUniqueList,
+      totalUniqueList,
+      todayPageviews,
+      totalPageviews,
+      recentVisitorsRaw,
       countryAgg,
       deviceAgg,
-      pageAgg,
     ] = await Promise.all([
-      activeCollection.countDocuments({ lastActive: { $gte: fiveMinutesAgo } }),
-      logsCollection.countDocuments({ timestamp: { $gte: startOfToday } }),
-      logsCollection.countDocuments({ timestamp: { $gte: sevenDaysAgo } }),
-      logsCollection.countDocuments({ timestamp: { $gte: thirtyDaysAgo } }),
-      logsCollection.countDocuments(),
+      // Currently active devices
+      activeCollection.find({ lastActive: { $gte: activeCutoff } }).toArray(),
+      // Unique devices (distinct visitorId) for Today, Week, Month
+      logsCollection.distinct("visitorId", { timestamp: { $gte: startOfToday } }),
+      logsCollection.distinct("visitorId", { timestamp: { $gte: sevenDaysAgo } }),
+      logsCollection.distinct("visitorId", { timestamp: { $gte: thirtyDaysAgo } }),
       logsCollection.distinct("visitorId"),
-      logsCollection.find({}).sort({ timestamp: -1 }).limit(15).toArray(),
+      // Raw pageviews
+      logsCollection.countDocuments({ timestamp: { $gte: startOfToday } }),
+      logsCollection.countDocuments(),
+      // Last 20 visitor logs
+      logsCollection.find({}).sort({ timestamp: -1 }).limit(20).toArray(),
+      // Top Countries by unique visitors
       logsCollection
         .aggregate([
-          { $group: { _id: { country: "$country", code: "$countryCode" }, count: { $sum: 1 } } },
+          {
+            $group: {
+              _id: { country: "$country", code: "$countryCode" },
+              uniqueVisitors: { $addToSet: "$visitorId" },
+              pageviews: { $sum: 1 },
+            },
+          },
+          {
+            $project: {
+              country: "$_id.country",
+              countryCode: "$_id.code",
+              count: { $size: "$uniqueVisitors" },
+              pageviews: 1,
+            },
+          },
           { $sort: { count: -1 } },
           { $limit: 8 },
         ])
         .toArray(),
+      // Devices by unique visitors
       logsCollection
         .aggregate([
-          { $group: { _id: "$device", count: { $sum: 1 } } },
+          {
+            $group: {
+              _id: "$device",
+              uniqueVisitors: { $addToSet: "$visitorId" },
+            },
+          },
+          {
+            $project: {
+              device: "$_id",
+              count: { $size: "$uniqueVisitors" },
+            },
+          },
           { $sort: { count: -1 } },
-        ])
-        .toArray(),
-      logsCollection
-        .aggregate([
-          { $group: { _id: "$path", count: { $sum: 1 } } },
-          { $sort: { count: -1 } },
-          { $limit: 6 },
         ])
         .toArray(),
     ]);
 
+    // Format active devices list with real-time live duration
+    const formattedActive = activeVisitorsList.map((v: any) => {
+      const firstSeen = v.firstSeen ? new Date(v.firstSeen) : new Date(v.lastActive || now);
+      const durationSeconds = Math.max(0, Math.round((now.getTime() - firstSeen.getTime()) / 1000));
+
+      return {
+        visitorId: v.visitorId,
+        deviceModel: v.deviceModel || v.device || "Unknown Device",
+        device: v.device || "Desktop",
+        browser: v.browser || "Browser",
+        os: v.os || "",
+        country: v.country || "Unknown",
+        countryCode: v.countryCode || "XX",
+        city: v.city || "",
+        path: v.path || "/",
+        durationSeconds,
+      };
+    });
+
     const formattedCountries = countryAgg.map((item: any) => ({
-      country: item._id.country || "Unknown",
-      countryCode: item._id.code || "XX",
+      country: item.country || "Unknown",
+      countryCode: item.countryCode || "XX",
       count: item.count,
     }));
 
@@ -78,17 +122,12 @@ export async function GET() {
       Tablet: 0,
     };
     deviceAgg.forEach((item: any) => {
-      if (item._id && formattedDevices[item._id] !== undefined) {
-        formattedDevices[item._id] = item.count;
+      if (item.device && formattedDevices[item.device] !== undefined) {
+        formattedDevices[item.device] = item.count;
       }
     });
 
-    const formattedPages = pageAgg.map((item: any) => ({
-      path: item._id || "/",
-      count: item.count,
-    }));
-
-    const sanitizedRecent = recentVisitors.map((v: any) => {
+    const recentVisitors = recentVisitorsRaw.map((v: any) => {
       const { _id, ...rest } = v;
       return rest;
     });
@@ -96,16 +135,17 @@ export async function GET() {
     return NextResponse.json({
       success: true,
       data: {
-        liveCount: Math.max(1, activeCount),
-        todayCount,
-        weekCount,
-        monthCount,
-        totalCount,
-        uniqueCount: uniqueVisitors.length,
+        liveCount: Math.max(1, formattedActive.length),
+        todayUnique: todayUniqueList.length,
+        weekUnique: weekUniqueList.length,
+        monthUnique: monthUniqueList.length,
+        totalUnique: totalUniqueList.length,
+        todayPageviews,
+        totalPageviews,
+        activeDevices: formattedActive,
         devices: formattedDevices,
         topCountries: formattedCountries,
-        topPages: formattedPages,
-        recentVisitors: sanitizedRecent,
+        recentVisitors,
       },
     });
   } catch (error: any) {

@@ -6,21 +6,20 @@ export const dynamic = "force-dynamic";
 export async function GET() {
   try {
     const db = await getDb();
-    const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
+    // 75-second active window (heartbeat pings every 20s)
+    const cutoff = new Date(Date.now() - 75 * 1000);
 
-    const activeCount = await db
+    const activeList = await db
       .collection("active_visitors")
-      .countDocuments({ lastActive: { $gte: fiveMinutesAgo } });
+      .distinct("visitorId", { lastActive: { $gte: cutoff } });
 
-    // Always at least 1 when someone is actively looking at the site
-    const liveCount = Math.max(1, activeCount);
+    const liveCount = Math.max(1, activeList.length);
 
     return NextResponse.json({
       success: true,
       liveCount,
     });
   } catch {
-    // Graceful fallback
     return NextResponse.json({
       success: true,
       liveCount: 1,

@@ -6,10 +6,10 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json().catch(() => ({}));
     const {
-      visitorId = "anon-visitor",
-      sessionId = "anon-session",
+      visitorId: rawVisitorId,
       path = "/",
       referrer = "",
+      isNewVisit = false,
     } = body;
 
     // Ignore automated bots, health checks, or internal API calls
@@ -24,7 +24,6 @@ export async function POST(req: NextRequest) {
     const countryCode = rawCountry ? rawCountry.toUpperCase() : "BD";
     const city = rawCity ? decodeURIComponent(rawCity) : "Dhaka";
 
-    // Country name helper map
     const countryNames: Record<string, string> = {
       BD: "Bangladesh",
       US: "United States",
@@ -41,59 +40,78 @@ export async function POST(req: NextRequest) {
     };
     const country = countryNames[countryCode] || countryCode || "Unknown";
 
-    // Device, browser, and OS parsing
-    const { device, browser, os } = parseUserAgent(uaString);
+    // Device, specific model, browser, and OS parsing
+    const { device, deviceModel, browser, os } = parseUserAgent(uaString);
 
-    // IP hash for unique daily visitor calculations
+    // Ensure valid persistent visitorId
     const clientIp = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "127.0.0.1";
-    const effectiveVisitorId = visitorId !== "anon-visitor" ? visitorId : hashIp(clientIp);
+    const visitorId = (rawVisitorId && typeof rawVisitorId === "string" && rawVisitorId.length > 3)
+      ? rawVisitorId
+      : hashIp(clientIp);
 
     const now = new Date();
+    const db = await getDb();
 
+    // 1. Check existing active session to compute duration
+    const existingActive: any = await db.collection("active_visitors").findOne({ visitorId });
+    const firstSeen = existingActive?.firstSeen ? new Date(existingActive.firstSeen) : now;
+    const durationSeconds = Math.max(0, Math.round((now.getTime() - firstSeen.getTime()) / 1000));
+
+    // 2. Insert visitor log
     const logEntry: VisitorLog = {
-      visitorId: effectiveVisitorId,
-      sessionId,
+      visitorId,
       path: path.slice(0, 120),
       country,
       countryCode,
       city,
       device,
+      deviceModel,
       browser,
       os,
       referrer: typeof referrer === "string" ? referrer.slice(0, 200) : "",
       timestamp: now,
+      durationSeconds,
     };
-
-    const db = await getDb();
-
-    // 1. Log visitor pageview
     await db.collection("visitor_logs").insertOne(logEntry);
 
-    // 2. Update real-time active visitor session
+    // 3. Upsert into active_visitors uniquely by visitorId (1 Device = 1 Active Record)
     await db.collection("active_visitors").updateOne(
-      { sessionId },
+      { visitorId },
       {
         $set: {
-          sessionId,
-          visitorId: effectiveVisitorId,
+          visitorId,
           lastActive: now,
           country,
           countryCode,
           city,
           device,
+          deviceModel,
+          browser,
+          os,
           path,
+        },
+        $setOnInsert: {
+          firstSeen: now,
+          openTabs: 1,
         },
       },
       { upsert: true }
     );
 
-    // 3. Clean up inactive sessions older than 10 minutes
-    const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000);
-    db.collection("active_visitors").deleteMany({ lastActive: { $lt: tenMinutesAgo } }).catch(() => {});
+    // If new visit/tab, increment tab counter
+    if (isNewVisit && existingActive) {
+      await db.collection("active_visitors").updateOne(
+        { visitorId },
+        { $inc: { openTabs: 1 } }
+      );
+    }
 
-    return NextResponse.json({ success: true });
+    // 4. Auto-clean expired sessions (older than 75 seconds without heartbeat)
+    const cutoff = new Date(Date.now() - 75 * 1000);
+    db.collection("active_visitors").deleteMany({ lastActive: { $lt: cutoff } }).catch(() => {});
+
+    return NextResponse.json({ success: true, visitorId });
   } catch (err: any) {
-    // Fail silently so visitor experience is never interrupted
     return NextResponse.json({ success: false, error: err?.message }, { status: 200 });
   }
 }

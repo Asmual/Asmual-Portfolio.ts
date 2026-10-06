@@ -3,16 +3,17 @@
 import { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 
-function getOrSetId(storage: Storage, key: string): string {
+function getDeviceVisitorId(): string {
   try {
-    let id = storage.getItem(key);
+    const key = "asmual_device_id_v2";
+    let id = window.localStorage.getItem(key);
     if (!id) {
-      id = "v_" + Math.random().toString(36).substring(2, 10) + Date.now().toString(36);
-      storage.setItem(key, id);
+      id = "dev_" + Math.random().toString(36).substring(2, 10) + Date.now().toString(36);
+      window.localStorage.setItem(key, id);
     }
     return id;
   } catch {
-    return "v_" + Math.random().toString(36).substring(2, 10);
+    return "dev_" + Math.random().toString(36).substring(2, 10);
   }
 }
 
@@ -21,27 +22,24 @@ export default function VisitorTracker() {
   const lastTrackedPath = useRef<string | null>(null);
 
   useEffect(() => {
-    // Only track in browser
     if (typeof window === "undefined") return;
 
-    // Do not track admin dashboard visits to avoid skewing real audience data
-    if (pathname.startsWith("/dashboard")) return;
+    // Do not track visits inside the admin dashboard to avoid skewing real audience data
+    if (pathname.startsWith("/dashboard") || pathname.startsWith("/login")) return;
 
-    const visitorId = getOrSetId(window.localStorage, "asmual_visitor_id");
-    const sessionId = getOrSetId(window.sessionStorage, "asmual_session_id");
+    const visitorId = getDeviceVisitorId();
 
-    const trackPageview = () => {
+    const sendTrack = (isNewVisit: boolean = false) => {
       try {
         fetch("/api/analytics/track", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             visitorId,
-            sessionId,
             path: pathname,
-            referrer: typeof document !== "undefined" ? document.referrer : "",
+            referrer: document.referrer || "",
+            isNewVisit,
           }),
-          // Keepalive ensures request completes even if navigating away quickly
           keepalive: true,
         }).catch(() => {});
       } catch {
@@ -49,18 +47,72 @@ export default function VisitorTracker() {
       }
     };
 
-    // Track when pathname changes
+    const sendHeartbeat = () => {
+      if (document.visibilityState !== "visible") return;
+      try {
+        fetch("/api/analytics/heartbeat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ visitorId, path: pathname }),
+          keepalive: true,
+        }).catch(() => {});
+      } catch {
+        // Ignore network errors
+      }
+    };
+
+    const sendLeave = (closeAll: boolean = false) => {
+      try {
+        const payload = JSON.stringify({ visitorId, closeAll });
+        if (navigator.sendBeacon) {
+          const blob = new Blob([payload], { type: "application/json" });
+          navigator.sendBeacon("/api/analytics/leave", blob);
+        } else {
+          fetch("/api/analytics/leave", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: payload,
+            keepalive: true,
+          }).catch(() => {});
+        }
+      } catch {
+        // Ignore errors on leave
+      }
+    };
+
+    // Track initial page load or route transition
     if (lastTrackedPath.current !== pathname) {
+      const isFirst = lastTrackedPath.current === null;
       lastTrackedPath.current = pathname;
-      trackPageview();
+      sendTrack(isFirst);
     }
 
-    // Heartbeat every 2.5 minutes while active tab stays open
-    const heartbeat = setInterval(() => {
-      trackPageview();
-    }, 150000);
+    // Frequent heartbeat every 20 seconds while page is active
+    const heartbeatInterval = setInterval(sendHeartbeat, 20000);
 
-    return () => clearInterval(heartbeat);
+    // Fast leave detection: when tab/browser closes or app is minimized on mobile
+    const handlePageHide = () => {
+      sendLeave(false);
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "hidden") {
+        sendLeave(false);
+      } else if (document.visibilityState === "visible") {
+        sendHeartbeat();
+      }
+    };
+
+    window.addEventListener("pagehide", handlePageHide);
+    window.addEventListener("beforeunload", handlePageHide);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      clearInterval(heartbeatInterval);
+      window.removeEventListener("pagehide", handlePageHide);
+      window.removeEventListener("beforeunload", handlePageHide);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
   }, [pathname]);
 
   return null;

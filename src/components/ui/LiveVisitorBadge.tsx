@@ -32,8 +32,8 @@ export default function LiveVisitorBadge({ variant = "hero" }: LiveVisitorBadgeP
 
     fetchLiveCount();
 
-    // Refresh every 35 seconds
-    const interval = setInterval(fetchLiveCount, 35000);
+    // Refresh every 12 seconds so drop-offs or new visitors reflect rapidly
+    const interval = setInterval(fetchLiveCount, 12000);
 
     return () => {
       isMounted = false;
