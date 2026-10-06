@@ -39,6 +39,7 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import { Project, ProjectCategory } from "@/data/projects";
 import { getCountryFlag, formatDuration } from "@/lib/analytics";
+import ThemeToggle from "@/components/ui/ThemeToggle";
 
 // Curated library of clickable technology chips
 const popularTechnologies = [
@@ -663,6 +664,8 @@ export default function DashboardPage() {
           </div>
 
           <div className="flex items-center gap-2 sm:gap-3">
+            <ThemeToggle />
+
             <Link
               href="/"
               className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-card-bg border border-border hover:border-accent hover:text-accent text-foreground transition-colors shadow-2xs"

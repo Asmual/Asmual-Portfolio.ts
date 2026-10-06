@@ -19,7 +19,9 @@ export async function GET() {
       return NextResponse.json({ success: true, projects: seedData });
     }
 
-    const projects = await collection.find({}).sort({ _id: -1 }).toArray();
+    // Sort by designated orderIndex ascending (arthub=1, shopnexus=2, docappoint=3, etc.)
+    // For newly added custom projects without an orderIndex, fallback to createdAt/latest
+    const projects = await collection.find({}).sort({ orderIndex: 1, createdAt: -1, _id: 1 }).toArray();
 
     // Map _id to string if needed and strip MongoDB internal ObjectId
     const sanitized = projects.map((p: any) => {

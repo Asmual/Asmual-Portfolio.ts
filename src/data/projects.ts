@@ -40,6 +40,7 @@ export interface Project {
   metrics?: ProjectMetric[];
   detailedFeatures?: DetailedFeature[];
   challengesSolved?: ProjectChallenge[];
+  orderIndex?: number;
 }
 
 export const projectsData: Project[] = [
@@ -122,87 +123,6 @@ export const projectsData: Project[] = [
     liveUrl: "https://arthub-three.vercel.app",
     githubUrl: "https://github.com/Asmual/arthub-client",
     clientGithubUrl: "https://github.com/Asmual/arthub-client",
-    featured: true,
-    status: "Live",
-  },
-  {
-    id: "docappoint",
-    title: "DocAppoint — Doctor Appointment System",
-    tagline: "Streamlined medical booking & doctor schedule management",
-    category: "Full Stack",
-    role: "Full Stack Developer",
-    duration: "3 Weeks • Production Ready",
-    description:
-      "A comprehensive healthcare platform allowing patients to book appointments, check doctor real-time availability, and manage consultation schedules efficiently with an intuitive, accessible UI.",
-    overview:
-      "DocAppoint is a centralized healthcare scheduling and clinic workflow management platform built to eradicate waiting room friction. Patients search certified medical specialists, evaluate real-time available consultation windows, and reserve confirmed booking slots with automated confirmations.",
-    architecture:
-      "Constructed using Next.js App Router, TypeScript, Tailwind CSS, Express.js backend services, and MongoDB Atlas. Features collision-proof transactional booking locks, automated schedule roster generators, and patient health history timelines.",
-    metrics: [
-      { label: "Double Booking Overlap", value: "0%" },
-      { label: "Slot Query Latency", value: "<120ms" },
-      { label: "Appointment Confirmation", value: "Instant" },
-      { label: "Accessibility Score", value: "98/100" },
-    ],
-    detailedFeatures: [
-      {
-        title: "Collision-Proof Slot Reservation Engine",
-        description:
-          "Real-time slot reservation system with atomic state locks preventing multiple simultaneous patients from claiming the same consultation time window.",
-      },
-      {
-        title: "Doctor Roster & Schedule Configurator",
-        description:
-          "Doctors configure personalized day-by-day availability, consultation durations, lunch breaks, and holiday blackouts with automatic calendar generation.",
-      },
-      {
-        title: "Patient Consultation History & Records",
-        description:
-          "Centralized patient portal preserving consultation timelines, prescription notes, and appointment status progression (Pending ➜ Confirmed ➜ Completed).",
-      },
-      {
-        title: "Accessible High-Contrast Medical UI",
-        description:
-          "Designed with strict attention to healthcare UX standards, offering instant specialty searching, department filtering, and responsive mobile booking.",
-      },
-    ],
-    challengesSolved: [
-      {
-        title: "Preventing Concurrent Slot Reservation Race Conditions",
-        problem:
-          "When two patients clicked the same 10:30 AM slot at the exact same second, both requests could be confirmed before the database updated.",
-        solution:
-          "Applied MongoDB atomic `$findOneAndUpdate` with optimistic concurrency checking on slot availability flags, guaranteeing instant rejection of duplicate attempts.",
-      },
-      {
-        title: "Timezone Normalization Across Clinics",
-        problem:
-          "Managing appointment slots across server UTC time and local Bangladesh Standard Time (BST) caused date drift and slot misalignment.",
-        solution:
-          "Normalized all database timestamps to ISO 8601 UTC standards and designed client-side locale formatters that dynamically compute the patient's local timezone.",
-      },
-      {
-        title: "Mobile Calendar Density & Responsiveness",
-        problem:
-          "Desktop doctor calendars displaying 7 simultaneous days overwhelmed small mobile screens with excessive scrolling.",
-        solution:
-          "Created a responsive calendar component that converts to a swipeable horizontal date strip with dynamic morning/afternoon slot clusters on mobile viewports.",
-      },
-    ],
-    keyFeatures: [
-      "Real-time doctor schedule and slot booking system",
-      "Automated appointment status updates & notifications",
-      "Patient consultation records & history tracking",
-      "Fully responsive medical appointment dashboard",
-    ],
-    tags: ["Next.js", "TypeScript", "Tailwind CSS", "Express.js", "MongoDB"],
-    images: [
-      "/images/docappint/nav-hero.png",
-      "/images/docappint/why-chose.png",
-      "/images/docappint/all-appointpage.png",
-    ],
-    liveUrl: "https://docappoint-eight-drab.vercel.app",
-    githubUrl: "https://github.com/Asmual/DocAppoint",
     featured: true,
     status: "Live",
   },
@@ -314,6 +234,87 @@ export const projectsData: Project[] = [
     status: "Live",
   },
   {
+    id: "docappoint",
+    title: "DocAppoint — Doctor Appointment System",
+    tagline: "Streamlined medical booking & doctor schedule management",
+    category: "Full Stack",
+    role: "Full Stack Developer",
+    duration: "3 Weeks • Production Ready",
+    description:
+      "A comprehensive healthcare platform allowing patients to book appointments, check doctor real-time availability, and manage consultation schedules efficiently with an intuitive, accessible UI.",
+    overview:
+      "DocAppoint is a centralized healthcare scheduling and clinic workflow management platform built to eradicate waiting room friction. Patients search certified medical specialists, evaluate real-time available consultation windows, and reserve confirmed booking slots with automated confirmations.",
+    architecture:
+      "Constructed using Next.js App Router, TypeScript, Tailwind CSS, Express.js backend services, and MongoDB Atlas. Features collision-proof transactional booking locks, automated schedule roster generators, and patient health history timelines.",
+    metrics: [
+      { label: "Double Booking Overlap", value: "0%" },
+      { label: "Slot Query Latency", value: "<120ms" },
+      { label: "Appointment Confirmation", value: "Instant" },
+      { label: "Accessibility Score", value: "98/100" },
+    ],
+    detailedFeatures: [
+      {
+        title: "Collision-Proof Slot Reservation Engine",
+        description:
+          "Real-time slot reservation system with atomic state locks preventing multiple simultaneous patients from claiming the same consultation time window.",
+      },
+      {
+        title: "Doctor Roster & Schedule Configurator",
+        description:
+          "Doctors configure personalized day-by-day availability, consultation durations, lunch breaks, and holiday blackouts with automatic calendar generation.",
+      },
+      {
+        title: "Patient Consultation History & Records",
+        description:
+          "Centralized patient portal preserving consultation timelines, prescription notes, and appointment status progression (Pending ➜ Confirmed ➜ Completed).",
+      },
+      {
+        title: "Accessible High-Contrast Medical UI",
+        description:
+          "Designed with strict attention to healthcare UX standards, offering instant specialty searching, department filtering, and responsive mobile booking.",
+      },
+    ],
+    challengesSolved: [
+      {
+        title: "Preventing Concurrent Slot Reservation Race Conditions",
+        problem:
+          "When two patients clicked the same 10:30 AM slot at the exact same second, both requests could be confirmed before the database updated.",
+        solution:
+          "Applied MongoDB atomic `$findOneAndUpdate` with optimistic concurrency checking on slot availability flags, guaranteeing instant rejection of duplicate attempts.",
+      },
+      {
+        title: "Timezone Normalization Across Clinics",
+        problem:
+          "Managing appointment slots across server UTC time and local Bangladesh Standard Time (BST) caused date drift and slot misalignment.",
+        solution:
+          "Normalized all database timestamps to ISO 8601 UTC standards and designed client-side locale formatters that dynamically compute the patient's local timezone.",
+      },
+      {
+        title: "Mobile Calendar Density & Responsiveness",
+        problem:
+          "Desktop doctor calendars displaying 7 simultaneous days overwhelmed small mobile screens with excessive scrolling.",
+        solution:
+          "Created a responsive calendar component that converts to a swipeable horizontal date strip with dynamic morning/afternoon slot clusters on mobile viewports.",
+      },
+    ],
+    keyFeatures: [
+      "Real-time doctor schedule and slot booking system",
+      "Automated appointment status updates & notifications",
+      "Patient consultation records & history tracking",
+      "Fully responsive medical appointment dashboard",
+    ],
+    tags: ["Next.js", "TypeScript", "Tailwind CSS", "Express.js", "MongoDB"],
+    images: [
+      "/images/docappint/nav-hero.png",
+      "/images/docappint/why-chose.png",
+      "/images/docappint/all-appointpage.png",
+    ],
+    liveUrl: "https://docappoint-eight-drab.vercel.app",
+    githubUrl: "https://github.com/Asmual/DocAppoint",
+    featured: true,
+    status: "Live",
+  },
+  {
     id: "lawfirm",
     title: "Law Firm Solutions — Legal Litigation & Chamber Management",
     tagline: "Supreme Court litigation management, automated cause lists & forensic audit logging",
@@ -404,6 +405,99 @@ export const projectsData: Project[] = [
     githubUrl: "https://github.com/Asmual/Law-Firm-Solutions-Server",
     clientGithubUrl: "https://github.com/Asmual/Law-Firm-Solutions",
     serverGithubUrl: "https://github.com/Asmual/Law-Firm-Solutions-Server",
+    featured: true,
+    status: "Live",
+  },
+  {
+    id: "mykeeps",
+    title: "My Keeps — Smart Cloud Workspace & Note Manager",
+    tagline: "Google Keep inspired workspace with voice memos, PIN lock & multi-media notes",
+    category: "Full Stack",
+    role: "Full Stack Engineer & System Designer",
+    duration: "3 Weeks • Production Workspace",
+    description:
+      "A feature-rich full-stack productivity workspace inspired by Google Keep. Organize ideas with multi-format notes including interactive checklists, Cloudinary-powered image attachments, voice memo recordings, PIN-locked private notes, dynamic color palettes, and bulk batch actions.",
+    overview:
+      "Inspired by Google Keep, My Keeps is a feature-rich full-stack productivity workspace engineered with Next.js, React, Express.js API, and MongoDB Atlas. It empowers users to capture multi-format notes including interactive checklists, Cloudinary voice memos, image attachments, PIN-protected private notes, and bulk batch actions.",
+    architecture:
+      "Full-stack architecture featuring Next.js App Router, React, Better-Auth session infrastructure, Express.js microservice endpoints, Cloudinary Audio/Image Media API, and MongoDB Atlas document collections.",
+    metrics: [
+      { label: "Note Formats", value: "Text, Checklist, Voice, Images" },
+      { label: "Color Palettes", value: "12+ Vibrant Pastel Styles" },
+      { label: "Voice Compression", value: "85% Size Reduction (WebM)" },
+      { label: "Auto-Save Debounce", value: "800ms Conflict-Free" },
+    ],
+    detailedFeatures: [
+      {
+        title: "Multi-Format Creative Note Engine",
+        description:
+          "Capture thoughts with rich markdown text, interactive checkboxes with progress counters, Cloudinary image attachments, and in-browser voice memo recordings.",
+      },
+      {
+        title: "Cryptographic PIN Lock for Private Notes",
+        description:
+          "End-to-end PIN protection for confidential notes. Note previews and text bodies remain obscured on both client and API until unlocked with a verified master PIN.",
+      },
+      {
+        title: "Productivity Batch Action Controls",
+        description:
+          "Select multiple notes simultaneously to perform rapid bulk operations: multi-note archiving, bulk color palette shifting, pin toggles, and permanent deletion.",
+      },
+      {
+        title: "Intelligent Organization & Trash Recovery",
+        description:
+          "Categorize notes into pinned priorities, archive drawer, and soft-delete trash bin with 30-day restore capabilities and instant full-text search.",
+      },
+    ],
+    challengesSolved: [
+      {
+        title: "Audio Voice Memo Recording & Compression",
+        problem:
+          "Direct browser microphone recording generated oversized uncompressed WAV files that slowed cloud uploads on slower connections.",
+        solution:
+          "Engineered a client-side MediaRecorder pipeline that records audio in lightweight WebM Opus format, compressing audio payloads by 85% before dispatching to Cloudinary.",
+      },
+      {
+        title: "Conflict-Free Auto-Save Pipeline",
+        problem:
+          "Triggering HTTP PATCH requests on every keystroke generated network congestion and potential database write collisions.",
+        solution:
+          "Designed an 800ms debounced auto-saving engine with optimistic UI updates that seamlessly queues edits and synchronizes changes without user interruption.",
+      },
+      {
+        title: "Securing Private Note Content at Rest & in Transit",
+        problem:
+          "Public list queries could accidentally leak sensitive snippets of locked notes to unauthorized browser network inspector tools.",
+        solution:
+          "Sanitized note response models on the server to strip title and body content for PIN-locked items until an authenticated PIN challenge token is submitted.",
+      },
+    ],
+    keyFeatures: [
+      "Multi-Format Notes: Rich text, interactive checklists, Cloudinary image uploads & voice memos",
+      "PIN-Protected Private Notes: Secure lock/unlock system with password encryption",
+      "Smart Organization: 12+ vibrant pastel color palettes, pinned notes, archive, and trash restore",
+      "Productivity Batch Actions: Multi-select batch operations for archiving, pinning, and coloring",
+      "Robust Full-Stack Engine: Next.js, React, Better-Auth, Express.js API & MongoDB Atlas",
+    ],
+    tags: [
+      "Next.js",
+      "React",
+      "TypeScript",
+      "Node.js",
+      "Express.js",
+      "MongoDB",
+      "Cloudinary",
+      "Tailwind CSS",
+    ],
+    images: [
+      "/images/mykeeps/Home.png",
+      "/images/mykeeps/Notes.png",
+      "/images/mykeeps/light mood.png",
+    ],
+    liveUrl: "https://my-keeps-pink.vercel.app",
+    githubUrl: "https://github.com/Asmual/My-Keeps",
+    clientGithubUrl: "https://github.com/Asmual/My-Keeps",
+    serverGithubUrl: "https://github.com/Asmual/My-Keeps--Server",
     featured: true,
     status: "Live",
   },
@@ -568,100 +662,8 @@ export const projectsData: Project[] = [
     githubUrl: "https://github.com/Asmual/Asmual-Next.js-Portfolio",
     featured: true,
     status: "Live",
-  },
-  {
-    id: "mykeeps",
-    title: "My Keeps — Smart Cloud Workspace & Note Manager",
-    tagline: "Google Keep inspired workspace with voice memos, PIN lock & multi-media notes",
-    category: "Full Stack",
-    role: "Full Stack Engineer & System Designer",
-    duration: "3 Weeks • Production Workspace",
-    description:
-      "A feature-rich full-stack productivity workspace inspired by Google Keep. Organize ideas with multi-format notes including interactive checklists, Cloudinary-powered image attachments, voice memo recordings, PIN-locked private notes, dynamic color palettes, and bulk batch actions.",
-    overview:
-      "Inspired by Google Keep, My Keeps is a feature-rich full-stack productivity workspace engineered with Next.js, React, Express.js API, and MongoDB Atlas. It empowers users to capture multi-format notes including interactive checklists, Cloudinary voice memos, image attachments, PIN-protected private notes, and bulk batch actions.",
-    architecture:
-      "Full-stack architecture featuring Next.js App Router, React, Better-Auth session infrastructure, Express.js microservice endpoints, Cloudinary Audio/Image Media API, and MongoDB Atlas document collections.",
-    metrics: [
-      { label: "Note Formats", value: "Text, Checklist, Voice, Images" },
-      { label: "Color Palettes", value: "12+ Vibrant Pastel Styles" },
-      { label: "Voice Compression", value: "85% Size Reduction (WebM)" },
-      { label: "Auto-Save Debounce", value: "800ms Conflict-Free" },
-    ],
-    detailedFeatures: [
-      {
-        title: "Multi-Format Creative Note Engine",
-        description:
-          "Capture thoughts with rich markdown text, interactive checkboxes with progress counters, Cloudinary image attachments, and in-browser voice memo recordings.",
-      },
-      {
-        title: "Cryptographic PIN Lock for Private Notes",
-        description:
-          "End-to-end PIN protection for confidential notes. Note previews and text bodies remain obscured on both client and API until unlocked with a verified master PIN.",
-      },
-      {
-        title: "Productivity Batch Action Controls",
-        description:
-          "Select multiple notes simultaneously to perform rapid bulk operations: multi-note archiving, bulk color palette shifting, pin toggles, and permanent deletion.",
-      },
-      {
-        title: "Intelligent Organization & Trash Recovery",
-        description:
-          "Categorize notes into pinned priorities, archive drawer, and soft-delete trash bin with 30-day restore capabilities and instant full-text search.",
-      },
-    ],
-    challengesSolved: [
-      {
-        title: "Audio Voice Memo Recording & Compression",
-        problem:
-          "Direct browser microphone recording generated oversized uncompressed WAV files that slowed cloud uploads on slower connections.",
-        solution:
-          "Engineered a client-side MediaRecorder pipeline that records audio in lightweight WebM Opus format, compressing audio payloads by 85% before dispatching to Cloudinary.",
-      },
-      {
-        title: "Conflict-Free Auto-Save Pipeline",
-        problem:
-          "Triggering HTTP PATCH requests on every keystroke generated network congestion and potential database write collisions.",
-        solution:
-          "Designed an 800ms debounced auto-saving engine with optimistic UI updates that seamlessly queues edits and synchronizes changes without user interruption.",
-      },
-      {
-        title: "Securing Private Note Content at Rest & in Transit",
-        problem:
-          "Public list queries could accidentally leak sensitive snippets of locked notes to unauthorized browser network inspector tools.",
-        solution:
-          "Sanitized note response models on the server to strip title and body content for PIN-locked items until an authenticated PIN challenge token is submitted.",
-      },
-    ],
-    keyFeatures: [
-      "Multi-Format Notes: Rich text, interactive checklists, Cloudinary image uploads & voice memos",
-      "PIN-Protected Private Notes: Secure lock/unlock system with password encryption",
-      "Smart Organization: 12+ vibrant pastel color palettes, pinned notes, archive, and trash restore",
-      "Productivity Batch Actions: Multi-select batch operations for archiving, pinning, and coloring",
-      "Robust Full-Stack Engine: Next.js, React, Better-Auth, Express.js API & MongoDB Atlas",
-    ],
-    tags: [
-      "Next.js",
-      "React",
-      "TypeScript",
-      "Node.js",
-      "Express.js",
-      "MongoDB",
-      "Cloudinary",
-      "Tailwind CSS",
-    ],
-    images: [
-      "/images/mykeeps/Home.png",
-      "/images/mykeeps/Notes.png",
-      "/images/mykeeps/light mood.png",
-    ],
-    liveUrl: "https://my-keeps-pink.vercel.app",
-    githubUrl: "https://github.com/Asmual/My-Keeps",
-    clientGithubUrl: "https://github.com/Asmual/My-Keeps",
-    serverGithubUrl: "https://github.com/Asmual/My-Keeps--Server",
-    featured: true,
-    status: "Live",
-  },
+  }
+
 ];
 
 // Helper to extract unique category list dynamically
