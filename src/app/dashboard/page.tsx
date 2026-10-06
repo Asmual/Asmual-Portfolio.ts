@@ -35,6 +35,11 @@ import {
   Calendar,
   Clock,
   Tablet,
+  Radio,
+  Eye,
+  ChevronRight,
+  Activity,
+  Compass,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Project, ProjectCategory } from "@/data/projects";
@@ -93,6 +98,8 @@ export default function DashboardPage() {
   // Visitor Analytics State
   const [analyticsData, setAnalyticsData] = useState<any | null>(null);
   const [isLoadingAnalytics, setIsLoadingAnalytics] = useState(false);
+  const [selectedDevice, setSelectedDevice] = useState<any | null>(null);
+  const [deviceFilter, setDeviceFilter] = useState<"all" | "online" | "offline">("all");
 
   // AI Prompt State
   const [aiPrompt, setAiPrompt] = useState("");
@@ -182,20 +189,42 @@ export default function DashboardPage() {
     }
   };
 
-  const loadAnalytics = async () => {
-    setIsLoadingAnalytics(true);
+  const loadAnalytics = async (isBackground = false) => {
+    if (!isBackground) {
+      setIsLoadingAnalytics(true);
+    }
     try {
       const res = await fetch("/api/analytics/stats");
       const data = await res.json();
       if (res.ok && data.success && data.data) {
         setAnalyticsData(data.data);
+        setSelectedDevice((prev: any) => {
+          if (!prev) return null;
+          const updated = data.data.allDevices?.find((d: any) => d.visitorId === prev.visitorId);
+          return updated || prev;
+        });
       }
     } catch (err) {
       console.error("Failed to load analytics:", err);
     } finally {
-      setIsLoadingAnalytics(false);
+      if (!isBackground) {
+        setIsLoadingAnalytics(false);
+      }
     }
   };
+
+  // Real-time silent live polling every 3 seconds when viewing Analytics tab
+  useEffect(() => {
+    if (activeTab !== "analytics") return;
+
+    loadAnalytics(!!analyticsData);
+
+    const interval = setInterval(() => {
+      loadAnalytics(true);
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [activeTab]);
 
   // Check auth status on mount
   useEffect(() => {
@@ -1453,7 +1482,7 @@ export default function DashboardPage() {
 
               <button
                 type="button"
-                onClick={loadAnalytics}
+                onClick={() => loadAnalytics(false)}
                 disabled={isLoadingAnalytics}
                 className="inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold rounded-xl bg-card-bg border border-border hover:border-accent hover:text-accent transition-all cursor-pointer self-start sm:self-auto shadow-2xs disabled:opacity-60"
               >
@@ -1671,138 +1700,230 @@ export default function DashboardPage() {
                   </div>
                 </div>
 
-                {/* Currently Active Devices (Live Now) */}
-                {analyticsData?.activeDevices && analyticsData.activeDevices.length > 0 && (
-                  <div className="p-5 sm:p-6 rounded-2xl bg-card-bg border border-emerald-500/30 shadow-xs space-y-3.5">
-                    <div className="flex items-center justify-between pb-2 border-b border-border/60">
-                      <div className="flex items-center gap-2">
-                        <span className="relative flex h-2.5 w-2.5">
-                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                          <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500" />
-                        </span>
-                        <h3 className="text-xs font-bold uppercase tracking-wider text-foreground">
-                          Active Live Devices ({analyticsData.activeDevices.length})
-                        </h3>
-                      </div>
-                      <span className="text-[10px] font-mono text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
-                        1 Device = 1 Visitor
-                      </span>
-                    </div>
+                {/* Registered Devices & Visitors Archive */}
+                {(() => {
+                  const allDevs: any[] = analyticsData?.allDevices || [];
+                  const onlineCount = allDevs.filter((d) => d.isOnline).length;
+                  const offlineCount = allDevs.filter((d) => !d.isOnline).length;
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                      {analyticsData.activeDevices.map((dev: any, idx: number) => (
-                        <div
-                          key={idx}
-                          className="p-3.5 rounded-xl bg-background border border-emerald-500/20 text-xs space-y-2 hover:border-emerald-500/40 transition-colors"
-                        >
-                          <div className="flex items-center justify-between">
-                            <span className="font-bold text-foreground flex items-center gap-1.5">
-                              {dev.device === "Mobile" ? (
-                                <Smartphone className="w-3.5 h-3.5 text-emerald-500" />
-                              ) : dev.device === "Tablet" ? (
-                                <Tablet className="w-3.5 h-3.5 text-purple-500" />
-                              ) : (
-                                <Monitor className="w-3.5 h-3.5 text-accent" />
-                              )}
-                              <span>{dev.deviceModel || dev.device}</span>
-                            </span>
-                            <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-500 font-semibold">
-                              {formatDuration(dev.durationSeconds)}
-                            </span>
-                          </div>
+                  const filteredList = allDevs.filter((d) => {
+                    if (deviceFilter === "online") return d.isOnline;
+                    if (deviceFilter === "offline") return !d.isOnline;
+                    return true;
+                  });
 
-                          <div className="flex items-center justify-between text-foreground/70 text-[11px]">
-                            <span className="flex items-center gap-1.5">
-                              <span>{getCountryFlag(dev.countryCode)}</span>
-                              <span>{dev.city ? `${dev.city}, ` : ""}{dev.country}</span>
-                            </span>
-                            <span className="font-mono text-accent truncate max-w-[120px]" title={dev.path}>
-                              {dev.path}
-                            </span>
+                  return (
+                    <div className="p-5 sm:p-6 rounded-2xl bg-card-bg border border-border shadow-xs space-y-5">
+                      {/* Section Header & Filter Controls */}
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3.5 pb-3 border-b border-border/60">
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <Radio className="w-4 h-4 text-emerald-500 animate-pulse" />
+                            <h3 className="text-xs font-bold uppercase tracking-wider text-foreground">
+                              Registered Devices &amp; Visitors Archive ({allDevs.length})
+                            </h3>
                           </div>
-
-                          <div className="text-[10.5px] text-foreground/50 border-t border-border/40 pt-1.5 flex items-center justify-between">
-                            <span>{dev.browser} • {dev.os}</span>
-                            <span className="font-mono text-[9.5px]">ID: {dev.visitorId?.slice(0, 8)}</span>
-                          </div>
+                          <p className="text-[11px] text-foreground/50 mt-0.5">
+                            Each physical device/visitor stays permanently archived. Active devices glow green in real time.
+                          </p>
                         </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
 
-                {/* Recent Visitor Activity Stream */}
-                <div className="p-5 sm:p-6 rounded-2xl bg-card-bg border border-border shadow-xs space-y-3.5">
-                  <div className="flex items-center justify-between pb-2 border-b border-border/60">
-                    <div>
-                      <h3 className="text-xs font-bold uppercase tracking-wider text-foreground flex items-center gap-2">
-                        <Clock className="w-4 h-4 text-accent" />
-                        <span>Recent Visitors Stream</span>
-                      </h3>
-                      <p className="text-[11px] text-foreground/50 mt-0.5">
-                        Latest real-time pageviews, device specifics, and stay duration
-                      </p>
-                    </div>
-                    <span className="text-[10px] font-mono text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
-                      Live Feed
-                    </span>
-                  </div>
+                        {/* Filter Tabs */}
+                        <div className="flex items-center gap-1.5 p-1 rounded-xl bg-background border border-border/80 self-start sm:self-auto text-xs">
+                          <button
+                            type="button"
+                            onClick={() => setDeviceFilter("all")}
+                            className={`px-3 py-1 rounded-lg font-semibold transition-all cursor-pointer ${
+                              deviceFilter === "all"
+                                ? "bg-card-bg text-foreground shadow-2xs border border-border"
+                                : "text-foreground/60 hover:text-foreground"
+                            }`}
+                          >
+                            All ({allDevs.length})
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setDeviceFilter("online")}
+                            className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-lg font-semibold transition-all cursor-pointer ${
+                              deviceFilter === "online"
+                                ? "bg-emerald-500/15 text-emerald-500 border border-emerald-500/30"
+                                : "text-foreground/60 hover:text-emerald-500"
+                            }`}
+                          >
+                            <span className="relative flex h-2 w-2">
+                              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+                            </span>
+                            <span>Online ({onlineCount})</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setDeviceFilter("offline")}
+                            className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-lg font-semibold transition-all cursor-pointer ${
+                              deviceFilter === "offline"
+                                ? "bg-foreground/10 text-foreground border border-border"
+                                : "text-foreground/60 hover:text-foreground"
+                            }`}
+                          >
+                            <span className="inline-block h-2 w-2 rounded-full bg-foreground/40" />
+                            <span>Offline ({offlineCount})</span>
+                          </button>
+                        </div>
+                      </div>
 
-                  {(!analyticsData?.recentVisitors || analyticsData.recentVisitors.length === 0) ? (
-                    <p className="text-xs text-foreground/50 italic py-8 text-center">
-                      No visitor stream logged yet. Refresh or browse pages on the live site to populate.
-                    </p>
-                  ) : (
-                    <div className="overflow-x-auto">
-                      <table className="w-full text-left text-xs">
-                        <thead>
-                          <tr className="text-[10.5px] uppercase font-semibold text-foreground/50 border-b border-border/60">
-                            <th className="pb-2">Location</th>
-                            <th className="pb-2">Page Visited</th>
-                            <th className="pb-2">Device &amp; Browser</th>
-                            <th className="pb-2">Duration</th>
-                            <th className="pb-2 text-right">Time</th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-border/40">
-                          {analyticsData.recentVisitors.map((v: any, i: number) => {
-                            const dateObj = new Date(v.timestamp);
-                            const formattedTime = dateObj.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-                            const formattedDate = dateObj.toLocaleDateString([], { month: "short", day: "numeric" });
+                      {filteredList.length === 0 ? (
+                        <div className="py-12 text-center text-foreground/50 text-xs italic">
+                          No visitor devices found for filter &quot;{deviceFilter}&quot;.
+                        </div>
+                      ) : (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
+                          {filteredList.map((dev: any) => {
+                            const isOnline = !!dev.isOnline;
+                            const lastDate = new Date(dev.lastSeen);
+                            const formattedLastSeen = lastDate.toLocaleDateString([], {
+                              month: "short",
+                              day: "numeric",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            });
 
                             return (
-                              <tr key={i} className="hover:bg-foreground/2 transition-colors">
-                                <td className="py-2.5">
-                                  <div className="flex items-center gap-2">
-                                    <span className="text-sm">{getCountryFlag(v.countryCode)}</span>
+                              <div
+                                key={dev.visitorId}
+                                className={`p-4 rounded-2xl bg-background border transition-all duration-200 flex flex-col justify-between gap-3.5 hover:shadow-md ${
+                                  isOnline
+                                    ? "border-emerald-500/40 hover:border-emerald-500/60 shadow-emerald-500/5"
+                                    : "border-border hover:border-border/80"
+                                }`}
+                              >
+                                {/* Top Device info & Online/Offline Pill */}
+                                <div className="flex items-start justify-between gap-2">
+                                  <div className="flex items-center gap-2.5">
+                                    <div
+                                      className={`p-2.5 rounded-xl flex items-center justify-center shrink-0 ${
+                                        isOnline
+                                          ? "bg-emerald-500/15 text-emerald-500"
+                                          : "bg-foreground/5 text-foreground/60"
+                                      }`}
+                                    >
+                                      {dev.device === "Mobile" ? (
+                                        <Smartphone className="w-4 h-4" />
+                                      ) : dev.device === "Tablet" ? (
+                                        <Tablet className="w-4 h-4" />
+                                      ) : (
+                                        <Monitor className="w-4 h-4" />
+                                      )}
+                                    </div>
                                     <div>
-                                      <span className="font-semibold text-foreground block">
-                                        {v.city ? `${v.city}, ` : ""}{v.country}
+                                      <h4 className="font-bold text-xs text-foreground flex items-center gap-1.5">
+                                        <span>{dev.deviceModel || dev.device}</span>
+                                      </h4>
+                                      <span className="text-[10.5px] text-foreground/50 block">
+                                        {dev.browser} • {dev.os}
                                       </span>
                                     </div>
                                   </div>
-                                </td>
-                                <td className="py-2.5 font-mono text-accent">
-                                  {v.path}
-                                </td>
-                                <td className="py-2.5 text-foreground/75">
-                                  <span className="font-medium text-foreground">{v.deviceModel || v.device}</span>
-                                  <span className="text-foreground/50 text-[11px] block">{v.browser} ({v.os})</span>
-                                </td>
-                                <td className="py-2.5 font-mono text-[11px] text-foreground/70">
-                                  {formatDuration(v.durationSeconds || 0)}
-                                </td>
-                                <td className="py-2.5 text-right text-foreground/50 font-mono text-[11px]">
-                                  {formattedDate} {formattedTime}
-                                </td>
-                              </tr>
+
+                                  {/* Status Pill */}
+                                  {isOnline ? (
+                                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-500/15 text-emerald-500 border border-emerald-500/30 shrink-0">
+                                      <span className="relative flex h-2 w-2">
+                                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                                        <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+                                      </span>
+                                      <span>Online</span>
+                                    </span>
+                                  ) : (
+                                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-semibold bg-foreground/5 text-foreground/50 border border-border shrink-0">
+                                      <span className="inline-block h-2 w-2 rounded-full bg-foreground/30" />
+                                      <span>Offline</span>
+                                    </span>
+                                  )}
+                                </div>
+
+                                {/* Location & Current/Last Route */}
+                                <div className="space-y-2 text-xs">
+                                  <div className="flex items-center justify-between text-foreground/75">
+                                    <span className="inline-flex items-center gap-1.5 text-[11px]">
+                                      <span>{getCountryFlag(dev.countryCode)}</span>
+                                      <span>
+                                        {dev.city ? `${dev.city}, ` : ""}
+                                        {dev.country}
+                                      </span>
+                                    </span>
+                                    <span className="text-[10px] text-foreground/50 font-mono">
+                                      {isOnline ? "Active now" : formattedLastSeen}
+                                    </span>
+                                  </div>
+
+                                  <div className="p-2 rounded-xl bg-card-bg border border-border/60 flex items-center justify-between gap-2">
+                                    <span className="text-[10.5px] text-foreground/60 flex items-center gap-1 shrink-0">
+                                      <Compass className="w-3 h-3 text-accent" />
+                                      <span>{isOnline ? "Current" : "Last"}:</span>
+                                    </span>
+                                    <span
+                                      className="font-mono text-[10.5px] text-accent truncate max-w-[160px]"
+                                      title={dev.currentPath}
+                                    >
+                                      {dev.currentPath}
+                                    </span>
+                                  </div>
+                                </div>
+
+                                {/* Metrics Summary */}
+                                <div className="grid grid-cols-2 gap-2 pt-1 border-t border-border/50 text-xs">
+                                  <div className="p-2 rounded-xl bg-card-bg/60 border border-border/40">
+                                    <span className="text-[10px] text-foreground/50 block font-medium">Total Visits</span>
+                                    <span className="font-bold text-foreground text-xs font-mono">
+                                      {dev.visitCount} {dev.visitCount === 1 ? "session" : "sessions"}
+                                    </span>
+                                  </div>
+                                  <div className="p-2 rounded-xl bg-card-bg/60 border border-border/40">
+                                    <span className="text-[10px] text-foreground/50 block font-medium">Time Stayed</span>
+                                    <span className="font-bold text-emerald-500 font-mono text-xs">
+                                      {formatDuration(dev.totalDurationSeconds || 0)}
+                                    </span>
+                                  </div>
+                                </div>
+
+                                {/* Viewed Projects Tags Preview */}
+                                {dev.viewedProjects && dev.viewedProjects.length > 0 && (
+                                  <div className="flex flex-wrap items-center gap-1">
+                                    <span className="text-[10px] text-foreground/50 font-medium">Projects:</span>
+                                    {dev.viewedProjects.slice(0, 2).map((p: string, pIdx: number) => (
+                                      <span
+                                        key={pIdx}
+                                        className="text-[10px] px-2 py-0.5 rounded-md bg-accent/10 text-accent font-semibold capitalize"
+                                      >
+                                        {p.replace(/-/g, " ")}
+                                      </span>
+                                    ))}
+                                    {dev.viewedProjects.length > 2 && (
+                                      <span className="text-[10px] text-foreground/50 font-mono">
+                                        +{dev.viewedProjects.length - 2} more
+                                      </span>
+                                    )}
+                                  </div>
+                                )}
+
+                                {/* Action Button */}
+                                <button
+                                  type="button"
+                                  onClick={() => setSelectedDevice(dev)}
+                                  className="w-full mt-0.5 py-2 px-3 rounded-xl bg-card-bg hover:bg-accent hover:text-white border border-border hover:border-accent text-foreground/80 text-xs font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer shadow-2xs group"
+                                >
+                                  <Eye className="w-3.5 h-3.5 text-accent group-hover:text-white transition-colors" />
+                                  <span>View History &amp; Timeline</span>
+                                  <ChevronRight className="w-3 h-3 text-foreground/40 group-hover:text-white transition-colors" />
+                                </button>
+                              </div>
                             );
                           })}
-                        </tbody>
-                      </table>
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
+                  );
+                })()}
               </>
             )}
           </div>
@@ -2335,6 +2456,206 @@ export default function DashboardPage() {
           </div>
         )}
       </AnimatePresence>
+
+      {/* Device History & Detail Modal */}
+      <AnimatePresence>
+        {selectedDevice && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 15 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 15 }}
+              transition={{ duration: 0.2 }}
+              className="relative w-full max-w-2xl bg-card-bg border border-border rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[88vh]"
+            >
+              {/* Header */}
+              <div className="p-5 sm:p-6 border-b border-border flex items-center justify-between gap-4 bg-background/50">
+                <div className="flex items-center gap-3">
+                  <div
+                    className={`p-2.5 rounded-2xl flex items-center justify-center ${
+                      selectedDevice.isOnline
+                        ? "bg-emerald-500/15 text-emerald-500 border border-emerald-500/30"
+                        : "bg-foreground/5 text-foreground/60 border border-border"
+                    }`}
+                  >
+                    {selectedDevice.device === "Mobile" ? (
+                      <Smartphone className="w-5 h-5" />
+                    ) : selectedDevice.device === "Tablet" ? (
+                      <Tablet className="w-5 h-5" />
+                    ) : (
+                      <Monitor className="w-5 h-5" />
+                    )}
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <h3 className="font-bold text-sm sm:text-base text-foreground">
+                        {selectedDevice.deviceModel || selectedDevice.device}
+                      </h3>
+                      {selectedDevice.isOnline ? (
+                        <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/15 text-emerald-500 border border-emerald-500/30">
+                          <span className="relative flex h-2 w-2">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+                          </span>
+                          <span>Online Now</span>
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-foreground/5 text-foreground/50 border border-border">
+                          <span className="inline-block h-2 w-2 rounded-full bg-foreground/30" />
+                          <span>Offline</span>
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-xs text-foreground/60 mt-0.5">
+                      {getCountryFlag(selectedDevice.countryCode)} {selectedDevice.city ? `${selectedDevice.city}, ` : ""}{selectedDevice.country} • {selectedDevice.browser} ({selectedDevice.os})
+                    </p>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setSelectedDevice(null)}
+                  className="p-2 rounded-xl bg-card-bg border border-border hover:bg-foreground/5 text-foreground/70 hover:text-foreground transition-colors cursor-pointer"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              {/* Scrollable Body */}
+              <div className="p-5 sm:p-6 overflow-y-auto space-y-6">
+                {/* 4 Summary Stats */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                  <div className="p-3 rounded-2xl bg-background border border-border space-y-1">
+                    <span className="text-[10px] uppercase font-bold text-foreground/50 block">
+                      Total Visits
+                    </span>
+                    <span className="text-base font-extrabold text-foreground">
+                      {selectedDevice.visitCount} {selectedDevice.visitCount === 1 ? "time" : "times"}
+                    </span>
+                  </div>
+
+                  <div className="p-3 rounded-2xl bg-background border border-border space-y-1">
+                    <span className="text-[10px] uppercase font-bold text-foreground/50 block">
+                      Total Stay Time
+                    </span>
+                    <span className="text-base font-extrabold text-emerald-500 font-mono">
+                      {formatDuration(selectedDevice.totalDurationSeconds || 0)}
+                    </span>
+                  </div>
+
+                  <div className="p-3 rounded-2xl bg-background border border-border space-y-1">
+                    <span className="text-[10px] uppercase font-bold text-foreground/50 block">
+                      First Visited
+                    </span>
+                    <span className="text-xs font-semibold text-foreground/80 block">
+                      {new Date(selectedDevice.firstSeen).toLocaleDateString([], { month: "short", day: "numeric" })}
+                    </span>
+                    <span className="text-[10px] font-mono text-foreground/50">
+                      {new Date(selectedDevice.firstSeen).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                    </span>
+                  </div>
+
+                  <div className="p-3 rounded-2xl bg-background border border-border space-y-1">
+                    <span className="text-[10px] uppercase font-bold text-foreground/50 block">
+                      Last Active
+                    </span>
+                    <span className="text-xs font-semibold text-foreground/80 block">
+                      {selectedDevice.isOnline ? "Active Now" : new Date(selectedDevice.lastSeen).toLocaleDateString([], { month: "short", day: "numeric" })}
+                    </span>
+                    <span className="text-[10px] font-mono text-foreground/50">
+                      {selectedDevice.isOnline ? "Real-time" : new Date(selectedDevice.lastSeen).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Projects Viewed Section */}
+                <div className="space-y-2.5">
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-foreground flex items-center gap-1.5">
+                    <FolderKanban className="w-3.5 h-3.5 text-accent" />
+                    <span>Projects Viewed by this Visitor</span>
+                  </h4>
+                  {selectedDevice.viewedProjects && selectedDevice.viewedProjects.length > 0 ? (
+                    <div className="flex flex-wrap gap-2">
+                      {selectedDevice.viewedProjects.map((pSlug: string, idx: number) => (
+                        <div
+                          key={idx}
+                          className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-accent/10 border border-accent/25 text-accent text-xs font-semibold"
+                        >
+                          <CheckCircle2 className="w-3.5 h-3.5" />
+                          <span className="capitalize">{pSlug.replace(/-/g, " ")}</span>
+                          <span className="text-[10px] text-accent/70 font-mono">(/projects/{pSlug})</span>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-xs text-foreground/50 italic p-3 rounded-xl bg-background border border-border/60">
+                      This visitor browsed general portfolio pages and has not opened dedicated project detail modals/pages yet.
+                    </p>
+                  )}
+                </div>
+
+                {/* Route Navigation Timeline */}
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <h4 className="text-xs font-bold uppercase tracking-wider text-foreground flex items-center gap-1.5">
+                      <Activity className="w-3.5 h-3.5 text-accent" />
+                      <span>Navigation Timeline &amp; Route History</span>
+                    </h4>
+                    <span className="text-[11px] font-mono text-foreground/50">
+                      {selectedDevice.history?.length || 0} visits recorded
+                    </span>
+                  </div>
+
+                  {(!selectedDevice.history || selectedDevice.history.length === 0) ? (
+                    <p className="text-xs text-foreground/50 italic py-4 text-center">
+                      No route history recorded.
+                    </p>
+                  ) : (
+                    <div className="relative pl-6 space-y-3.5 before:absolute before:left-2.5 before:top-2 before:bottom-2 before:w-0.5 before:bg-border">
+                      {selectedDevice.history.map((step: any, sIdx: number) => {
+                        const stepDate = new Date(step.timestamp);
+                        const timeStr = stepDate.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+                        const dateStr = stepDate.toLocaleDateString([], { month: "short", day: "numeric" });
+
+                        return (
+                          <div key={sIdx} className="relative group">
+                            {/* Dot */}
+                            <div className="absolute -left-6 top-1.5 w-3 h-3 rounded-full bg-card-bg border-2 border-accent" />
+                            
+                            <div className="p-3 rounded-xl bg-background border border-border/70 flex flex-col sm:flex-row sm:items-center justify-between gap-2 hover:border-accent/40 transition-colors">
+                              <div className="flex items-center gap-2">
+                                <span className="font-mono text-xs font-bold text-accent bg-accent/10 px-2 py-0.5 rounded-md">
+                                  {step.path}
+                                </span>
+                              </div>
+
+                              <div className="flex items-center gap-3 text-xs text-foreground/60 font-mono text-[11px]">
+                                {step.durationSeconds > 0 && (
+                                  <span className="text-emerald-500 font-semibold bg-emerald-500/10 px-2 py-0.5 rounded-md border border-emerald-500/20">
+                                    stayed {formatDuration(step.durationSeconds)}
+                                  </span>
+                                )}
+                                <span>{dateStr} {timeStr}</span>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+
+                {/* Visitor Fingerprint & Metadata Footer */}
+                <div className="p-3 rounded-xl bg-background/50 border border-border/40 text-[10.5px] text-foreground/50 flex flex-col sm:flex-row sm:items-center justify-between gap-1 font-mono">
+                  <span>Unique Visitor ID: {selectedDevice.visitorId}</span>
+                  <span>Session Type: Persistent Device Record</span>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
+

@@ -24,128 +24,178 @@ export async function GET() {
     const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
     const activeCutoff = new Date(now.getTime() - 75 * 1000); // 75s window
 
-    // Parallel queries
-    const [
-      activeVisitorsList,
-      todayUniqueList,
-      weekUniqueList,
-      monthUniqueList,
-      totalUniqueList,
-      todayPageviews,
-      totalPageviews,
-      recentVisitorsRaw,
-      countryAgg,
-      deviceAgg,
-    ] = await Promise.all([
-      // Currently active devices
-      activeCollection.find({ lastActive: { $gte: activeCutoff } }).toArray(),
-      // Unique devices (distinct visitorId) for Today, Week, Month
-      logsCollection.distinct("visitorId", { timestamp: { $gte: startOfToday } }),
-      logsCollection.distinct("visitorId", { timestamp: { $gte: sevenDaysAgo } }),
-      logsCollection.distinct("visitorId", { timestamp: { $gte: thirtyDaysAgo } }),
-      logsCollection.distinct("visitorId"),
-      // Raw pageviews
-      logsCollection.countDocuments({ timestamp: { $gte: startOfToday } }),
-      logsCollection.countDocuments(),
-      // Last 20 visitor logs
-      logsCollection.find({}).sort({ timestamp: -1 }).limit(20).toArray(),
-      // Top Countries by unique visitors
-      logsCollection
-        .aggregate([
-          {
-            $group: {
-              _id: { country: "$country", code: "$countryCode" },
-              uniqueVisitors: { $addToSet: "$visitorId" },
-              pageviews: { $sum: 1 },
-            },
-          },
-          {
-            $project: {
-              country: "$_id.country",
-              countryCode: "$_id.code",
-              count: { $size: "$uniqueVisitors" },
-              pageviews: 1,
-            },
-          },
-          { $sort: { count: -1 } },
-          { $limit: 8 },
-        ])
-        .toArray(),
-      // Devices by unique visitors
-      logsCollection
-        .aggregate([
-          {
-            $group: {
-              _id: "$device",
-              uniqueVisitors: { $addToSet: "$visitorId" },
-            },
-          },
-          {
-            $project: {
-              device: "$_id",
-              count: { $size: "$uniqueVisitors" },
-            },
-          },
-          { $sort: { count: -1 } },
-        ])
-        .toArray(),
-    ]);
+    // 1. Fetch currently active sessions
+    const activeDocs = await activeCollection
+      .find({ lastActive: { $gte: activeCutoff } })
+      .toArray();
 
-    // Format active devices list with real-time live duration
-    const formattedActive = activeVisitorsList.map((v: any) => {
-      const firstSeen = v.firstSeen ? new Date(v.firstSeen) : new Date(v.lastActive || now);
-      const durationSeconds = Math.max(0, Math.round((now.getTime() - firstSeen.getTime()) / 1000));
-
-      return {
-        visitorId: v.visitorId,
-        deviceModel: v.deviceModel || v.device || "Unknown Device",
-        device: v.device || "Desktop",
-        browser: v.browser || "Browser",
-        os: v.os || "",
-        country: v.country || "Unknown",
-        countryCode: v.countryCode || "XX",
-        city: v.city || "",
-        path: v.path || "/",
-        durationSeconds,
-      };
+    const activeMap = new Map<string, any>();
+    activeDocs.forEach((doc) => {
+      activeMap.set(doc.visitorId, doc);
     });
 
-    const formattedCountries = countryAgg.map((item: any) => ({
-      country: item.country || "Unknown",
-      countryCode: item.countryCode || "XX",
-      count: item.count,
-    }));
+    // 2. Fetch all visitor logs for aggregation & device timeline
+    const allLogs = await logsCollection
+      .find({})
+      .sort({ timestamp: -1 })
+      .toArray();
 
-    const formattedDevices: Record<string, number> = {
-      Desktop: 0,
-      Mobile: 0,
-      Tablet: 0,
-    };
-    deviceAgg.forEach((item: any) => {
-      if (item.device && formattedDevices[item.device] !== undefined) {
-        formattedDevices[item.device] = item.count;
+    // Group logs by visitorId to build individual DeviceProfiles
+    const deviceProfilesMap = new Map<string, any>();
+
+    for (const log of allLogs) {
+      const vid = log.visitorId;
+      if (!vid) continue;
+
+      if (!deviceProfilesMap.has(vid)) {
+        const activeInfo = activeMap.get(vid);
+        const isOnline = !!activeInfo;
+
+        deviceProfilesMap.set(vid, {
+          visitorId: vid,
+          deviceModel: log.deviceModel || log.device || "Desktop PC",
+          device: log.device || "Desktop",
+          browser: log.browser || "Web Browser",
+          os: log.os || "Unknown",
+          country: log.country || "Bangladesh",
+          countryCode: log.countryCode || "BD",
+          city: log.city || "Dhaka",
+          firstSeen: log.timestamp,
+          lastSeen: log.timestamp,
+          visitCount: 0,
+          totalDurationSeconds: 0,
+          currentPath: activeInfo?.path || log.path || "/",
+          isOnline,
+          history: [],
+          viewedProjects: [],
+        });
       }
+
+      const profile = deviceProfilesMap.get(vid);
+      profile.visitCount += 1;
+
+      // Calculate total duration (sum of logged durations)
+      if (typeof log.durationSeconds === "number" && log.durationSeconds > 0) {
+        profile.totalDurationSeconds += log.durationSeconds;
+      }
+
+      // Track project views e.g. /projects/shopnexus
+      if (typeof log.path === "string") {
+        if (log.path.startsWith("/projects/") && log.path.length > 10) {
+          const projName = log.path.replace("/projects/", "").split("?")[0];
+          if (projName && !profile.viewedProjects.includes(projName)) {
+            profile.viewedProjects.push(projName);
+          }
+        }
+
+        // Add to history (keep latest 30 route visits)
+        if (profile.history.length < 30) {
+          profile.history.push({
+            path: log.path,
+            timestamp: log.timestamp,
+            durationSeconds: log.durationSeconds || 0,
+          });
+        }
+      }
+
+      // Track oldest seen
+      if (new Date(log.timestamp) < new Date(profile.firstSeen)) {
+        profile.firstSeen = log.timestamp;
+      }
+      // Track latest seen
+      if (new Date(log.timestamp) > new Date(profile.lastSeen)) {
+        profile.lastSeen = log.timestamp;
+      }
+    }
+
+    // Ensure all active visitors are in the profile map even if no prior log
+    for (const active of activeDocs) {
+      const vid = active.visitorId;
+      if (!deviceProfilesMap.has(vid)) {
+        deviceProfilesMap.set(vid, {
+          visitorId: vid,
+          deviceModel: active.deviceModel || active.device || "Desktop PC",
+          device: active.device || "Desktop",
+          browser: active.browser || "Web Browser",
+          os: active.os || "Unknown",
+          country: active.country || "Bangladesh",
+          countryCode: active.countryCode || "BD",
+          city: active.city || "Dhaka",
+          firstSeen: active.firstSeen || active.lastActive || now,
+          lastSeen: active.lastActive || now,
+          visitCount: 1,
+          totalDurationSeconds: 0,
+          currentPath: active.path || "/",
+          isOnline: true,
+          history: [{ path: active.path || "/", timestamp: active.lastActive || now }],
+          viewedProjects: [],
+        });
+      } else {
+        const profile = deviceProfilesMap.get(vid);
+        profile.isOnline = true;
+        profile.currentPath = active.path || profile.currentPath;
+        profile.lastSeen = active.lastActive || profile.lastSeen;
+      }
+    }
+
+    // Convert map to array and sort: Online devices first, then latest seen
+    const allDevices = Array.from(deviceProfilesMap.values()).sort((a, b) => {
+      if (a.isOnline && !b.isOnline) return -1;
+      if (!a.isOnline && b.isOnline) return 1;
+      return new Date(b.lastSeen).getTime() - new Date(a.lastSeen).getTime();
     });
 
-    const recentVisitors = recentVisitorsRaw.map((v: any) => {
-      const { _id, ...rest } = v;
-      return rest;
+    // 3. Time-window metrics based on distinct visitorId
+    const todayUnique = await logsCollection.distinct("visitorId", {
+      timestamp: { $gte: startOfToday },
     });
+    const weekUnique = await logsCollection.distinct("visitorId", {
+      timestamp: { $gte: sevenDaysAgo },
+    });
+    const monthUnique = await logsCollection.distinct("visitorId", {
+      timestamp: { $gte: thirtyDaysAgo },
+    });
+    const totalUnique = await logsCollection.distinct("visitorId");
+
+    const todayPageviews = await logsCollection.countDocuments({
+      timestamp: { $gte: startOfToday },
+    });
+    const totalPageviews = await logsCollection.countDocuments();
+
+    // 4. Device and Country distributions
+    const formattedDevices: Record<string, number> = { Desktop: 0, Mobile: 0, Tablet: 0 };
+    const countryCounts: Record<string, { country: string; countryCode: string; count: number }> = {};
+
+    allDevices.forEach((d) => {
+      if (formattedDevices[d.device] !== undefined) {
+        formattedDevices[d.device] += 1;
+      }
+      const code = d.countryCode || "BD";
+      if (!countryCounts[code]) {
+        countryCounts[code] = {
+          country: d.country,
+          countryCode: code,
+          count: 0,
+        };
+      }
+      countryCounts[code].count += 1;
+    });
+
+    const topCountries = Object.values(countryCounts).sort((a, b) => b.count - a.count).slice(0, 8);
 
     return NextResponse.json({
       success: true,
       data: {
-        liveCount: Math.max(1, formattedActive.length),
-        todayUnique: todayUniqueList.length,
-        weekUnique: weekUniqueList.length,
-        monthUnique: monthUniqueList.length,
-        totalUnique: totalUniqueList.length,
+        liveCount: activeDocs.length,
+        todayUnique: todayUnique.length,
+        weekUnique: weekUnique.length,
+        monthUnique: monthUnique.length,
+        totalUnique: totalUnique.length,
         todayPageviews,
         totalPageviews,
-        activeDevices: formattedActive,
         devices: formattedDevices,
-        topCountries: formattedCountries,
-        recentVisitors,
+        topCountries,
+        allDevices,
       },
     });
   } catch (error: any) {

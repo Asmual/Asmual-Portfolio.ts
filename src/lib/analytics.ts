@@ -15,19 +15,29 @@ export interface VisitorLog {
   durationSeconds: number;
 }
 
-export interface ActiveVisitor {
+export interface RouteVisit {
+  path: string;
+  timestamp: Date | string;
+  durationSeconds?: number;
+}
+
+export interface DeviceProfile {
   visitorId: string;
-  openTabs: number;
-  lastActive: Date;
-  firstSeen: Date;
+  deviceModel: string;
+  device: "Desktop" | "Mobile" | "Tablet";
+  browser: string;
+  os: string;
   country: string;
   countryCode: string;
   city: string;
-  device: "Desktop" | "Mobile" | "Tablet";
-  deviceModel: string;
-  browser: string;
-  os: string;
-  path: string;
+  firstSeen: Date;
+  lastSeen: Date;
+  visitCount: number;
+  totalDurationSeconds: number;
+  currentPath: string;
+  isOnline: boolean;
+  history: RouteVisit[];
+  viewedProjects: string[];
 }
 
 // Convert 2-letter country code (e.g. "BD", "US") to unicode flag emoji
