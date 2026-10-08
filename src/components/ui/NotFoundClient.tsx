@@ -2,24 +2,18 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Home,
   ArrowLeft,
   Compass,
   Radio,
-  Sparkles,
-  FolderKanban,
-  Mail,
-  Terminal,
-  RotateCcw,
-  Radar,
   Satellite,
-  Layers,
-  Code2,
+  Terminal,
+  FolderKanban,
 } from "lucide-react";
-import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
+import ThemeToggle from "@/components/ui/ThemeToggle";
 
 // Starfield Particle Canvas with soft mouse parallax
 function CosmicStarfield() {
@@ -147,22 +141,21 @@ function CosmicStarfield() {
 }
 
 export default function NotFoundClient() {
+  const router = useRouter();
   const [isPinging, setIsPinging] = useState(false);
-  const [pingCount, setPingCount] = useState(0);
   const [currentPath, setCurrentPath] = useState<string>("");
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      setCurrentPath(window.location.pathname || "/unknown-route");
+      setCurrentPath(window.location.pathname || "");
     }
   }, []);
 
   const triggerRadarPing = () => {
     setIsPinging(true);
-    setPingCount((prev) => prev + 1);
     setTimeout(() => {
       setIsPinging(false);
-    }, 2400);
+    }, 2000);
   };
 
   return (
@@ -175,13 +168,24 @@ export default function NotFoundClient() {
       <div className="pointer-events-none absolute top-1/3 left-1/4 w-[340px] h-[340px] bg-purple-500/10 blur-[100px] rounded-full z-0" />
       <div className="pointer-events-none absolute bottom-1/4 right-1/4 w-[380px] h-[380px] bg-emerald-500/10 blur-[110px] rounded-full z-0" />
 
-      {/* Main Navbar */}
-      <Navbar />
+      {/* Minimal Top Brand Bar with Theme Toggle (No Navbar) */}
+      <header className="relative z-20 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-2 flex items-center justify-between">
+        <Link
+          href="/"
+          className="group inline-flex items-center gap-2 font-mono font-bold text-sm sm:text-base text-foreground hover:text-accent transition-colors"
+        >
+          <span className="w-8 h-8 rounded-xl bg-accent/10 border border-accent/30 flex items-center justify-center text-accent group-hover:scale-105 transition-transform">
+            A
+          </span>
+          <span className="tracking-tight">Asmual</span>
+        </Link>
+        <ThemeToggle />
+      </header>
 
       {/* Main 404 Hero Container */}
-      <main className="relative z-10 flex-1 flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 py-16 sm:py-24 max-w-6xl mx-auto w-full">
-        {/* Floating Draggable Tech/Code Shards */}
-        <div className="w-full relative max-w-4xl flex items-center justify-center">
+      <main className="relative z-10 flex-1 flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 py-8 max-w-3xl mx-auto w-full">
+        {/* Floating Draggable Tech Shards */}
+        <div className="w-full relative max-w-2xl flex items-center justify-center">
           {/* Shard 1: Top Left */}
           <motion.div
             drag
@@ -196,10 +200,10 @@ export default function NotFoundClient() {
               y: { duration: 4, repeat: Infinity, ease: "easeInOut" },
               rotate: { duration: 5, repeat: Infinity, ease: "easeInOut" },
             }}
-            className="hidden md:flex absolute -top-8 left-4 lg:left-10 z-20 items-center gap-2 px-3 py-1.5 rounded-full bg-card-bg/80 backdrop-blur-md border border-rose-500/30 text-[11px] font-mono text-rose-400 shadow-lg cursor-grab active:cursor-grabbing hover:border-rose-500/60 transition-colors"
+            className="hidden md:flex absolute -top-8 left-4 lg:-left-6 z-20 items-center gap-2 px-3 py-1.5 rounded-full bg-card-bg/80 backdrop-blur-md border border-rose-500/30 text-[11px] font-mono text-rose-400 shadow-lg cursor-grab active:cursor-grabbing hover:border-rose-500/60 transition-colors"
           >
             <Compass className="w-3.5 h-3.5 text-rose-500 animate-spin-slow" />
-            <span>ERR_404: VECTOR_LOST</span>
+            <span>ERR_404: ROUTE_NOT_FOUND</span>
           </motion.div>
 
           {/* Shard 2: Top Right */}
@@ -216,10 +220,10 @@ export default function NotFoundClient() {
               y: { duration: 4.5, repeat: Infinity, ease: "easeInOut", delay: 0.5 },
               rotate: { duration: 6, repeat: Infinity, ease: "easeInOut", delay: 0.5 },
             }}
-            className="hidden md:flex absolute -top-6 right-4 lg:right-10 z-20 items-center gap-2 px-3 py-1.5 rounded-full bg-card-bg/80 backdrop-blur-md border border-accent/30 text-[11px] font-mono text-accent shadow-lg cursor-grab active:cursor-grabbing hover:border-accent/60 transition-colors"
+            className="hidden md:flex absolute -top-6 right-4 lg:-right-6 z-20 items-center gap-2 px-3 py-1.5 rounded-full bg-card-bg/80 backdrop-blur-md border border-accent/30 text-[11px] font-mono text-accent shadow-lg cursor-grab active:cursor-grabbing hover:border-accent/60 transition-colors"
           >
             <Terminal className="w-3.5 h-3.5" />
-            <span>&#123; status: 404, sector: &quot;unmapped&quot; &#125;</span>
+            <span>&#123; status: 404 &#125;</span>
           </motion.div>
 
           {/* Shard 3: Bottom Left */}
@@ -236,10 +240,10 @@ export default function NotFoundClient() {
               y: { duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 },
               rotate: { duration: 5.5, repeat: Infinity, ease: "easeInOut", delay: 1 },
             }}
-            className="hidden md:flex absolute -bottom-6 left-12 lg:left-20 z-20 items-center gap-2 px-3 py-1.5 rounded-full bg-card-bg/80 backdrop-blur-md border border-emerald-500/30 text-[11px] font-mono text-emerald-400 shadow-lg cursor-grab active:cursor-grabbing hover:border-emerald-500/60 transition-colors"
+            className="hidden md:flex absolute -bottom-4 left-6 lg:-left-2 z-20 items-center gap-2 px-3 py-1.5 rounded-full bg-card-bg/80 backdrop-blur-md border border-emerald-500/30 text-[11px] font-mono text-emerald-400 shadow-lg cursor-grab active:cursor-grabbing hover:border-emerald-500/60 transition-colors"
           >
             <Radio className="w-3.5 h-3.5 text-emerald-400 animate-pulse" />
-            <span>PING_TIMEOUT: 404ms</span>
+            <span>PING: 404ms</span>
           </motion.div>
 
           {/* Shard 4: Bottom Right */}
@@ -256,30 +260,30 @@ export default function NotFoundClient() {
               y: { duration: 4.8, repeat: Infinity, ease: "easeInOut", delay: 0.8 },
               rotate: { duration: 5.2, repeat: Infinity, ease: "easeInOut", delay: 0.8 },
             }}
-            className="hidden md:flex absolute -bottom-8 right-12 lg:right-24 z-20 items-center gap-2 px-3 py-1.5 rounded-full bg-card-bg/80 backdrop-blur-md border border-amber-500/30 text-[11px] font-mono text-amber-400 shadow-lg cursor-grab active:cursor-grabbing hover:border-amber-500/60 transition-colors"
+            className="hidden md:flex absolute -bottom-4 right-6 lg:-right-2 z-20 items-center gap-2 px-3 py-1.5 rounded-full bg-card-bg/80 backdrop-blur-md border border-amber-500/30 text-[11px] font-mono text-amber-400 shadow-lg cursor-grab active:cursor-grabbing hover:border-amber-500/60 transition-colors"
           >
             <Satellite className="w-3.5 h-3.5 text-amber-400" />
-            <span>COORDINATE_DRIFT: 0x404</span>
+            <span>ORBIT: STABLE</span>
           </motion.div>
 
           {/* THE 404 CENTERPIECE */}
-          <div className="flex items-center justify-center gap-2 sm:gap-6 my-4">
+          <div className="flex items-center justify-center gap-2 sm:gap-6 my-2">
             {/* Left "4" */}
             <motion.span
               initial={{ opacity: 0, x: -60, scale: 0.8 }}
               animate={{ opacity: 1, x: 0, scale: 1 }}
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-              className="text-7xl sm:text-9xl md:text-[14rem] font-black tracking-tighter leading-none bg-gradient-to-b from-foreground via-foreground/80 to-foreground/20 bg-clip-text text-transparent drop-shadow-2xl font-mono select-none"
+              className="text-7xl sm:text-9xl md:text-[13rem] font-black tracking-tighter leading-none bg-gradient-to-b from-foreground via-foreground/80 to-foreground/20 bg-clip-text text-transparent drop-shadow-2xl font-mono select-none"
             >
               4
             </motion.span>
 
-            {/* Center "0" - Interactive Orbital Satellite & Radar Core */}
+            {/* Center "0" - Interactive Orbital Satellite */}
             <motion.div
               initial={{ opacity: 0, scale: 0.6 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.9, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-              className="relative w-28 h-28 sm:w-44 sm:h-44 md:w-56 md:h-56 flex items-center justify-center"
+              className="relative w-28 h-28 sm:w-40 sm:h-40 md:w-52 md:h-52 flex items-center justify-center"
             >
               {/* Outer Orbital Dashed Ring */}
               <motion.div
@@ -294,7 +298,6 @@ export default function NotFoundClient() {
                 transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
                 className="absolute inset-3 sm:inset-5 rounded-full border border-accent/25 pointer-events-none"
               >
-                {/* Orbiting Satellite Particle Node */}
                 <span className="absolute -top-1 left-1/2 -translate-x-1/2 w-2.5 h-2.5 rounded-full bg-accent shadow-[0_0_12px_#3b82f6]" />
                 <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_10px_#10b981]" />
               </motion.div>
@@ -330,7 +333,7 @@ export default function NotFoundClient() {
                 )}
               </AnimatePresence>
 
-              {/* Central Space Satellite / Probe Card */}
+              {/* Central Satellite Interactive Core */}
               <motion.div
                 drag
                 dragConstraints={{ top: -20, bottom: 20, left: -20, right: 20 }}
@@ -338,13 +341,11 @@ export default function NotFoundClient() {
                 whileHover={{ scale: 1.08 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={triggerRadarPing}
-                title="Click or drag to send telemetry radar ping!"
-                className="relative z-10 w-16 h-16 sm:w-24 sm:h-24 md:w-32 md:h-32 rounded-3xl bg-card-bg/90 backdrop-blur-xl border border-accent/40 shadow-xl flex flex-col items-center justify-center cursor-pointer group hover:border-accent hover:shadow-accent/25 transition-all duration-300"
+                title="Click or drag satellite core"
+                className="relative z-10 w-16 h-16 sm:w-22 sm:h-22 md:w-28 md:h-28 rounded-3xl bg-card-bg/90 backdrop-blur-xl border border-accent/40 shadow-xl flex flex-col items-center justify-center cursor-pointer group hover:border-accent hover:shadow-accent/25 transition-all duration-300"
               >
-                {/* Glow ring */}
                 <div className="absolute inset-0 rounded-3xl bg-gradient-to-tr from-accent/10 to-purple-500/10 -z-10 group-hover:opacity-100 transition-opacity" />
 
-                {/* Satellite Core SVG Icon */}
                 <motion.div
                   animate={{
                     y: [0, -4, 0],
@@ -353,10 +354,9 @@ export default function NotFoundClient() {
                   transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
                   className="flex flex-col items-center justify-center text-accent"
                 >
-                  <Satellite className="w-7 h-7 sm:w-11 sm:h-11 md:w-14 md:h-14 stroke-[1.6] group-hover:text-emerald-400 transition-colors" />
+                  <Satellite className="w-7 h-7 sm:w-10 sm:h-10 md:w-12 md:h-12 stroke-[1.6] group-hover:text-emerald-400 transition-colors" />
                 </motion.div>
 
-                {/* Pulsing Beacon Dot */}
                 <span className="absolute -top-1 -right-1 flex h-3 w-3">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
                   <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500" />
@@ -373,43 +373,43 @@ export default function NotFoundClient() {
               initial={{ opacity: 0, x: 60, scale: 0.8 }}
               animate={{ opacity: 1, x: 0, scale: 1 }}
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-              className="text-7xl sm:text-9xl md:text-[14rem] font-black tracking-tighter leading-none bg-gradient-to-b from-foreground via-foreground/80 to-foreground/20 bg-clip-text text-transparent drop-shadow-2xl font-mono select-none"
+              className="text-7xl sm:text-9xl md:text-[13rem] font-black tracking-tighter leading-none bg-gradient-to-b from-foreground via-foreground/80 to-foreground/20 bg-clip-text text-transparent drop-shadow-2xl font-mono select-none"
             >
               4
             </motion.span>
           </div>
         </div>
 
-        {/* DIAGNOSTIC TELEMETRY CARD */}
+        {/* DIAGNOSTIC CARD */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.4 }}
-          className="mt-6 sm:mt-8 w-full max-w-2xl bg-card-bg/70 backdrop-blur-xl border border-border/80 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6 text-center relative overflow-hidden"
+          transition={{ duration: 0.7, delay: 0.3 }}
+          className="mt-4 sm:mt-6 w-full max-w-xl bg-card-bg/75 backdrop-blur-xl border border-border/80 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-5 text-center relative overflow-hidden"
         >
           {/* Subtle Top Accent Border Light */}
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-48 h-[2px] bg-gradient-to-r from-transparent via-accent to-transparent" />
 
           {/* Anomaly Badge */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-rose-500/10 border border-rose-500/25 text-rose-500 text-xs font-mono font-bold tracking-wider">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-rose-500/10 border border-rose-500/25 text-rose-500 text-xs font-mono font-semibold tracking-wide">
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75" />
               <span className="relative inline-flex rounded-full h-2 w-2 bg-rose-500" />
             </span>
-            <span>COORDINATE ANOMALY: ROUTE NOT FOUND</span>
+            <span>404 • PAGE NOT FOUND</span>
           </div>
 
           {/* Headings */}
           <div className="space-y-2">
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-foreground tracking-tight">
-              Lost in Digital Space
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-foreground tracking-tight">
+              Lost in Cyberspace
             </h1>
-            <p className="text-xs sm:text-sm text-foreground/70 max-w-lg mx-auto leading-relaxed">
-              আপনি যে পেজটি খুঁজছেন তা মহাবিশ্বের কোনো ব্ল্যাকহোলে হারিয়ে গেছে অথবা এর ঠিকানা স্থানান্তরিত হয়েছে।
+            <p className="text-xs sm:text-sm text-foreground/70 max-w-md mx-auto leading-relaxed">
+              The page you are looking for doesn&apos;t exist, was moved, or is temporarily unavailable.
             </p>
             {currentPath && (
               <p className="text-xs font-mono text-foreground/50 pt-1">
-                Requested Sector:{" "}
+                Requested URL:{" "}
                 <span className="text-rose-400 bg-rose-500/10 px-2 py-0.5 rounded-md border border-rose-500/20">
                   {currentPath}
                 </span>
@@ -417,104 +417,77 @@ export default function NotFoundClient() {
             )}
           </div>
 
-          {/* Radar Telemetry Interactive Action Bar */}
-          <div className="p-3.5 rounded-2xl bg-background/60 border border-border/70 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
-            <div className="flex items-center gap-2.5 text-foreground/75">
-              <Radar
-                className={`w-4 h-4 text-accent ${
-                  isPinging ? "animate-spin text-emerald-400" : ""
-                }`}
-              />
-              <span className="font-mono text-[11.5px]">
-                {isPinging
-                  ? `Broadcasting distress beacon [404.0 MHz]... (Ping #${pingCount})`
-                  : `Telemetry scanner ready • Ping satellite core`}
-              </span>
-            </div>
-
+          {/* Action Buttons */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
             <button
               type="button"
-              onClick={triggerRadarPing}
-              className="px-3.5 py-1.5 rounded-xl bg-card-bg hover:bg-accent hover:text-white border border-border hover:border-accent text-foreground text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer shadow-2xs shrink-0 active:scale-95"
+              onClick={() => router.back()}
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-background hover:bg-card-bg border border-border hover:border-accent text-foreground font-semibold text-xs sm:text-sm shadow-xs transition-all duration-200 active:scale-95 cursor-pointer"
             >
-              <Radio className="w-3.5 h-3.5 text-accent" />
-              <span>Send Radar Ping</span>
+              <ArrowLeft className="w-4 h-4" />
+              <span>Go Back</span>
             </button>
-          </div>
 
-          {/* Primary Quick-Navigation Deck */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
-            {/* Primary Return Home */}
             <Link
               href="/"
-              className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-2xl bg-accent text-white font-bold text-xs sm:text-sm hover:bg-accent/90 shadow-lg shadow-accent/25 hover:shadow-accent/40 active:scale-98 transition-all group"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-accent text-white font-semibold text-xs sm:text-sm hover:bg-accent/90 shadow-md shadow-accent/25 hover:shadow-accent/40 transition-all duration-200 active:scale-95"
             >
-              <Home className="w-4 h-4 transition-transform group-hover:-translate-y-0.5" />
-              <span>Mission Control</span>
+              <Home className="w-4 h-4" />
+              <span>Back to Home</span>
             </Link>
 
-            {/* Explore Projects */}
             <Link
               href="/projects"
-              className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-2xl bg-background hover:bg-card-bg border border-border hover:border-accent text-foreground font-semibold text-xs sm:text-sm shadow-2xs hover:shadow-md active:scale-98 transition-all group"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-background hover:bg-card-bg border border-border hover:border-accent text-foreground font-semibold text-xs sm:text-sm shadow-xs transition-all duration-200 active:scale-95"
             >
-              <FolderKanban className="w-4 h-4 text-accent transition-transform group-hover:scale-110" />
+              <FolderKanban className="w-4 h-4 text-accent" />
               <span>View Projects</span>
-            </Link>
-
-            {/* Contact Developer */}
-            <Link
-              href="/contact"
-              className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-2xl bg-background hover:bg-card-bg border border-border hover:border-accent text-foreground font-semibold text-xs sm:text-sm shadow-2xs hover:shadow-md active:scale-98 transition-all group"
-            >
-              <Mail className="w-4 h-4 text-emerald-500 transition-transform group-hover:scale-110" />
-              <span>Contact Asmual</span>
             </Link>
           </div>
 
-          {/* Quick Jump Safe Sectors Navigation Bar */}
-          <div className="pt-4 border-t border-border/50 space-y-2.5">
+          {/* Quick Jump Links */}
+          <div className="pt-4 border-t border-border/50 space-y-2">
             <span className="text-[11px] font-mono uppercase tracking-wider text-foreground/50 block">
-              Safe Coordinate Destinations
+              Quick Navigation
             </span>
             <div className="flex flex-wrap items-center justify-center gap-2 text-xs">
               <Link
                 href="/#home"
-                className="px-3 py-1 rounded-xl bg-background/80 hover:bg-accent/10 border border-border hover:border-accent/40 text-foreground/75 hover:text-accent font-medium transition-all"
+                className="px-3 py-1 rounded-lg bg-background/80 hover:bg-accent/10 border border-border hover:border-accent/40 text-foreground/75 hover:text-accent font-medium transition-all"
               >
-                #home
+                Home
               </Link>
               <Link
                 href="/projects"
-                className="px-3 py-1 rounded-xl bg-background/80 hover:bg-accent/10 border border-border hover:border-accent/40 text-foreground/75 hover:text-accent font-medium transition-all"
+                className="px-3 py-1 rounded-lg bg-background/80 hover:bg-accent/10 border border-border hover:border-accent/40 text-foreground/75 hover:text-accent font-medium transition-all"
               >
-                #projects
+                Projects
               </Link>
               <Link
                 href="/skills"
-                className="px-3 py-1 rounded-xl bg-background/80 hover:bg-accent/10 border border-border hover:border-accent/40 text-foreground/75 hover:text-accent font-medium transition-all"
+                className="px-3 py-1 rounded-lg bg-background/80 hover:bg-accent/10 border border-border hover:border-accent/40 text-foreground/75 hover:text-accent font-medium transition-all"
               >
-                #skills
+                Skills
               </Link>
               <Link
                 href="/about"
-                className="px-3 py-1 rounded-xl bg-background/80 hover:bg-accent/10 border border-border hover:border-accent/40 text-foreground/75 hover:text-accent font-medium transition-all"
+                className="px-3 py-1 rounded-lg bg-background/80 hover:bg-accent/10 border border-border hover:border-accent/40 text-foreground/75 hover:text-accent font-medium transition-all"
               >
-                #about
+                About
               </Link>
               <Link
                 href="/contact"
-                className="px-3 py-1 rounded-xl bg-background/80 hover:bg-accent/10 border border-border hover:border-accent/40 text-foreground/75 hover:text-accent font-medium transition-all"
+                className="px-3 py-1 rounded-lg bg-background/80 hover:bg-accent/10 border border-border hover:border-accent/40 text-foreground/75 hover:text-accent font-medium transition-all"
               >
-                #contact
+                Contact
               </Link>
             </div>
           </div>
         </motion.div>
       </main>
 
-      {/* Main Footer */}
-      <Footer />
+      {/* Clean Bottom Spacing (No Footer) */}
+      <div className="pb-6" />
     </div>
   );
 }
