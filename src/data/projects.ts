@@ -125,6 +125,7 @@ export const projectsData: Project[] = [
     clientGithubUrl: "https://github.com/Asmual/arthub-client",
     featured: true,
     status: "Live",
+    orderIndex: 1,
   },
   {
     id: "shopnexus",
@@ -232,6 +233,113 @@ export const projectsData: Project[] = [
     serverGithubUrl: "https://github.com/Saad7528/ShopNexus-Backend",
     featured: true,
     status: "Live",
+    orderIndex: 2,
+  },
+  {
+    id: "eshop-bd",
+    title: "eShop BD — Modern Multi-Vendor E-Commerce Platform",
+    tagline: "Enterprise multi-vendor marketplace with PostgreSQL, Prisma ORM, BDT payments & real-time order tracking",
+    category: "Full Stack",
+    role: "Full Stack Developer & Database Architect",
+    duration: "4 Weeks • Production System",
+    description:
+      "A comprehensive full-stack multi-vendor e-commerce marketplace tailored for the retail market. Engineered with Next.js, TypeScript, PostgreSQL, and Prisma ORM. Features independent vendor stores, real-time flash deal countdowns, dynamic coupon voucher redemption, multi-criteria product filtering, order tracking telemetry, and native BDT (৳) checkout.",
+    overview:
+      "eShop BD is an enterprise-scale multi-vendor online marketplace engineered to connect independent merchant stores with nationwide shoppers. Unlike traditional single-vendor shops, it empowers sellers with dedicated store onboarding, inventory management, and automated sales commission ledgers, while offering consumers flash deals, promotional discount codes (e.g. FIRST15), live package tracking, and instant BDT pricing.",
+    architecture:
+      "Engineered with a relational data architecture using PostgreSQL and Prisma ORM, strictly utilizing structured relational schemas, ACID transactions, and foreign key cascades. The frontend is powered by Next.js App Router, React 19, TypeScript, and Tailwind CSS. The backend API handles complex order state-machines, JWT role authorization (Admin / Vendor / Customer), and Redis caching for time-critical flash sale countdowns.",
+    metrics: [
+      { label: "Database Engine", value: "PostgreSQL & Prisma ORM" },
+      { label: "Transaction Safety", value: "100% ACID Compliant" },
+      { label: "Catalog Filter Latency", value: "<45ms B-Tree Index" },
+      { label: "Multi-Vendor Roles", value: "Admin / Seller / Buyer" },
+    ],
+    detailedFeatures: [
+      {
+        title: "Multi-Vendor Merchant Ecosystem",
+        description:
+          "Dedicated vendor onboarding ('Become a Seller'), isolated merchant store catalogs, dynamic commission ledgers, and independent seller order fulfillment pipelines.",
+      },
+      {
+        title: "Relational PostgreSQL & Prisma Architecture",
+        description:
+          "Strict relational schema with normalized tables for Users, Vendors, Products, Categories, Stock SKUs, Orders, OrderItems, and Promo Vouchers, ensuring zero data redundancy and strict referential integrity.",
+      },
+      {
+        title: "Flash Deals & Real-Time Countdown Engine",
+        description:
+          "High-impact promotional campaign system featuring synchronized live countdown timers (Hours, Minutes, Seconds) for time-limited flash sales with dynamic percentage discount badges (up to 40% OFF).",
+      },
+      {
+        title: "Dynamic Coupon & Promo Voucher Verification",
+        description:
+          "Promotional discount voucher engine (e.g. FIRST15 for 15% off first order) equipped with minimum spend rules, expiration validation, and 1-click clipboard code copy.",
+      },
+      {
+        title: "Real-Time Order & Logistics Tracking",
+        description:
+          "Multi-stage order tracking workflow ('Track Order') updating buyers on payment confirmation, merchant preparation, courier dispatch, and estimated delivery dates.",
+      },
+      {
+        title: "Faceted Product Search & Sidebar Categories",
+        description:
+          "Instant hierarchical category navigation across 10+ retail departments (Fashion, Electronics, Home, Grocery, Books), keyword search within collections, and price sorting.",
+      },
+    ],
+    challengesSolved: [
+      {
+        title: "Relational Data Integrity in Multi-Item Multi-Vendor Orders",
+        problem:
+          "In orders with items split across multiple independent vendors, partial network or checkout failures could corrupt order totals or inventory balances.",
+        solution:
+          "Leveraged Prisma interactive transactions (prisma.$transaction) on PostgreSQL to bundle order creation, stock decrements, and payment ledger entries into an atomic unit with automatic rollback on failure.",
+      },
+      {
+        title: "Flash Sale Inventory Overselling (Race Conditions)",
+        problem:
+          "Hundreds of simultaneous buyers clicking 'Buy Now' on limited flash sale items could result in negative stock balances.",
+        solution:
+          "Implemented PostgreSQL row-level locking (SELECT ... FOR UPDATE) via Prisma combined with Redis distributed locks, ensuring strict sequential stock allocation.",
+      },
+      {
+        title: "Sub-Second Faceted Query Performance on Growing Catalogs",
+        problem:
+          "Complex multi-attribute queries combining category, price ranges in BDT, discounts, and ratings caused slow sequential table scans.",
+        solution:
+          "Designed composite B-Tree indexes on (categoryId, price, isPublished) and PostgreSQL full-text search indexes on product titles and descriptions, reducing query time to under 45ms.",
+      },
+    ],
+    keyFeatures: [
+      "Multi-Vendor Marketplace: Dedicated vendor onboarding ('Become a Seller') & store management",
+      "Robust Relational Database: PostgreSQL & Prisma ORM with strict ACID transactions & foreign keys",
+      "Flash Deals & Countdown: Real-time deal countdown timers & dynamic percentage discount badges",
+      "Promotional Coupon Engine: Verified discount voucher codes (e.g., FIRST15) with 1-click clipboard copy",
+      "Order Tracking System: Real-time multi-stage parcel progress & delivery milestone updates",
+      "Faceted Category Hierarchy: 10+ retail category departments with instant filtering & BDT (৳) pricing",
+    ],
+    tags: [
+      "Next.js",
+      "React",
+      "TypeScript",
+      "PostgreSQL",
+      "Prisma",
+      "Tailwind CSS",
+      "Node.js",
+      "Redis",
+      "Stripe",
+    ],
+    images: [
+      "/images/eShopBD/eShop_home.png",
+      "/images/eShopBD/eShop_allProduct.png",
+      "/images/eShopBD/eShop_Offer.png",
+    ],
+    liveUrl: "https://eshop-bd.vercel.app",
+    githubUrl: "https://github.com/Asmual/eShop-BD",
+    clientGithubUrl: "https://github.com/Asmual/eShop-BD-Client",
+    serverGithubUrl: "https://github.com/Asmual/eShop-BD-Server",
+    featured: true,
+    status: "Live",
+    orderIndex: 3,
   },
   {
     id: "docappoint",
@@ -240,6 +348,7 @@ export const projectsData: Project[] = [
     category: "Full Stack",
     role: "Full Stack Developer",
     duration: "3 Weeks • Production Ready",
+    orderIndex: 4,
     description:
       "A comprehensive healthcare platform allowing patients to book appointments, check doctor real-time availability, and manage consultation schedules efficiently with an intuitive, accessible UI.",
     overview:
@@ -407,6 +516,7 @@ export const projectsData: Project[] = [
     serverGithubUrl: "https://github.com/Asmual/Law-Firm-Solutions-Server",
     featured: true,
     status: "Live",
+    orderIndex: 5,
   },
   {
     id: "mykeeps",
@@ -500,6 +610,7 @@ export const projectsData: Project[] = [
     serverGithubUrl: "https://github.com/Asmual/My-Keeps--Server",
     featured: true,
     status: "Live",
+    orderIndex: 6,
   },
   {
     id: "suncart",
@@ -508,6 +619,7 @@ export const projectsData: Project[] = [
     category: "Frontend",
     role: "Frontend Developer & UI Engineer",
     duration: "3 Weeks • Interactive Application",
+    orderIndex: 7,
     description:
       "Scalable e-commerce solution and administration system featuring dynamic inventory management, RESTful APIs, fast data handling, and secure JWT authentication.",
     overview:
@@ -589,6 +701,7 @@ export const projectsData: Project[] = [
     category: "Frontend",
     role: "Frontend Engineer & UI Designer",
     duration: "2 Weeks • Production Portfolio",
+    orderIndex: 8,
     description:
       "Personal developer showcase website crafted with Next.js, React, JavaScript, DaisyUI, Tailwind CSS, and Framer Motion. Features interactive animated hero, skills display, and dark/light modes.",
     overview:
